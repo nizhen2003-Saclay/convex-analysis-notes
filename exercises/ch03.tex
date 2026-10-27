@@ -1,0 +1,111 @@
+% 第 3 章练习（原讲义附录 B.3，标题误作 “Chapter 4”，内容对应第 3 章“次微分”）
+
+\begin{exercise}[原讲义 B.3 练习 18]
+\label{exo:B3-18}
+\textbf{包络定理（envelope theorem）。} 设 $(f_i)_{i\in I}$ 是一族 $\mathcal C^1(\R^d)$ 中的凸函数，满足
+\begin{equation}
+  \forall i_0\neq i_1\in I,\ \forall x\in\R^d,\quad\nabla f_{i_0}(x)\neq\nabla f_{i_1}(x).
+  \label{eq:18}
+\end{equation}
+定义逐点最大值 $f=\max_{i\in I}f_i$，并假设对每个 $x\in\R^d$ 最大值都能取到。
+\begin{enumerate}[label=\arabic*.]
+  \item 证明：若 $I$ 是有限集，则 $f$ 几乎处处可微。（提示：利用隐函数定理。）
+  \item 一般情形下，考虑集合
+        \[
+          A=\{x\in\R^d\mid\exists i_0\neq i_1\in I,\ f(x)=f_{i_0}(x)=f_{i_1}(x)\}.
+        \]
+        证明：若 $x\in A$，则 $f$ 在 $x$ 处不 Gâteaux 可微。
+  \item 推出：对几乎每个 $x\in\R^d$，$f$ 在 $x$ 处可微，且存在唯一的 $i_x\in I$ 使 $f(x)=f_{i_x}(x)$，并且 $\nabla f(x)=\nabla f_{i_x}(x)$。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.3 练习 19]
+\label{exo:B3-19}
+\textbf{单纯形。} 设 $f:\R^d\to\R$，$f(x_1,\dots,x_d)=\max(x_1,\dots,x_d)$。证明
+\[
+  \partial f(0)=\{x\in\R^d\mid x_1+\dots+x_d=1,\ \forall i,\ x_i\geqslant0\}.
+\]
+\end{exercise}
+
+\begin{exercise}[原讲义 B.3 练习 20]
+\label{exo:B3-20}
+\textbf{次微分和法则的失效。} 设 $A=\overline{\mathrm B}((0,0),1)$，$B=\overline{\mathrm B}((0,2),1)$ 是 $\R^2$ 中的闭球，$f=\iota_A$，$g=\iota_B$。
+计算在 $x=(0,1)$ 处的次微分 $\partial f(x)$、$\partial g(x)$ 与 $\partial(f+g)(x)$。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.3 练习 21]
+\label{exo:B3-21}
+\textbf{凸性的刻画。} 设 $f:\X\to\Rbar$ 是正常函数，并且对所有 $x\in\X$，次微分 $\partial f(x)$ 非空（从而 $\dom f=\X$）。
+\begin{enumerate}[label=\arabic*.]
+  \item 证明 $f$ 等于其仿射下界函数的上确界。
+  \item 推出 $f$ 是下半连续凸函数。
+  \item 反之，证明若 $f:\R^d\to\R$ 凸，则对所有 $x\in\R^d$ 有 $\partial f(x)\neq\varnothing$。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.3 练习 22]
+\label{exo:B3-22}
+\textbf{次微分和法则。} 设 $f,g\in\Gammaz(\X)$。利用支撑函数（见注~\ref{rem:16}）证明：当 $x\in\cont f\cap\cont g$ 时，$\partial(f+g)(x)=\partial f(x)+\partial g(x)$。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.3 练习 23]
+\label{exo:B3-23}
+\textbf{用距离函数做精确罚（exact penalization）。} 设 $K$ 是 Hilbert 空间 $\X$ 的非空闭凸子集，$\mathrm d_K$ 为到 $K$ 的距离函数，$p_K$ 为到 $K$ 的正交投影。
+本题把次微分、法锥等都看成 $\X\simeq\Xs$ 的子集。
+\begin{enumerate}[label=\arabic*.]
+  \item 设 $p\in K$。证明 $\partial\iota_K(p)=\{v\in\X\mid\forall q\in K,\ \pair{v}{p}\geqslant\pair{v}{q}\}$。再利用正交投影的刻画证明
+        \begin{equation}
+          \partial\iota_K(p)=\{v\in\X\mid p_K(p+v)=p\}.
+          \label{eq:19}
+        \end{equation}
+  \item \emph{应用：} 设 $f:\X\to\R$ 凸且连续。证明 $\bar p\in K$ 是问题
+        \begin{equation}
+          \min_{p\in K}f(p)
+          \label{eq:20}
+        \end{equation}
+        的最小值点，当且仅当存在 $w\in\partial f(\bar p)$ 使 $p_K(\bar p-w)=\bar p$。（提示：利用次微分和法则。）
+  \item 下面证明：若 $p\in K$，$v\in\Nor_pK=\partial\iota_K(p)$ 且 $v\neq0$，则 $v/\norm v\in\partial\mathrm d_K(p)$，等价地，
+        \begin{equation}
+          \forall x\in\X,\quad\mathrm d_K(x)\geqslant\mathrm d_K(p)+\Bigl\langle\frac{v}{\norm v}\Bigm| x-p\Bigr\rangle .
+          \label{eq:21}
+        \end{equation}
+        \begin{enumerate}[label=\alph*.]
+          \item 证明当 $\pair{v}{x}\leqslant\pair{v}{p}$ 时 \eqref{eq:21} 成立。
+          \item 设 $x\notin H:=\{x\in\X\mid\pair{v}{p}\geqslant\pair{v}{x}\}$，记 $x_H=p_H(x)$ 为 $x$ 到 $H$ 的投影。证明
+                $x_H=x-\bigl\langle\frac{v}{\norm v}\bigm| x-p\bigr\rangle\frac{v}{\norm v}$。
+          \item 利用 $K\subseteq H$，证明 $\mathrm d_K(x)\geqslant\mathrm d_H(x)=\norm{x-x_H}=\bigl\langle\frac{v}{\norm v}\bigm| x-p\bigr\rangle$，并推出 $v/\norm v\in\partial\mathrm d_K(p)$。
+        \end{enumerate}
+  \item \emph{应用：} 设 $\bar p\in K$ 是 \eqref{eq:20} 的最小值点。
+        \begin{enumerate}[label=\alph*.]
+          \item 证明存在 $w\in\partial f(\bar p)$ 使 $-w\in\partial\iota_K(\bar p)$，从而
+                \[
+                  0\in\partial\bigl(f+\norm w\,\mathrm d_K\bigr)(\bar p).
+                \]
+          \item 推出存在 $\lambda\geqslant0$，使 $\bar p$ 是罚问题
+                \[
+                  \min_{p\in\X}f(p)+\lambda\,\mathrm d_K(p)
+                \]
+                的最小值点。
+        \end{enumerate}
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.3 练习 24]
+\label{exo:B3-24}
+\textbf{极限次微分（limiting subdifferential），2020 年考题。} 设 $f\in\mathcal C^0(\R^d)$ 是凸函数。
+\begin{enumerate}[label=\arabic*.]
+  \item 固定 $x\in\R^d$，令 $K=\clconv S$，其中
+        \[
+          S=\Bigl\{s\in\R^d\Bigm|\exists x_n\to x,\ f\text{ 在 }x_n\text{ 处可微，且}\lim_{n\to\infty}\nabla f(x_n)=s\Bigr\}.
+        \]
+        \begin{enumerate}[label=\alph*.]
+          \item 证明 $S\subseteq\partial f(x)$ 且 $K\subseteq\partial f(x)$。
+
+                \emph{接下来的几问证明反向包含。}
+          \item 固定向量 $v\in\R^d$。证明对每个 $t_n=1/n$，存在 $v_n\in\R^d$，使 $\norm{v_n-v}\leqslant t_n$ 且 $f$ 在 $x_n=x+t_nv_n$ 处可微。
+          \item 证明必要时取子列，可设 $\nabla f(x_n)$ 收敛到某个 $s\in S$。证明 $f^+(x;v)\leqslant\pair{s}{v}$。
+          \item 推出 $f^+(x;v)\leqslant\sigma_K(v)$，其中 $\sigma_K$ 是 $K$ 的支撑函数。由此得出 $\partial f(x)\subseteq K$。
+        \end{enumerate}
+  \item \emph{应用：} 设存在 $G\in\mathcal C^0(\R^d,\R^d)$，使对所有 $x\in\R^d$ 有 $G(x)\in\partial f(x)$。证明 $f\in\mathcal C^1(\R^d)$ 且 $\nabla f=G$。
+\end{enumerate}
+\end{exercise}

@@ -1,0 +1,584 @@
+% 第 5 章：凸对偶（据原讲义第 47--56 页整理）
+\chapter{凸对偶}
+\label{ch:ch05}
+
+本章介绍凸优化问题的\emph{扰动对偶}（perturbation duality）框架：把原问题嵌入一族带参数的问题，
+由此系统地构造对偶问题，并在一个限制条件下证明强对偶。随后把这一框架应用于 Lagrange 对偶、
+Fenchel--Rockafellar 定理以及最优输运中的 Kantorovich 对偶。
+本章中 $\X,\Y$ 是赋范空间（更一般地，局部凸拓扑向量空间），其对偶空间记为 $\Xs,\Ys$。
+
+% ------------------------------------------------------------
+\section{凸问题的扰动}
+
+本节的讲法参考了 Ekeland--Temam 的专著以及 Guillaume Carlier 即将出版的书。考虑极小化问题
+\[
+  P=\inf_{x\in\X}f(x),
+\]
+并假设 $f$ 可以写成 $f(x)=\Phi(x,0)$，其中 $\Phi\in\Gammaz(\X\times\Y)$，$\Y$ 是另一个空间。
+换言之，假设原问题是下面这族以 $y\in\Y$ 为参数的\emph{扰动问题}（perturbed problem）在 $y=0$ 时的特例：
+\[
+  P_y:=\inf_{x\in\X}\Phi(x,y).
+\]
+通过等同 $(\X\times\Y)^*\simeq\Xs\times\Ys$（配对为 $\pair{(x^*,y^*)}{(x,y)}=\pair{x^*}{x}+\pair{y^*}{y}$），把 $\Phi^*$ 看作 $\Xs\times\Ys$ 上的函数。
+问题 $P$ 的\emph{对偶问题}（dual problem）定义为
+\[
+  D=\sup_{y^*\in\Ys}\ -\Phi^*(0,y^*).
+\]
+这样构造对偶问题的动机见命题~\ref{res:63} 的证明。注意对偶问题不是唯一的：$f$ 的每一种扰动 $\Phi$ 都给出 $P$ 的一个对偶问题。
+
+\begin{proposition}[弱对偶]
+\label{res:63}
+\emph{弱对偶不等式}（weak duality）$P\geqslant D$ 总成立。此外，对 $(x,y^*)\in\X\times\Ys$，下列命题等价：
+\begin{enumerate}[label=(\roman*)]
+  \item $\Phi(x,0)=-\Phi^*(0,y^*)$；
+  \item $x$ 是 $P$ 的极小点，$y^*$ 是 $D$ 的极大点，且 $P=D$；
+  \item $(0,y^*)\in\partial\Phi(x,0)$；
+  \item $(x,0)\in\partial\Phi^*(0,y^*)$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+由 Fenchel--Young 不等式，
+\[
+  \forall(x,y^*)\in\X\times\Ys,\qquad \Phi(x,0)+\Phi^*(0,y^*)\geqslant\pair{(0,y^*)}{(x,0)}=0 ,
+\]
+即 $\Phi(x,0)\geqslant-\Phi^*(0,y^*)$。左边对 $x$ 取下确界、右边对 $y^*$ 取上确界，得 $P=\inf_x\Phi(x,0)\geqslant\sup_{y^*}-\Phi^*(0,y^*)=D$。
+
+(i)$\Rightarrow$(ii)：$P\leqslant\Phi(x,0)=-\Phi^*(0,y^*)\leqslant D\leqslant P$，各处取等号，即得 (ii)。
+(ii)$\Rightarrow$(i)：$\Phi(x,0)=P=D=-\Phi^*(0,y^*)$。
+
+(i)$\iff$(iii)：(i) 即 $\Phi(x,0)+\Phi^*(0,y^*)=0=\pair{(0,y^*)}{(x,0)}$，是 Fenchel--Young 不等式的等号情形；
+由定理~\ref{res:61}（(i)$\iff$(ii)，$\Phi$ 正常），它等价于 $(0,y^*)\in\partial\Phi(x,0)$。
+
+(i)$\iff$(iv)：同理，对 $\Phi^*$ 用等号情形，并利用 $\Phi^{**}=\Phi$（Fenchel--Moreau，$\Phi\in\Gammaz$）；
+也可直接由定理~\ref{res:61} 的 (i)$\iff$(iii) 从 (iii) 得到。
+\end{proof}
+
+\begin{theorem}[强对偶]
+\label{res:64}
+设 $\X,\Y$ 是两个空间，$\Phi\in\Gammaz(\X\times\Y)$，考虑极小化问题 $P=\inf_\X\Phi(\cdot,0)$。假设
+\begin{itemize}
+  \item $P$ 有限；
+  \item 满足如下\emph{限制条件}（qualification hypothesis）：存在 $x_0\in\X$，使 $0\in\cont(\Phi(x_0,\cdot))$。
+\end{itemize}
+则对偶问题 $D=\max_{y^*\in\Ys}-\Phi^*(0,y^*)$ 的最大值可以取到，并且\emph{强对偶}（strong duality）成立：
+\[
+  P=D .
+\]
+此外，$D$ 的极大点集恰为\emph{值函数}（value function）
+\[
+  v:y\in\Y\mapsto\inf_{x\in\X}\Phi(x,y)
+\]
+在 $0$ 处的次微分 $\partial v(0)$。
+\end{theorem}
+
+下面的引理是证明的核心。
+
+\begin{lemma}
+\label{res:65}
+在定理~\ref{res:64} 的假设下，值函数 $v$ 满足：
+\begin{enumerate}[label=(\roman*)]
+  \item $v$ 是凸函数；
+  \item $v^*(y^*)=\Phi^*(0,y^*)$（此条不需要定理的假设）；特别地，
+  \[
+    v(0)=P,\qquad v^{**}(0)=\sup_{y^*\in\Ys}-\Phi^*(0,y^*)=D ;
+  \]
+  \item $v$ 在 $0$ 处连续；
+  \item $\partial v(0)\neq\varnothing$。
+\end{enumerate}
+\end{lemma}
+
+由于 $P=v(0)$，$D=v^{**}(0)$，若 $v$ 是 $\Y$ 上的正常下半连续凸函数，Fenchel--Moreau 定理（定理~\ref{res:28}）就直接给出 $P=D$。
+但 $v$ 未必下半连续；不过引理的最后一条仍然足以证明 $v(0)=v^{**}(0)$。
+
+\begin{proof}
+(i) 设 $y_0,y_1\in\Y$，$t\in[0,1]$，$y_t=(1-t)y_0+ty_1$。若 $v(y_0)$ 或 $v(y_1)$ 为 $+\infty$，不等式显然。
+否则对任意 $x',x''\in\X$，由 $\Phi$ 的凸性，
+\[
+  v(y_t)\leqslant\Phi\bigl((1-t)x'+tx'',\,y_t\bigr)\leqslant(1-t)\Phi(x',y_0)+t\Phi(x'',y_1).
+\]
+右端对 $x',x''$ 分别独立取下确界，得 $v(y_t)\leqslant(1-t)v(y_0)+tv(y_1)$。
+
+(ii) 对 $y^*\in\Ys$，
+\[
+  \begin{aligned}
+  v^*(y^*)&=\sup_{y\in\Y}\ \pair{y^*}{y}-v(y)
+  =\sup_{y\in\Y}\Bigl(\pair{y^*}{y}-\inf_{x\in\X}\Phi(x,y)\Bigr)\\
+  &=\sup_{(x,y)\in\X\times\Y}\ \pair{(0,y^*)}{(x,y)}-\Phi(x,y)=\Phi^*(0,y^*).
+  \end{aligned}
+\]
+因此 $v^{**}(0)=\sup_{y^*}\bigl(\pair{y^*}{0}-v^*(y^*)\bigr)=\sup_{y^*}-\Phi^*(0,y^*)=D$，而 $v(0)=\inf_x\Phi(x,0)=P$ 由定义可得。
+
+(iii) 由限制条件，存在 $x_0\in\X$ 使 $\Phi(x_0,\cdot)$ 在 $0$ 处连续，特别地在 $0$ 的某个邻域 $U$ 上有上界 $M$。于是
+\[
+  \forall y\in U,\qquad v(y)=\inf_{x\in\X}\Phi(x,y)\leqslant\Phi(x_0,y)\leqslant M .
+\]
+$v$ 也不取 $-\infty$：若 $v(y_1)=-\infty$，取 $\varepsilon>0$ 充分小使 $y_2=-\varepsilon y_1\in U$，则
+$0=\frac{\varepsilon}{1+\varepsilon}y_1+\frac1{1+\varepsilon}y_2$，由凸性 $v(0)=-\infty$，与 $P$ 有限矛盾。
+于是 $v$ 是凸函数，在 $0$ 处有限（$v(0)=P$）且在 $0$ 的邻域上有上界，由命题~\ref{res:17}，$v$ 在 $0$ 处连续。
+
+(iv) 由定理~\ref{res:38}，凸函数在连续点处的次微分非空，故 $\partial v(0)\neq\varnothing$。
+\end{proof}
+
+\begin{proof}[定理~\ref{res:64} 的证明]
+由引理~\ref{res:65}(iii) 的证明，$v$ 不取 $-\infty$，又 $v(0)=P$ 有限，故 $v$ 是正常的。于是对任意 $y^*\in\Ys$，
+由 Fenchel--Young 等号情形（定理~\ref{res:61} 的 (i)$\iff$(ii)，用于 $v$ 与点 $0$）及引理~\ref{res:65}(ii)，
+\[
+  y^*\in\partial v(0)\iff v(0)+v^*(y^*)=\pair{y^*}{0}=0\iff-\Phi^*(0,y^*)=P .
+\]
+由引理~\ref{res:65}(iv)，$\partial v(0)\neq\varnothing$。任取 $y^*\in\partial v(0)$，结合弱对偶（命题~\ref{res:63}）得 $P=-\Phi^*(0,y^*)\leqslant D\leqslant P$，
+故 $P=D$（即 $v(0)=v^{**}(0)$），且 $y^*$ 是对偶问题的极大点；所以 $\partial v(0)\subseteq\argmax D$。
+反之，若 $y^*$ 是对偶问题的极大点，则 $-\Phi^*(0,y^*)=D=P$，由上面的等价得 $y^*\in\partial v(0)$。
+\end{proof}
+
+\begin{example}[应用：线性规划]
+\label{exa:21}
+作为第一个简单应用，取 $\X=\R^n$，$\Y=\R^m$，并用 Euclid 内积把它们与各自的对偶空间等同。
+给定 $m$ 行 $n$ 列的矩阵 $A$ 及 $b\in\Y$，$c\in\Xs$，令
+\[
+  \Phi(x,y)=\pair{c}{x}+\iota_{\{(x,y)\mid Ax-b\leqslant y\}}(x,y).
+\]
+于是
+\[
+  P=\inf_{x\in\X}\Phi(x,0)=\inf_{Ax\leqslant b}\pair{c}{x},
+\]
+其中 $Ax\leqslant b$ 表示对一切 $j$，$(Ax)_j\leqslant b_j$。原问题就是在多面体 $K=\{x\in\X\mid Ax\leqslant b\}$ 上极小化线性形式 $\pair{c}{x}$。
+$\Phi$ 是凸、下半连续的（约束集是闭凸集），且当 $K\neq\varnothing$ 时是正常的。
+
+为套用强对偶定理，假设 $P$ 有限，并假设存在\emph{严格可行点} $x_0$，即 $Ax_0<b$（逐分量严格成立）。
+\footnote{原讲义假设“$K$ 有非空内部”。当 $A$ 没有零行时两者等价；但若 $A$ 有零行而对应的 $b_j=0$，$K$ 可以有内点却没有严格可行点，此时下面的论证不成立。}
+这时 $\Phi(x_0,y)=\pair{c}{x_0}$ 对 $0$ 的一个邻域中的 $y$（满足 $y\geqslant Ax_0-b$ 的 $y$）成立，故 $\Phi(x_0,\cdot)$ 在 $0$ 处连续。
+由强对偶定理（定理~\ref{res:64}），$P=D$，其中对偶问题为
+\[
+  D=\max_{y^*\in\Ys}-\Phi^*(0,y^*).
+\]
+下面计算其中的共轭函数：
+\[
+  \Phi^*(0,y^*)=\sup_{(x,y)\in\X\times\Y}\pair{(0,y^*)}{(x,y)}-\Phi(x,y)
+  =\sup_{\substack{(x,y)\in\X\times\Y\\ Ax-b\leqslant y}}\pair{y^*}{y}-\pair{c}{x}.
+\]
+若存在某个 $i$ 使 $y^*_i>0$，则对任意 $\lambda\geqslant0$，取 $x=x_0$，$y=\lambda e_i$（可行，因 $Ax_0-b\leqslant0\leqslant\lambda e_i$），得
+\[
+  \Phi^*(0,y^*)\geqslant\lambda y_i^*-\pair{c}{x_0}\xrightarrow[\lambda\to+\infty]{}+\infty ,
+\]
+故 $\Phi^*(0,y^*)=+\infty$。另一方面，若对一切 $i$ 有 $y_i^*\leqslant0$，则对固定的 $x$，关于 $y\geqslant Ax-b$ 的上确界在 $y=Ax-b$ 处取到，于是
+\[
+  \Phi^*(0,y^*)=\sup_{x\in\X}\pair{y^*}{Ax-b}-\pair{c}{x}
+  =\sup_{x\in\X}\pair{A^\T y^*-c}{x}-\pair{y^*}{b}
+  =\begin{cases}
+    -\pair{y^*}{b}, & A^\T y^*=c,\\
+    +\infty, & \text{其他}.
+  \end{cases}
+\]
+所以对偶问题可以写成
+\[
+  D=\max_{y^*}-\Phi^*(0,y^*)=\max_{\substack{y^*\leqslant0\\ A^\T y^*=c}}\pair{y^*}{b}.
+\]
+（令 $\lambda=-y^*\geqslant0$，即熟悉的形式 $\max\{-\pair{b}{\lambda}\mid A^\T\lambda=-c,\ \lambda\geqslant0\}$。）
+注意 $D$ 中的最大值可以取到，这是强对偶定理的结论。
+\end{example}
+
+% ------------------------------------------------------------
+\section{应用：Lagrange 对偶}
+
+本节简要说明如何用扰动方法得到约束集由一族不等式给出的约束优化问题的 Lagrange 对偶。
+设 $f,g_1,\dots,g_N\in\Gammaz(\X)$，考虑
+\[
+  P=\inf_Kf,\qquad K=\{x\in\X\mid g_1(x)\leqslant0,\dots,g_N(x)\leqslant0\}.
+\]
+对 $y\in\R^N$ 构造扰动问题
+\[
+  P_y=\inf\{f(x)\mid g_1(x)\leqslant-y_1,\dots,g_N(x)\leqslant-y_N\},
+\]
+相当于引入扰动函数
+\[
+  \Phi:\X\times\R^N\to\Rbar,\qquad
+  (x,y)\mapsto
+  \begin{cases}
+    f(x), & g_i(x)\leqslant-y_i,\ 1\leqslant i\leqslant N,\\
+    +\infty, & \text{其他}.
+  \end{cases}
+\]
+$\Phi$ 也可以写成
+\[
+  \Phi(x,y)=f(x)+\sum_{1\leqslant i\leqslant N}\iota_{\epi(g_i)}(x,-y_i),
+\]
+由此可见 $\Phi$ 是凸、下半连续的（$\epi g_i$ 是闭凸集，$(x,y)\mapsto(x,-y_i)$ 是连续线性映射）。我们假设下面这个与 \eqref{eq:12} 类似的条件：
+\begin{equation}
+  \label{eq:16}
+  \exists x_0\in\dom f\ \text{使得}\ g_i(x_0)<0,\quad i\in\{1,\dots,N\}.
+\end{equation}
+于是 $\Phi(x_0,0)=f(x_0)<+\infty$，$\Phi$ 正常；并且只要 $\norm{y}_\infty\leqslant\min_{1\leqslant i\leqslant N}\abs{g_i(x_0)}$，
+就有 $g_i(x_0)=-\abs{g_i(x_0)}\leqslant-y_i$，从而 $\Phi(x_0,y)=f(x_0)$，所以 $\Phi(x_0,\cdot)$ 在 $y=0$ 附近为常数，在 $0$ 处连续。
+因此只要 $P$ 有限，就可以应用强对偶定理（定理~\ref{res:64}），得到 $P=D=\max_{y^*\in\R^N}-\Phi^*(0,y^*)$。
+共轭函数 $\Phi^*(0,y^*)$ 可以用问题的 \emph{Lagrange 函数}（Lagrangian）显式表示：
+\begin{equation}
+  \label{eq:17}
+  L:\X\times\R^N_+\to\Rbar,\qquad (x,\lambda)\mapsto f(x)+\sum_{1\leqslant i\leqslant N}\lambda_ig_i(x),
+\end{equation}
+其中约定：若对某个 $i$ 有 $x\notin\dom g_i$，则 $L(x,\lambda)=+\infty$（即使 $\lambda_i=0$）。
+这里把对偶变量 $y^*\in(\R^N)^*$ 改记为 $\lambda\in\R^N$，以符合 Lagrange 乘子的通常记号。
+
+\begin{lemma}
+\label{res:66}
+对 $\lambda\in\R^N$，
+\[
+  \Phi^*(0,\lambda)=
+  \begin{cases}
+    -\inf_{x\in\X}L(x,\lambda), & \forall i,\ \lambda_i\geqslant0,\\
+    +\infty, & \text{其他}.
+  \end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+由定义，
+\[
+  \Phi^*(0,\lambda)=\sup_{(x,y)\in\X\times\R^N}\pair{\lambda}{y}-\Phi(x,y)
+  =\sup\bigl\{\pair{\lambda}{y}-f(x)\bigm|(x,y)\in\X\times\R^N,\ \forall i,\ g_i(x)\leqslant-y_i\bigr\}.
+\]
+若某个 $\lambda_i<0$，取 $x=x_0$，$y=-re_i$（$e_i$ 为坐标向量，$r\geqslant g_i(x_0)$；其余约束由 $g_j(x_0)<0$ 保证），得值
+$-r\lambda_i-f(x_0)\to+\infty$（$r\to+\infty$），故 $\Phi^*(0,\lambda)=+\infty$。
+
+若对一切 $i$ 有 $\lambda_i\geqslant0$：对固定的 $x\in\bigcap_i\dom g_i$，$y$ 的可行范围是 $y_i\leqslant-g_i(x)$，
+$\pair{\lambda}{y}=\sum_i\lambda_iy_i$ 在 $y_i=-g_i(x)$ 处取最大值 $-\sum_i\lambda_ig_i(x)$；
+若 $x\notin\bigcap_i\dom g_i$，则没有可行的 $y$，这样的 $x$ 对上确界的贡献为 $-\infty$，与约定 $-L(x,\lambda)=-\infty$ 一致。因此
+\[
+  \Phi^*(0,\lambda)=\sup_{x\in\X}\Bigl(-\sum_i\lambda_ig_i(x)-f(x)\Bigr)=-\inf_{x\in\X}L(x,\lambda).\qedhere
+\]
+\end{proof}
+
+由此得到对偶问题的表达式
+\[
+  D=\sup_{\lambda\in\R^N}-\Phi^*(0,\lambda)=\sup_{\lambda\in\R^N_+}\ \inf_{x\in\X}L(x,\lambda).
+\]
+
+\begin{theorem}[Lagrange 对偶]
+\label{res:67}
+设 $f,g_1,\dots,g_N\in\Gammaz(\X)$ 满足限制条件 \eqref{eq:16}，Lagrange 函数 $L$ 如 \eqref{eq:17}。若下式左端有限，则
+\[
+  \inf_{x\in\X}\ \sup_{\lambda\in\R^N_+}L(x,\lambda)=\max_{\lambda\in\R^N_+}\ \inf_{x\in\X}L(x,\lambda).
+\]
+进一步，若 $\lambda\in\R^N_+$ 是对偶问题的解，则 $x$ 是原问题的解，当且仅当它满足下面三个 \emph{Karush--Kuhn--Tucker 条件}（KKT 条件）：
+\begin{itemize}
+  \item 可行性（admissibility）：$g_i(x)\leqslant0$，$i\in\{1,\dots,N\}$；
+  \item Lagrange 函数极小化：$x\in\argmin_\X L(\cdot,\lambda)$；
+  \item 互补松弛（complementary slackness）：$\lambda_ig_i(x)=0$，$i\in\{1,\dots,N\}$。
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+（原讲义未给出证明，以下为补充。）先算左端。对固定的 $x$：若 $x\in K$，则各 $g_i(x)\leqslant0$，$\sup_{\lambda\geqslant0}L(x,\lambda)$ 在 $\lambda=0$ 处取到，等于 $f(x)$；
+若 $x\notin\bigcap_i\dom g_i$，则 $L(x,\cdot)\equiv+\infty$；若 $x\in\bigcap_i\dom g_i$ 但某个 $g_i(x)>0$，令 $\lambda_i\to+\infty$（其余为 $0$）得上确界为 $+\infty$（$f(x)>-\infty$）。
+所以 $\sup_{\lambda\in\R^N_+}L(x,\lambda)=f(x)+\iota_K(x)$，左端等于 $\inf_Kf=P$。
+由前面的讨论，$P$ 有限时强对偶定理给出 $P=D$ 且对偶问题有解，这就是第一个等式。
+
+设 $\lambda\in\R^N_+$ 是对偶问题的解，即 $\inf_\X L(\cdot,\lambda)=D=P$。
+若 $x$ 是原问题的解，则 $x\in K$（可行性），且
+\[
+  f(x)=P=\inf_\X L(\cdot,\lambda)\leqslant L(x,\lambda)=f(x)+\sum_i\lambda_ig_i(x)\leqslant f(x),
+\]
+各处取等号：$x$ 极小化 $L(\cdot,\lambda)$，且 $\sum_i\lambda_ig_i(x)=0$；而每一项 $\lambda_ig_i(x)\leqslant0$，故每一项都为 $0$。
+反之，若三个条件成立，则 $x\in K$ 且 $f(x)=L(x,\lambda)=\inf_\X L(\cdot,\lambda)=P$，所以 $x$ 是原问题的解。
+\end{proof}
+
+这与\hyperref[ch:ch03]{第 3 章}的 KKT 定理（定理~\ref{res:45}）相呼应：那里的乘子由次微分计算得到，这里的乘子恰是对偶问题的解。
+
+% ------------------------------------------------------------
+\section{应用：Fenchel--Rockafellar 定理}
+
+设 $\X,\Y$ 是两个空间，$g\in\Gammaz(\X)$，$h\in\Gammaz(\Y)$，$A:\X\to\Y$ 是连续线性算子，$A^*:\Ys\to\Xs$ 是其伴随算子。考虑原问题
+\[
+  P=\inf_{x\in\X}\ g(x)+h(Ax),
+\]
+以及对偶问题
+\[
+  D=\sup_{y^*\in\Ys}\ -g^*(A^*y^*)-h^*(-y^*).
+\]
+
+\begin{proposition}[弱对偶]
+\label{res:68}
+$P\geqslant D$。此外，若 $P=D$，则对 $(x,y^*)\in\X\times\Ys$，下列命题等价：
+\begin{enumerate}[label=(\roman*)]
+  \item $x$ 是 $P$ 的极小点，且 $y^*$ 是 $D$ 的极大点；
+  \item $A^*y^*\in\partial g(x)$ 且 $-y^*\in\partial h(Ax)$；
+  \item $x\in\partial g^*(A^*y^*)$ 且 $Ax\in\partial h^*(-y^*)$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+先证弱对偶不等式 $P\geqslant D$。由 Fenchel--Young 不等式，对一切 $(x,y^*)\in\X\times\Ys$，
+\[
+  g(x)+g^*(A^*y^*)\geqslant\pair{A^*y^*}{x},\qquad
+  h(Ax)+h^*(-y^*)\geqslant\pair{-y^*}{Ax}.
+\]
+由于 $\pair{A^*y^*}{x}=\pair{y^*}{Ax}$，两式相加得 $g(x)+h(Ax)\geqslant-g^*(A^*y^*)-h^*(-y^*)$，于是
+\[
+  P=\inf_{x\in\X}g(x)+h(Ax)\geqslant\sup_{y^*\in\Ys}-g^*(A^*y^*)-h^*(-y^*)=D .
+\]
+
+现设 $P=D$。(i) 等价于等式 $g(x)+h(Ax)=-g^*(A^*y^*)-h^*(-y^*)$：若 (i) 成立，两边分别等于 $P$ 与 $D$；
+反之若此式成立，由弱对偶 $P\leqslant g(x)+h(Ax)=-g^*(A^*y^*)-h^*(-y^*)\leqslant D=P$，各处取等号，即得 (i)。
+此式左端 $>-\infty$、右端 $<+\infty$，所以它成立时四个值 $g(x),h(Ax),g^*(A^*y^*),h^*(-y^*)$ 都有限；利用 $\pair{A^*y^*}{x}=\pair{y^*}{Ax}$，它可改写为
+\[
+  \underbrace{g(x)+g^*(A^*y^*)-\pair{A^*y^*}{x}}_{\geqslant0}
+  +\underbrace{h(Ax)+h^*(-y^*)-\pair{-y^*}{Ax}}_{\geqslant0}=0 ,
+\]
+两项非负而和为零，故两项都为零。由定理~\ref{res:61}，这两个等式成立当且仅当 $A^*y^*\in\partial g(x)$ 且 $-y^*\in\partial h(Ax)$，
+又当且仅当（$g,h\in\Gammaz$）$x\in\partial g^*(A^*y^*)$ 且 $Ax\in\partial h^*(-y^*)$。
+\end{proof}
+
+\begin{theorem}[Fenchel--Rockafellar]
+\label{res:69}
+若 $P$ 有限，且满足限制条件
+\[
+  \exists x_0\in\dom g\ \text{使得}\ Ax_0\in\cont h ,
+\]
+则 $P=D$，并且对偶问题 $D$ 的最大值可以取到。
+\end{theorem}
+
+\begin{proof}
+令 $f(x)=g(x)+h(Ax)$，并引入扰动
+\[
+  \Phi(x,y)=g(x)+h(Ax-y).
+\]
+$\Phi$ 是凸、下半连续的（$h$ 与连续线性映射 $(x,y)\mapsto Ax-y$ 的复合仍凸下半连续），
+且 $\Phi(x_0,0)=g(x_0)+h(Ax_0)$ 有限，故 $\Phi\in\Gammaz(\X\times\Y)$，并且 $f=\Phi(\cdot,0)$。
+相应的对偶问题为 $D=\sup_{y^*}-\Phi^*(0,y^*)$。计算 $\Phi^*(0,y^*)$（换元 $z=Ax-y$）：
+\[
+  \begin{aligned}
+  \Phi^*(0,y^*)&=\sup_{(x,y)\in\X\times\Y}\pair{(0,y^*)}{(x,y)}-\Phi(x,y)
+  =\sup_{(x,y)\in\X\times\Y}\pair{y^*}{y}-\bigl(g(x)+h(\underbrace{Ax-y}_{=:z})\bigr)\\
+  &=\sup_{(x,z)\in\X\times\Y}\pair{y^*}{Ax-z}-\bigl(g(x)+h(z)\bigr)\\
+  &=\sup_{x\in\X}\bigl(\pair{A^*y^*}{x}-g(x)\bigr)+\sup_{z\in\Y}\bigl(\pair{y^*}{-z}-h(z)\bigr)
+  =g^*(A^*y^*)+h^*(-y^*).
+  \end{aligned}
+\]
+所以这一扰动给出的对偶问题正是
+\[
+  D=\sup_{y^*}-\Phi^*(0,y^*)=\sup_{y^*}-g^*(A^*y^*)-h^*(-y^*).
+\]
+由假设，存在 $x_0\in\dom g$ 使 $Ax_0\in\cont h$，于是 $\Phi(x_0,\cdot)=g(x_0)+h(Ax_0-\cdot)$ 在 $y=0$ 处连续（$g(x_0)$ 有限）。
+由定理~\ref{res:64}，$P=D$，且 $D$ 有极大点。
+\end{proof}
+
+\begin{remark}[用次微分运算证明]
+\label{rem:23}
+若原问题 $P$ 的最小值可以取到，也可以用次微分运算证明定理~\ref{res:69}。为简单起见设 $\Y=\X$，$A=\Id$。
+由弱对偶，只需证明 $D\geqslant P$。设 $x\in\argmin(g+h)$。由限制条件 $\dom g\cap\cont h\neq\varnothing$，可以应用和的次微分公式（定理~\ref{res:40}），得
+\[
+  0\in\partial(g+h)(x)=\partial g(x)+\partial h(x).
+\]
+于是存在 $x^*\in\partial g(x)$ 使 $-x^*\in\partial h(x)$。由 Fenchel--Young 等号情形（定理~\ref{res:61}），
+\[
+  g(x)+g^*(x^*)=\pair{x^*}{x},\qquad h(x)+h^*(-x^*)=\pair{-x^*}{x}.
+\]
+两个等式相加，得 $g(x)+h(x)=-g^*(x^*)-h^*(-x^*)$，故 $P=g(x)+h(x)=-g^*(x^*)-h^*(-x^*)\leqslant D$。
+结合弱对偶即得强对偶 $P=D$，并且 $x^*$ 是对偶问题的极大点。
+\end{remark}
+
+\begin{example}[von Neumann 极小极大定理]
+\label{exa:22}
+设 $\X,\Y$ 是 Hilbert 空间（与各自的对偶等同），$C\subseteq\X$，$E\subseteq\Y$ 是两个非空有界闭凸集，$L:\X\to\Y$ 是连续线性算子。
+（为避免与对偶值 $D$ 混淆，这里把原讲义中的集合 $D$ 记为 $E$。）考虑问题
+\[
+  P=\inf_{x\in C}\ \sup_{y\in E}\ \pair{Lx}{y}.
+\]
+引入 $E$ 的支撑函数 $\sigma_E$，有 $\sup_{y\in E}\pair{Lx}{y}=\sigma_E(Lx)$，所以
+\[
+  P=\inf_{x\in C}\sigma_E(Lx)=\inf_{x\in\X}\iota_C(x)+\sigma_E(Lx).
+\]
+于是可以对 $g=\iota_C$，$h=\sigma_E$，$A=L$ 应用 Fenchel--Rockafellar 定理。由于 $E$ 有界，$\abs{\sigma_E(y)}\leqslant M\norm{y}$，其中 $M=\sup_{z\in E}\norm{z}$；
+因此 $\sigma_E$ 是处处有限的凸函数且在每点附近有上界，由命题~\ref{res:17} 它在 $\Y$ 上处处连续，限制条件“$\exists x_0\in\dom g$ 使 $Lx_0\in\cont h$”显然成立。
+又对 $x\in C$，$\abs{\sigma_E(Lx)}\leqslant M\norm{L}\sup_{x'\in C}\norm{x'}$，故 $P$ 有限。由 Fenchel--Rockafellar 定理，$P=D$，其中
+\[
+  D=\max_{y\in\Y}\ -g^*(L^*y)-h^*(-y).
+\]
+回忆 $g^*=(\iota_C)^*=\sigma_C$（例~\ref{exa:9}），且 $h^*=(\sigma_E)^*=(\iota_E)^{**}=\iota_E$（Fenchel--Moreau 定理，$E$ 非空闭凸），于是
+\[
+  \begin{aligned}
+  D&=\max_{y\in\Y}-\sigma_C(L^*y)-\iota_E(-y)
+   =\max_{y\in\Y}-\sigma_C(-L^*y)-\iota_E(y)\\
+   &=\max_{y\in E}-\sup_{z\in C}\pair{-L^*y}{z}
+   =\max_{y\in E}\ \inf_{z\in C}\pair{y}{Lz}.
+  \end{aligned}
+\]
+（第二个等号是换元 $y\to-y$。）这就是 von Neumann 极小极大定理：
+\[
+  \inf_{x\in C}\ \sup_{y\in E}\ \pair{Lx}{y}=\max_{y\in E}\ \inf_{x\in C}\ \pair{Lx}{y}.
+\]
+\end{example}
+
+\begin{example}[LASSO]
+\label{exa:23}
+再看 LASSO 问题（例~\ref{exa:17}）：设 $A$ 是 $m\times d$ 矩阵，$b\in\R^m$，$\gamma>0$，
+\[
+  P=\min_{x\in\R^d}\ \frac12\norm{Ax-b}_2^2+\gamma\norm{x}_1 .
+\]
+令 $h(y)=\frac12\norm{y-b}_2^2$（$y\in\R^m$），$g(x)=\gamma\norm{x}_1$，问题就化为 Fenchel--Rockafellar 的形式。
+为写出对偶问题，需要计算 $g$ 与 $h$ 的共轭：
+\[
+  \begin{aligned}
+  g^*(x^*)&=\sup_{x\in\R^d}\pair{x^*}{x}-\gamma\norm{x}_1
+  =\gamma\sup_{x\in\R^d}\Bigl(\Bigl\langle\frac{x^*}{\gamma}\Bigm|x\Bigr\rangle-\norm{x}_1\Bigr)\\
+  &=\gamma\,\iota_{[-1,1]^d}\Bigl(\frac{x^*}{\gamma}\Bigr)=\iota_{[-\gamma,\gamma]^d}(x^*),
+  \end{aligned}
+\]
+这里用到了范数的共轭是对偶范数单位球的示性函数（例~\ref{exa:9}），$\norm{\cdot}_1$ 的对偶范数是 $\norm{\cdot}_\infty$。类似地（令 $u=y-b$），
+\[
+  h^*(y^*)=\sup_{y\in\R^m}\pair{y^*}{y}-\frac12\norm{y-b}_2^2
+  =\pair{y^*}{b}+\sup_{u}\Bigl(\pair{y^*}{u}-\frac12\norm{u}^2\Bigr)
+  =\frac12\norm{y^*+b}^2-\frac12\norm{b}^2 .
+\]
+由于 $h$ 处处连续且 $0\leqslant P\leqslant\frac12\norm{b}^2$，定理~\ref{res:69} 适用，对偶问题为
+\[
+  D=\max_{y^*\in\R^m}-g^*(A^\T y^*)-h^*(-y^*)
+  =\max\Bigl\{\frac12\norm{b}^2-\frac12\norm{b-y^*}^2\Bigm| y^*\in\R^m,\ A^\T y^*\in[-\gamma,\gamma]^d\Bigr\}.
+\]
+无约束的非光滑问题 $P$ 由此化为一个带约束的光滑问题 $D$。
+\end{example}
+
+\begin{example}[Rudin--Osher--Fatemi]
+\label{exa:24}
+第二个例子是图像去噪中 Rudin--Osher--Fatemi 模型的抽象形式：给定 $x_0\in\R^d$ 及线性算子 $B:\R^d\to\R^n$（原讲义记为 $D$，例如离散梯度），考虑
+\[
+  P=\min_{x\in\R^d}\ \frac12\norm{x-x_0}_2^2+\gamma\norm{Bx}_1 .
+\]
+取 $g(x)=\frac12\norm{x-x_0}^2$，$h=\gamma\norm{\cdot}_1$（在 $\R^n$ 上），$A=B$，即可应用 Fenchel--Rockafellar 定理（$h$ 处处连续，$P\geqslant0$ 有限）。
+此时 $g^*(x^*)=\pair{x^*}{x_0}+\frac12\norm{x^*}^2=\frac12\norm{x^*+x_0}^2-\frac12\norm{x_0}^2$，$h^*=\iota_{[-\gamma,\gamma]^n}$，对偶问题为
+\[
+  D=\max_{y^*\in\R^n}-g^*(B^\T y^*)-h^*(-y^*)=\max_{y^*\in[-\gamma,\gamma]^n}\ \frac12\norm{x_0}_2^2-\frac12\norm{B^\T y^*+x_0}_2^2 .
+\]
+这个问题比原问题容易得多：目标函数是二次的，约束集是可分的（若干线段的乘积），可以直接用投影梯度法求解。
+求出对偶解 $y^*$ 后，由定理~\ref{res:69}（$P=D$）及命题~\ref{res:68} 的 (i)$\Rightarrow$(iii)，若 $x$ 是 $P$ 的解（$g$ 强凸，故解存在唯一），则
+\[
+  x\in\partial g^*(B^\T y^*)=\{\nabla g^*(B^\T y^*)\}=\{B^\T y^*+x_0\}.
+\]
+于是得到原问题解的显式表达 $x=x_0+B^\T y^*$。
+\end{example}
+
+\begin{example}[多面体上的极小化]
+\label{exa:25}
+设 $A$ 是 $n\times d$ 矩阵，$b\in\R^n$，$g:\R^d\to\R$ 是凸函数（有限值，从而连续）。考虑
+\[
+  P=\inf\{g(x)\mid Ax\leqslant b\},
+\]
+其中 $Ax\leqslant b$ 按分量理解，即对一切 $i$，$(Ax)_i\leqslant b_i$。令 $h=\iota_L$，$L=\{y\in\R^n\mid\forall i,\ y_i\leqslant b_i\}$，问题可写成
+\[
+  P=\inf_{x\in\R^d}g(x)+h(Ax).
+\]
+假设
+\begin{itemize}
+  \item 存在 $x_0\in\R^d$ 使 $Ax_0\in\interior L$（即 $Ax_0<b$）；这蕴含多面体 $K=\{x\in\R^d\mid Ax\leqslant b\}$ 有非空内部；
+  \item $P$ 有限。
+\end{itemize}
+则 Fenchel--Rockafellar 定理的假设成立（$\cont h=\interior L$），于是
+\[
+  P=D=\max_{y^*\in\R^n}-g^*(A^\T y^*)-h^*(-y^*).
+\]
+计算 $h^*$：
+\[
+  h^*(y^*)=\sup_{y\in\R^n}\pair{y^*}{y}-\iota_L(y)=\sup_{y\leqslant b}\pair{y^*}{y}=
+  \begin{cases}
+    \pair{y^*}{b}, & y^*\geqslant0,\\
+    +\infty, & \text{其他}.
+  \end{cases}
+\]
+因此 $-h^*(-y^*)=\pair{y^*}{b}$（当 $y^*\leqslant0$），否则为 $-\infty$，从而
+\[
+  D=\max\bigl\{-g^*(A^\T y^*)+\pair{y^*}{b}\bigm| y^*\in\R^n,\ y^*\leqslant0\bigr\}.
+\]
+若 $g(x)=\pair{c^*}{x}$，$P$ 是线性规划问题，我们重新得到例~\ref{exa:21} 的线性规划对偶（附带了存在 $x_0$ 使 $Ax_0<b$ 的假设，与例~\ref{exa:21} 相同；对线性规划而言这一假设其实是多余的）。
+事实上，由例~\ref{exa:9}，$g^*=\iota_{\{c^*\}}$，于是
+\[
+  D=\max\bigl\{\pair{y^*}{b}\bigm| y^*\in\R^n,\ y^*\leqslant0,\ A^\T y^*=c^*\bigr\}.
+\]
+\end{example}
+
+% ------------------------------------------------------------
+\section{应用：最优输运中的对偶}
+
+设 $\Omega$ 是 $\R^d$ 的紧子集，记
+\begin{itemize}
+  \item $\mathcal C^0(\Omega)$：$\Omega$ 上连续函数构成的空间，带上确界范数 $\norm{\cdot}_\infty$；
+  \item $\mathcal M(\Omega)=(\mathcal C^0(\Omega))^*$：$\Omega$ 上有限（带符号）测度的空间，带弱$*$拓扑：测度序列 $(\mu_n)_{n\geqslant0}$ 弱$*$收敛到 $\mu$ 是指
+  \[
+    \forall\phi\in\mathcal C^0(\Omega),\qquad\lim_{n\to+\infty}\pair{\mu_n}{\phi}=\pair{\mu}{\phi};
+  \]
+  \item $\mathcal M^+(\Omega)$：非负测度的集合，即对一切非负检验函数 $\phi\in\mathcal C^0(\Omega)$ 都有 $\pair{\mu}{\phi}\geqslant0$ 的测度 $\mu$；
+  \item $\mathcal P(\Omega)$：概率测度的集合，即满足 $\pair{\mu}{1}=1$ 的非负测度 $\mu$。
+\end{itemize}
+
+设 $\Omega,\Omega'$ 是 $\R^d$ 的两个紧子集。对 $(\phi,\psi)\in\X:=\mathcal C^0(\Omega)\times\mathcal C^0(\Omega')$，记
+\[
+  \phi\oplus\psi:(x,y)\in\Omega\times\Omega'\mapsto\phi(x)+\psi(y).
+\]
+给定\emph{代价函数}（cost function）$c\in\Y:=\mathcal C^0(\Omega\times\Omega')$ 以及两个概率测度 $\mu\in\mathcal P(\Omega)$，$\nu\in\mathcal P(\Omega')$，考虑优化问题
+\[
+  S=\sup_{\substack{(\phi,\psi)\in\X\\ \phi\oplus\psi\leqslant c}}\ \pair{\mu}{\phi}+\pair{\nu}{\psi}.
+\]
+它可以写成 $S=-P$，其中 $P=\inf_{(\phi,\psi)\in\X}\Phi((\phi,\psi),0)$，扰动函数为
+\[
+  \Phi:\X\times\Y\to\Rbar,\qquad
+  ((\phi,\psi),p)\mapsto
+  \begin{cases}
+    -\bigl(\pair{\mu}{\phi}+\pair{\nu}{\psi}\bigr), & \phi\oplus\psi\leqslant c-p,\\
+    +\infty, & \text{其他}.
+  \end{cases}
+\]
+
+\emph{验证强对偶定理的假设（补充）。}$\Phi$ 是凸的（约束集凸，目标线性），下半连续（目标连续，约束集 $\{((\phi,\psi),p)\mid c-p-\phi\oplus\psi\geqslant0\}$ 在 $\X\times\Y$ 中闭）。
+记 $\phi_0\equiv-\norm{c}_\infty-1$，$\psi_0\equiv0$。当 $\norm{p}_\infty\leqslant1$ 时 $\phi_0\oplus\psi_0\leqslant c-p$，
+故 $\Phi((\phi_0,\psi_0),\cdot)$ 在 $p=0$ 附近为常数，从而在 $0$ 处连续，且 $\Phi$ 正常。
+另外，若 $\phi\oplus\psi\leqslant c$，则 $\max\phi+\max\psi\leqslant\norm{c}_\infty$，于是 $\pair{\mu}{\phi}+\pair{\nu}{\psi}\leqslant\max\phi+\max\psi\leqslant\norm{c}_\infty$；
+结合可行点 $(\phi_0,\psi_0)$ 知 $P$ 有限。所以定理~\ref{res:64} 适用。
+
+相应的对偶问题为 $D=\sup_{\gamma\in\Ys}-\Phi^*((0,0),\gamma)$，其中
+\[
+  \begin{aligned}
+  \Phi^*((0,0),\gamma)&=\sup_{((\phi,\psi),p)}\ \pair{(0,0)}{(\phi,\psi)}+\pair{\gamma}{p}-\Phi((\phi,\psi),p)\\
+  &=\sup_{\substack{((\phi,\psi),p)\\ \phi\oplus\psi\leqslant c-p}}\ \pair{\gamma}{p}+\pair{\mu}{\phi}+\pair{\nu}{\psi}.
+  \end{aligned}
+\]
+\begin{itemize}
+  \item 若 $\gamma\notin\mathcal M^+(\Omega\times\Omega')$，则存在非负的 $q\in\Y$ 使 $\pair{\gamma}{q}<0$。取 $(\phi,\psi)=(\phi_0,\psi_0)$，$p=-tq$（$t\geqslant0$，约束仍满足），
+  得值 $-t\pair{\gamma}{q}+\text{常数}\to+\infty$，故 $\Phi^*((0,0),\gamma)=+\infty$。
+  \item 若 $\gamma\in\mathcal M^+(\Omega\times\Omega')$，则对固定的 $(\phi,\psi)$，$p\leqslant c-\phi\oplus\psi$ 蕴含 $\pair{\gamma}{p}\leqslant\pair{\gamma}{c-\phi\oplus\psi}$，且 $p=c-\phi\oplus\psi$ 时取等号。于是
+  \[
+    \begin{aligned}
+    \Phi^*((0,0),\gamma)&=\sup_{(\phi,\psi)\in\X}\ \pair{\gamma}{c-\phi\oplus\psi}+\pair{\mu}{\phi}+\pair{\nu}{\psi}\\
+    &=\pair{\gamma}{c}+\sup_{(\phi,\psi)\in\X}\Bigl(\pair{\mu}{\phi}+\pair{\nu}{\psi}-\pair{\gamma}{\phi\oplus\psi}\Bigr).
+    \end{aligned}
+  \]
+  最后的上确界中的表达式关于 $(\phi,\psi)$ 是线性的，所以它等于 $0$（若该线性形式恒为零）或 $+\infty$（否则）。
+\end{itemize}
+综上，
+\[
+  \Phi^*((0,0),\gamma)=
+  \begin{cases}
+    \pair{c}{\gamma}, & \gamma\in\Gamma(\mu,\nu),\\
+    +\infty, & \text{其他},
+  \end{cases}
+\]
+其中 $\Gamma(\mu,\nu)$ 是 $\mu$ 与 $\nu$ 之间的\emph{输运方案}（transport plan）的集合，即满足
+\[
+  \forall(\phi,\psi)\in\X,\qquad\pair{\gamma}{\phi\oplus\psi}=\pair{\mu}{\phi}+\pair{\nu}{\psi}
+\]
+的非负测度 $\gamma\in\mathcal M^+(\Omega\times\Omega')$（等价地，$\gamma$ 的两个边缘分布分别是 $\mu$ 和 $\nu$）。
+由强对偶定理，我们证明了 \emph{Kantorovich 对偶}（Kantorovich duality）：
+\[
+  \sup_{\substack{(\phi,\psi)\in\X\\ \phi\oplus\psi\leqslant c}}\pair{\mu}{\phi}+\pair{\nu}{\psi}
+  =-\inf_{(\phi,\psi)\in\X}\Phi((\phi,\psi),0)
+  =-\max_{\gamma\in\Ys}-\Phi^*((0,0),\gamma)
+  =\min_{\gamma\in\Gamma(\mu,\nu)}\pair{\gamma}{c}.
+\]
+特别地，右端的最优输运问题总有最优输运方案。
+
+\begin{keypoints}
+  \item 扰动框架：$P=\inf_x\Phi(x,0)$，$D=\sup_{y^*}-\Phi^*(0,y^*)$；Fenchel--Young 给出弱对偶 $P\geqslant D$，最优对 $(x,y^*)$ 由 $(0,y^*)\in\partial\Phi(x,0)$ 刻画。
+  \item 值函数 $v(y)=\inf_x\Phi(x,y)$ 是凸函数，$v^*=\Phi^*(0,\cdot)$，$P=v(0)$，$D=v^{**}(0)$；强对偶的关键是 $\partial v(0)\neq\varnothing$。
+  \item 强对偶定理：$P$ 有限且 $\exists x_0$，$0\in\cont\Phi(x_0,\cdot)$（$\Phi(x_0,0)<+\infty$ 且 $\Phi(x_0,\cdot)$ 在 $0$ 处连续）$\Rightarrow$ $P=D$，对偶问题可解，且 $\argmax D=\partial v(0)$。
+  \item Lagrange 对偶：扰动约束右端，得 $D=\sup_{\lambda\geqslant0}\inf_xL(x,\lambda)$；Slater 型条件 \eqref{eq:16} 下强对偶成立，原—对偶解由 KKT 条件（可行、极小化 Lagrange 函数、互补松弛）刻画。
+  \item Fenchel--Rockafellar：$\inf g+h\circ A=\max_{y^*}-g^*(A^*y^*)-h^*(-y^*)$，条件 $P$ 有限且 $\exists x_0\in\dom g$，$Ax_0\in\cont h$；最优性条件 $A^*y^*\in\partial g(x)$，$-y^*\in\partial h(Ax)$。
+  \item 典型应用：线性规划对偶、von Neumann 极小极大定理、LASSO 与 ROF 的对偶（从对偶解恢复原解 $x=x_0+B^\T y^*$）、Kantorovich 对偶。
+\end{keypoints}

@@ -1,0 +1,361 @@
+% 第 4 章：邻近算子（据原讲义第 42--46 页整理）
+\chapter{邻近算子}
+\label{ch:ch04}
+\providecommand{\Fix}{\operatorname{Fix}}
+
+本章总假设 $\X$ 是 \emph{Hilbert 空间}，并通过 Riesz 表示把它与对偶空间等同：$\Xs\simeq\X$，
+对偶配对 $\pair{x^*}{x}$ 就是内积。本章引入\emph{邻近算子}（proximal operator），
+它是许多求解非光滑凸优化问题的一阶算法的基本构件。
+
+回忆：函数 $f:\X\to\Rbar$ 称为\emph{强制的}（coercive），如果 $\lim_{\norm{x}\to\infty}f(x)=+\infty$。
+
+% ------------------------------------------------------------
+\section{定义与基本性质}
+
+\begin{definition}[邻近算子]
+\label{def:26}
+设 $f\in\Gammaz(\X)$。$f$ 的\emph{邻近算子}定义为
+\[
+  \prox_f(x)=\argmin_{y\in\X}\ \frac12\norm{x-y}^2+f(y),\qquad x\in\X .
+\]
+对 $\gamma>0$，$\gamma f$ 仍属于 $\Gammaz(\X)$，相应的邻近算子记为 $\prox_{\gamma f}$。
+命题~\ref{res:57} 说明上式右端的极小点存在且唯一，所以 $\prox_f$ 是 $\X\to\X$ 的单值映射。
+\end{definition}
+
+\begin{example}[投影]
+\label{exa:18}
+设 $K$ 是 $\X$ 的非空闭凸子集，$f=\iota_K$。由于 $\gamma\iota_K=\iota_K$，对任意 $\gamma>0$，
+\[
+  \prox_{\gamma\iota_K}(x)=\argmin_{y\in K}\tfrac12\norm{x-y}^2=p_K(x),
+\]
+即到 $K$ 上的正交投影。因此邻近算子是凸集上投影的推广，并继承了投影的一些性质（见命题~\ref{res:58}）。
+\end{example}
+
+\begin{proposition}
+\label{res:57}
+设 $f\in\Gammaz(\X)$，$\gamma>0$，$x\in\X$。则
+\begin{enumerate}[label=(\roman*)]
+  \item 极小化问题
+  \[
+    \min_{y\in\X}\ \frac1{2\gamma}\norm{x-y}^2+f(y)
+  \]
+  有唯一解，所以 $\prox_{\gamma f}(x)$ 有定义（注意此问题与定义~\ref{def:26} 中 $\gamma f$ 的问题只差一个正因子 $1/\gamma$，极小点相同）；
+  \item 点 $p=\prox_{\gamma f}(x)$ 由关系式 $x\in(\Id+\gamma\partial f)(p)$ 刻画，即 $x-p\in\gamma\,\partial f(p)$；
+  \item $x$ 是 $f$ 在 $\X$ 上的极小点，当且仅当 $x=\prox_{\gamma f}(x)$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+记 $g=\frac1{2\gamma}\norm{x-\cdot}^2$，$h=f+g$。
+
+(i) $g$ 是连续凸函数，故 $h\in\Gammaz(\X)$（$h$ 正常是因为 $\dom h=\dom f\neq\varnothing$）。
+由于 $f\in\Gammaz(\X)$，$f$ 等于其仿射下界函数（affine minorant）的上确界（命题~\ref{res:26}），特别地 $f$ 至少有一个仿射下界函数：
+存在 $x^*\in\X$，$\alpha\in\R$ 使 $f\geqslant\pair{x^*}{\cdot}+\alpha$。于是
+\[
+  h=f+g\geqslant\pair{x^*}{\cdot}+\alpha+\frac1{2\gamma}\norm{x-\cdot}^2 ,
+\]
+右端当 $\norm{y}\to\infty$ 时以二次速度趋于 $+\infty$（线性项至多 $\norm{x^*}\norm{y}$），所以 $h$ 是强制的。
+又 $g$ 严格凸、$f$ 凸，故 $h$ 严格凸。由命题~\ref{res:30}，$h$ 有唯一极小点。%
+\footnote{命题~\ref{res:30} 原文假设空间可分且自反。其存在性部分只用到自反性：自反空间中有界闭凸集是弱紧的，
+凸下半连续函数是弱下半连续的；而 Hilbert 空间总是自反的，所以这里不需要可分性。}
+
+(ii) 因为 $\cont(g)=\X$ 且 $\dom f\neq\varnothing$，满足 Moreau--Rockafellar 定理（定理~\ref{res:40}）的限制条件，
+所以 $\partial(f+g)=\partial f+\partial g$。又 $g$ 可微，$\partial g(p)=\{\frac1\gamma(p-x)\}$。由 Fermat 法则，
+$p=\prox_{\gamma f}(x)$ 当且仅当
+\[
+  0\in\partial(f+g)(p)=\partial f(p)+\frac1\gamma(p-x)
+  \iff x-p\in\gamma\,\partial f(p)
+  \iff x\in(\Id+\gamma\partial f)(p).
+\]
+
+(iii) $x$ 是 $f$ 的极小点 $\iff 0\in\partial f(x)\iff 0\in\gamma\partial f(x)=\partial(\gamma f)(x)
+\iff x\in(\Id+\gamma\partial f)(x)$，由 (ii) 这又等价于 $x=\prox_{\gamma f}(x)$。
+\end{proof}
+
+\begin{example}[$\ell^1$ 范数的邻近算子]
+\label{exa:19}
+设 $h:\R\to\R$，$h(x)=\abs{x}$。则
+\[
+  \partial h(y)=
+  \begin{cases}
+    \{-1\}, & y<0,\\
+    [-1,1], & y=0,\\
+    \{1\}, & y>0,
+  \end{cases}
+  \qquad\Longrightarrow\qquad
+  (\Id+\gamma\partial h)(y)=
+  \begin{cases}
+    \{y-\gamma\}, & y<0,\\
+    [-\gamma,\gamma], & y=0,\\
+    \{y+\gamma\}, & y>0 .
+  \end{cases}
+\]
+由命题~\ref{res:57}(ii)，$p=\prox_{\gamma h}(x)$ 当且仅当 $x\in(\Id+\gamma\partial h)(p)$。逐一检查三种情形：
+$p>0$ 时 $x=p+\gamma$，即 $x>\gamma$；$p<0$ 时 $x=p-\gamma<-\gamma$；$p=0$ 时 $x\in[-\gamma,\gamma]$。于是
+\[
+  \prox_{\gamma h}(x)=
+  \begin{cases}
+    x-\gamma, & x\geqslant\gamma,\\
+    0, & -\gamma\leqslant x\leqslant\gamma,\\
+    x+\gamma, & x\leqslant-\gamma .
+  \end{cases}
+\]
+这正是例~\ref{exa:17} 中已经出现过的\emph{软阈值算子}（soft thresholding operator）
+\[
+  s_\gamma(r)=
+  \begin{cases}
+    r-\gamma\operatorname{sgn}(r), & \abs{r}\geqslant\gamma,\\
+    0, & \text{其他}.
+  \end{cases}
+\]
+若 $\X=\R^n$，$f(x)=\norm{x}_1=\sum_i\abs{x_i}$，则目标函数关于坐标可分：
+\[
+  \min_{y\in\R^n}\frac1{2\gamma}\norm{x-y}_2^2+f(y)=\sum_{1\leqslant i\leqslant n}\ \min_{y_i\in\R}\Bigl(\frac1{2\gamma}(x_i-y_i)^2+\abs{y_i}\Bigr),
+\]
+各坐标分别取极小，得 $\prox_{\gamma f}(x)=(s_\gamma(x_1),\dots,s_\gamma(x_n))$。
+\end{example}
+
+% ------------------------------------------------------------
+\section{邻近点算法}
+
+由命题~\ref{res:57}(iii)，极小化 $f$ 等价于寻找邻近算子的不动点。这启发了下面的极小化算法：
+固定 $\gamma>0$，
+\begin{equation}
+  \begin{cases}
+    x_0\in\X,\\
+    x_{n+1}=\prox_{\gamma f}(x_n),\quad n\geqslant 0 .
+  \end{cases}
+  \tag{PPA}\label{new:ch04-ppa}
+\end{equation}
+该算法称为\emph{邻近点算法}（proximal point algorithm, PPA），由 Martinet 于 1970 年代提出，后由 Rockafellar 推广。
+在证明它收敛之前，先介绍邻近算子的一个非常有用的性质。
+
+\begin{definition}[牢固非扩张]
+\label{def:27}
+映射 $T:\X\to\X$ 称为\emph{牢固非扩张的}（firmly non-expansive），如果它满足下列两个等价条件之一：
+\begin{enumerate}[label=(\roman*)]
+  \item $\forall x,y\in\X$，$\norm{T(x)-T(y)}^2\leqslant\pair{T(x)-T(y)}{x-y}$；
+  \item $\forall x,y\in\X$，$\norm{T(x)-T(y)}^2\leqslant\norm{x-y}^2-\norm{(x-T(x))-(y-T(y))}^2$。
+\end{enumerate}
+\end{definition}
+
+两个条件等价，只需展开
+\[
+  \norm{(x-T(x))-(y-T(y))}^2=\norm{x-y}^2+\norm{T(x)-T(y)}^2-2\pair{x-y}{T(x)-T(y)} ,
+\]
+代入 (ii) 后整理即得 (i)，反之亦然。由 (ii) 立即看出牢固非扩张映射是 $1$-Lipschitz 的（即\emph{非扩张的}），
+但牢固非扩张是比 $1$-Lipschitz 更强的性质。
+
+\begin{proposition}
+\label{res:58}
+设 $f\in\Gammaz(\X)$，$\gamma>0$。则
+\begin{enumerate}[label=(\roman*)]
+  \item 点 $p=\prox_{\gamma f}(x)$ 由下面的不等式刻画：
+  \[
+    \forall q\in\X,\qquad \frac1\gamma\pair{x-p}{q-p}\leqslant f(q)-f(p);
+  \]
+  \item 映射 $T:x\mapsto\prox_{\gamma f}(x)$ 是牢固非扩张的。
+\end{enumerate}
+\end{proposition}
+
+(i) 推广了凸集上投影的经典刻画：取 $f=\iota_K$ 即得 $p=p_K(x)\iff p\in K$ 且 $\forall q\in K$，$\pair{x-p}{q-p}\leqslant0$。
+
+\begin{proof}
+(i) 由命题~\ref{res:57}(ii)，$p=\prox_{\gamma f}(x)$ 当且仅当 $x\in(\Id+\gamma\partial f)(p)$，即 $\frac1\gamma(x-p)\in\partial f(p)$。
+按次微分的定义，这等价于
+\[
+  \forall q\in\X,\qquad f(q)\geqslant f(p)+\frac1\gamma\pair{x-p}{q-p}.
+\]
+
+(ii) 取 $x_1,x_2\in\X$，令 $p_i=\prox_{\gamma f}(x_i)$（由 (i)，$p_i\in\dom\partial f\subseteq\dom f$，故 $f(p_i)$ 有限）。
+在 (i) 的不等式中先取 $x=x_1$，$p=p_1$，$q=p_2$，再交换角色，得
+\[
+  f(p_2)-f(p_1)\geqslant\frac1\gamma\pair{x_1-p_1}{p_2-p_1},\qquad
+  f(p_1)-f(p_2)\geqslant\frac1\gamma\pair{x_2-p_2}{p_1-p_2}.
+\]
+两式相加并乘以 $\gamma>0$：
+\[
+  0\geqslant\pair{(x_1-p_1)-(x_2-p_2)}{p_2-p_1}=\norm{p_1-p_2}^2-\pair{x_1-x_2}{p_1-p_2},
+\]
+即 $\norm{p_1-p_2}^2\leqslant\pair{p_1-p_2}{x_1-x_2}$，这正是定义~\ref{def:27}(i)。
+\end{proof}
+
+由于 $T=\prox_{\gamma f}$ 一般只是 $1$-Lipschitz 的，不能用 Picard（Banach）不动点定理来证明邻近点算法收敛
+（那需要 $T$ 是 $k$-Lipschitz 的且 $k<1$）。但牢固非扩张性足以保证 PPA 收敛。
+
+\begin{theorem}[Martinet]
+\label{res:59}
+设 $f\in\Gammaz(\X)$ 是强制的，即 $\lim_{\norm{x}\to+\infty}f(x)=+\infty$，$\gamma>0$。
+则邻近点算法 \eqref{new:ch04-ppa} 生成的序列弱收敛到 $f$ 的一个全局极小点。
+\end{theorem}
+
+该定理是下面关于牢固非扩张映射的定理的直接推论，其中取 $T=\prox_{\gamma f}$。
+事实上，由假设（及命题~\ref{res:30}），$f$ 有极小点；由命题~\ref{res:57}(iii)，$f$ 的极小点集恰为 $T$ 的不动点集，故
+\[
+  \Fix(T)=\{x\in\X\mid T(x)=x\}=\argmin_\X f\neq\varnothing ,
+\]
+且 $T$ 由命题~\ref{res:58}(ii) 是牢固非扩张的。定理~\ref{res:60} 给出 $(x_n)$ 弱收敛到 $\Fix(T)$ 中一点，即 $f$ 的一个极小点。
+
+\begin{theorem}[Martinet]
+\label{res:60}
+设 $T:\X\to\X$ 牢固非扩张且 $\Fix(T)\neq\varnothing$。则由 $x_{n+1}=T(x_n)$ 定义的序列弱收敛到 $T$ 的一个不动点。
+\end{theorem}
+
+把该定理放到 $\alpha$-平均算子（$\alpha$-averaged operator）不动点迭代的一般框架中的现代证明，可参见 Bauschke--Combettes 的专著。
+下面给出 Martinet 的原始证明，它是自足的。
+
+\begin{proof}
+\emph{第一步：$(x_n)$ 有界，且 $\lim_{n\to\infty}\norm{x_n-x_{n+1}}=0$。}
+取 $c\in\Fix(T)$。由牢固非扩张性（定义~\ref{def:27}(ii)），
+\[
+  \norm{Tx_n-Tc}^2\leqslant\norm{x_n-c}^2-\norm{(x_n-T(x_n))-(c-T(c))}^2 .
+\]
+利用 $Tx_n=x_{n+1}$ 和 $T(c)=c$，得
+\begin{equation*}
+  \norm{x_{n+1}-c}^2\leqslant\norm{x_n-c}^2-\norm{x_n-x_{n+1}}^2 .
+\end{equation*}
+所以 $(\norm{x_n-c})_{n}$ 单调递减且有下界 $0$，从而收敛；特别地 $(x_n)$ 有界（$\norm{x_n}\leqslant\norm{c}+\norm{x_0-c}$）。于是
+\[
+  \norm{x_n-x_{n+1}}^2\leqslant\norm{x_n-c}^2-\norm{x_{n+1}-c}^2\xrightarrow[n\to+\infty]{}0 .
+\]
+
+\emph{第二步：$(x_n)$ 的每个弱聚点 $\bar x$ 都是 $T$ 的不动点。}
+设子列 $x_{n_k}\rightharpoonup\bar x$。对任意 $n$，一方面
+\[
+  \norm{x_n-T(\bar x)}^2=\norm{x_n-\bar x+\bar x-T(\bar x)}^2
+  =\norm{x_n-\bar x}^2+\norm{\bar x-T(\bar x)}^2+2\pair{x_n-\bar x}{\bar x-T(\bar x)} ;
+\]
+另一方面，由 $x_{n+1}=T(x_n)$ 及 $T$ 是 $1$-Lipschitz 的，
+\[
+  \norm{x_n-T(\bar x)}\leqslant\norm{x_n-x_{n+1}}+\norm{T(x_n)-T(\bar x)}\leqslant\norm{x_n-x_{n+1}}+\norm{x_n-\bar x}.
+\]
+两者结合得
+\[
+  \begin{aligned}
+  \norm{\bar x-T(\bar x)}^2
+  &=\norm{x_n-T(\bar x)}^2-\norm{x_n-\bar x}^2-2\pair{x_n-\bar x}{\bar x-T(\bar x)}\\
+  &\leqslant\bigl(\norm{x_n-x_{n+1}}+\norm{x_n-\bar x}\bigr)^2-\norm{x_n-\bar x}^2-2\pair{x_n-\bar x}{\bar x-T(\bar x)}\\
+  &=\norm{x_n-x_{n+1}}^2+2\norm{x_n-x_{n+1}}\,\norm{x_n-\bar x}-2\pair{x_n-\bar x}{\bar x-T(\bar x)} .
+  \end{aligned}
+\]
+沿子列 $n=n_k$ 令 $k\to\infty$：由第一步，前两项趋于 $0$（$\norm{x_n-\bar x}$ 有界）；
+由 $x_{n_k}\rightharpoonup\bar x$，最后一项趋于 $0$。故 $\norm{\bar x-T(\bar x)}=0$，即 $\bar x\in\Fix(T)$。
+
+\emph{第三步：弱聚点唯一。}
+设 $c_1,c_2$ 是两个弱聚点，由第二步它们都属于 $\Fix(T)$。由第一步，$\norm{x_{n+1}-c_i}^2\leqslant\norm{x_n-c_i}^2$，故序列
+\[
+  \norm{x_n}^2-2\pair{x_n}{c_i}=\norm{x_n-c_i}^2-\norm{c_i}^2
+\]
+单调递减且有下界，从而收敛（$i=1,2$）。两者相减，
+\[
+  \bigl(\norm{x_n}^2-2\pair{x_n}{c_1}\bigr)-\bigl(\norm{x_n}^2-2\pair{x_n}{c_2}\bigr)=-2\pair{x_n}{c_1-c_2}
+\]
+收敛，记 $\ell=\lim_n\pair{x_n}{c_1-c_2}$。分别沿弱收敛到 $c_1$、$c_2$ 的子列取极限，得
+\[
+  \pair{c_1}{c_1-c_2}=\ell=\pair{c_2}{c_1-c_2},
+\]
+相减得 $\norm{c_1-c_2}^2=0$，即 $c_1=c_2$。
+
+\emph{结论。}$(x_n)$ 有界；Hilbert 空间中有界序列的每个子列都有弱收敛子列，而所有弱聚点都等于同一点 $\bar x\in\Fix(T)$。
+若 $x_n\not\rightharpoonup\bar x$，则存在 $y\in\X$、$\varepsilon>0$ 和子列使 $\abs{\pair{y}{x_{n_k}-\bar x}}\geqslant\varepsilon$，
+而该子列又有弱收敛到 $\bar x$ 的子列，矛盾。故 $(x_n)$ 弱收敛到 $\bar x$。
+\end{proof}
+
+% ------------------------------------------------------------
+\section{共轭函数的邻近算子}
+
+本节的定理~\ref{res:61} 只用到对偶配对，对一般空间 $\X$ 成立；推论~\ref{res:62} 需要 Hilbert 空间。
+
+\begin{theorem}[次微分与共轭]
+\label{res:61}
+设 $f:\X\to\Rbar$ 正常。则对任意 $x\in\X$，$x^*\in\Xs$，下列两条等价：
+\begin{enumerate}[label=(\roman*)]
+  \item $x^*\in\partial f(x)$；
+  \item $f(x)+f^*(x^*)=\pair{x^*}{x}$。
+\end{enumerate}
+若进一步 $f\in\Gammaz(\X)$，则 (i)(ii) 还等价于
+\begin{enumerate}[label=(\roman*),start=3]
+  \item $x\in\partial f^*(x^*)$。
+\end{enumerate}
+\end{theorem}
+
+条件 (ii) 即 \emph{Fenchel--Young 不等式} $f(x)+f^*(x^*)\geqslant\pair{x^*}{x}$ 的等号情形。
+
+\begin{proof}
+(i)$\iff$(ii)。两边都蕴含 $f(x)\in\R$：(i) 时按次微分的定义 $x\in\dom f$；(ii) 时因 $f$ 正常，
+$f(x)>-\infty$ 且 $f^*(x^*)>-\infty$，二者之和等于实数，故都有限。于是在 $f(x)$ 有限的前提下，
+\[
+  \begin{aligned}
+  x^*\in\partial f(x)
+  &\iff\forall y\in\X,\ f(y)\geqslant f(x)+\pair{x^*}{y-x}\\
+  &\iff\forall y\in\X,\ \pair{x^*}{y}-f(y)\leqslant\pair{x^*}{x}-f(x)\\
+  &\iff f^*(x^*)=\sup_{y\in\X}\bigl(\pair{x^*}{y}-f(y)\bigr)\leqslant\pair{x^*}{x}-f(x)\\
+  &\iff f^*(x^*)+f(x)\leqslant\pair{x^*}{x}.
+  \end{aligned}
+\]
+而 Fenchel--Young 不等式说明 $f^*(x^*)+f(x)\geqslant\pair{x^*}{x}$ 总成立，故得 (i) 与 (ii) 等价。
+
+(i)$\iff$(iii)。因 $f\in\Gammaz(\X)$，$f^*\in\Gammaz(\Xs)$ 正常，且由 Fenchel--Moreau 定理（定理~\ref{res:28}）$f^{**}=f$。于是
+\[
+  x^*\in\partial f(x)\iff f(x)+f^*(x^*)=\pair{x^*}{x}
+  \iff f^{**}(x)+f^*(x^*)=\pair{x^*}{x}
+  \iff x\in\partial f^*(x^*),
+\]
+最后一步是把已证的 (i)$\iff$(ii) 应用于正常函数 $f^*$（这里 $\partial f^*(x^*)$ 理解为满足
+$\forall y^*,\ f^*(y^*)\geqslant f^*(x^*)+\pair{y^*-x^*}{x}$ 的 $x\in\X$ 之集）。
+\end{proof}
+
+\begin{example}[Gâteaux 可微的一个充分条件]
+\label{exa:20}
+设 $f\in\Gammaz(\X)$。若 $f^*$ 严格凸，则 $f$ 在 $\cont(f)$ 上 Gâteaux 可微。
+\end{example}
+
+\begin{proof}
+设 $x\in\cont(f)$。由定理~\ref{res:38}，$\partial f(x)\neq\varnothing$，且 $f$ 在 $x$ 处 Gâteaux 可微当且仅当 $\partial f(x)$ 是单点集；
+所以只需证明 $\operatorname{Card}\partial f(x)\leqslant1$。反设存在 $x_0^*\neq x_1^*$ 都属于 $\partial f(x)$。
+由 $\partial f(x)$ 的凸性，对一切 $t\in[0,1]$，$x_t^*=(1-t)x_0^*+tx_1^*\in\partial f(x)$。由定理~\ref{res:61}，
+\[
+  \forall t\in[0,1],\qquad f^*(x_t^*)=\pair{x_t^*}{x}-f(x),
+\]
+右端是 $t$ 的仿射函数（且有限，故 $[x_0^*,x_1^*]\subseteq\dom f^*$）。因此 $f^*$ 在线段 $[x_0^*,x_1^*]$ 上是仿射的，不是严格凸的，矛盾。
+\end{proof}
+
+\begin{corollary}[共轭函数的邻近算子]
+\label{res:62}
+设 $\X$ 是 Hilbert 空间，$f\in\Gammaz(\X)$。则
+\begin{equation}
+  \label{eq:15}
+  \forall x\in\X,\qquad \prox_f(x)+\prox_{f^*}(x)=x .
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+注意 $f^*\in\Gammaz(\X)$，故 $\prox_{f^*}$ 有定义。令 $p=\prox_f(x)$。由命题~\ref{res:57}(ii)（取 $\gamma=1$）及定理~\ref{res:61}，
+\[
+  \begin{aligned}
+  p=\prox_f(x)\iff x\in(\Id+\partial f)(p)
+  &\iff x-p\in\partial f(p)\\
+  &\iff p\in\partial f^*(x-p)\\
+  &\iff x\in(x-p)+\partial f^*(x-p)=(\Id+\partial f^*)(x-p)\\
+  &\iff x-p=\prox_{f^*}(x).
+  \end{aligned}
+\]
+最后一步再次用命题~\ref{res:57}(ii)，这次应用于 $f^*$。
+\end{proof}
+
+\begin{remark}
+\label{rem:22}
+式 \eqref{eq:15} 推广了熟知的分解 $x=\operatorname{proj}_Vx+\operatorname{proj}_{V^\perp}x$，其中 $V\subseteq\X$ 是闭子空间，
+$V^\perp$ 是它的正交补：取 $f=\iota_V$，则 $f^*=\sigma_V=\iota_{V^\perp}$。
+关于把这个公式推广到凸锥的情形（Moreau 分解），见练习~\ref{exo:B5-27}。
+\end{remark}
+
+\begin{keypoints}
+  \item 邻近算子 $\prox_{\gamma f}(x)=\argmin_y\frac1{2\gamma}\norm{x-y}^2+f(y)$ 对 $f\in\Gammaz(\X)$ 总是良定义的单值映射，是投影 $p_K=\prox_{\iota_K}$ 的推广。
+  \item 刻画：$p=\prox_{\gamma f}(x)\iff x-p\in\gamma\partial f(p)\iff\forall q,\ \frac1\gamma\pair{x-p}{q-p}\leqslant f(q)-f(p)$；$\argmin f=\Fix(\prox_{\gamma f})$。
+  \item $\ell^1$ 范数的邻近算子是逐坐标的软阈值 $s_\gamma$。
+  \item $\prox_{\gamma f}$ 牢固非扩张：$\norm{Tx-Ty}^2\leqslant\pair{Tx-Ty}{x-y}$，从而 $1$-Lipschitz。
+  \item Martinet 定理：牢固非扩张且有不动点的 $T$，其迭代弱收敛到不动点；因此 PPA 弱收敛到 $f$ 的极小点。证明三步：有界且步长趋零、弱聚点是不动点、弱聚点唯一。
+  \item Fenchel--Young 等号情形：$x^*\in\partial f(x)\iff f(x)+f^*(x^*)=\pair{x^*}{x}\iff x\in\partial f^*(x^*)$（后者需 $f\in\Gammaz$）。
+  \item Moreau 恒等式：$\prox_f+\prox_{f^*}=\Id$。
+\end{keypoints}

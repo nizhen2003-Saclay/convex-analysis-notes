@@ -1,0 +1,103 @@
+% ===== 导言区：宏包、环境与宏定义（沿用线性规划笔记的框架） =====
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{environ}
+\usepackage[colorlinks=true,allcolors=black]{hyperref}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+% ---------- 是否显示练习解答（true/false） ----------
+\newif\ifshowsolutions
+\showsolutionstrue
+
+% ---------- 定理类环境（按章编号，共用计数器） ----------
+\theoremstyle{definition}  % 正文直立，中文不宜斜体
+\newtheorem{theorem}{定理}[chapter]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+
+\renewcommand{\proofname}{证明}
+
+% ---------- 练习与解答 ----------
+% 练习按章编号；可选参数写来源，如 \begin{exercise}[原讲义 B.1 第 2 题]
+\newcounter{exercise}[chapter]
+\renewcommand{\theexercise}{\thechapter.\arabic{exercise}}
+\newenvironment{exercise}[1][]{%
+  \refstepcounter{exercise}%
+  \par\medskip\noindent\textbf{练习 \theexercise}%
+  \if\relax\detokenize{#1}\relax\else（#1）\fi\quad
+}{\par\medskip}
+\NewEnviron{solution}{%
+  \ifshowsolutions
+    \par\smallskip\noindent\textbf{解答}\quad\BODY\par\medskip
+  \fi
+}
+
+% ---------- 待填充占位 ----------
+\newcommand{\todo}[1]{{\color{red}\textbf{【待补充】}#1}}
+
+% ---------- 常用数学宏 ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rbar}{\overline{\R}}            % R ∪ {+∞}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\Xs}{\mathcal{X}^{*}}
+\newcommand{\Ys}{\mathcal{Y}^{*}}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\pair}[2]{\langle #1 \mid #2\rangle}  % 对偶配对 <x^*|x>
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\abs}[1]{\lvert #1\rvert}
+\newcommand{\Gammaz}{\Gamma_{0}}            % 正常下半连续凸函数类
+\DeclareMathOperator{\conv}{conv}
+\newcommand{\clconv}{\overline{\conv}}       % 闭凸包
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\cl}{cl}
+\DeclareMathOperator{\ri}{ri}
+\DeclareMathOperator{\aff}{aff}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\spanop}{span}
+\DeclareMathOperator{\cont}{cont}
+\DeclareMathOperator{\lev}{lev}
+\DeclareMathOperator{\Nor}{Nor}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator{\Lip}{Lip}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\T}{\top}
+
+% ---------- 复习辅助 ----------
+% 标题后加 \opt 表示“了解即可”的小节
+\newcommand{\opt}{\textsuperscript{$\ast$}}
+% 每章末尾的要点清单
+\newenvironment{keypoints}{%
+  \par\bigskip\noindent\textbf{本章要点}%
+  \begin{itemize}[leftmargin=2em,itemsep=1pt,topsep=3pt]}{\end{itemize}\par\medskip}
+
+% ---------- 按约定引入各章正文与练习 ----------
+% 正文：chapters/chNN.tex（自带 \chapter）；练习：exercises/chNN.tex（不含 \chapter）
+\newcommand{\includechapter}[1]{%
+  \IfFileExists{chapters/ch#1.tex}%
+    {\input{chapters/ch#1}}%
+    {\chapter{第 \number#1\relax{} 章（待填充）}\todo{尚未完成。}}%
+  \IfFileExists{exercises/ch#1.tex}%
+    {\section{练习}\input{exercises/ch#1}}%
+    {}%
+}

@@ -1,0 +1,985 @@
+% 第 3 章：次微分（据原讲义第 3 章 “Subdifferential”，第 25--41 页整理）
+\chapter{次微分}
+\label{ch:ch03}
+
+凸函数一般不可微（例如 $\abs{x}$ 在原点），但它总有“单侧”的导数，即方向导数；而在可微性失效的地方，
+导数的角色由“次梯度”接替。本章先研究凸函数方向导数的代数性质，再引入 Gâteaux 可微与 Fréchet 可微，
+然后定义次微分并建立它的基本性质与运算法则（和、复合、逐点最大值），作为应用推导凸优化问题的最优性条件
+（包括 Karush--Kuhn--Tucker 定理），最后讨论凸函数“几乎处处可微”的问题。
+
+\section{方向导数}
+
+本节研究凸函数方向导数的“代数”性质。这些性质对任意向量空间 $\X$ 都成立，甚至不需要拓扑。
+由于只用到空间的线性结构，自然不能指望由此得到函数正则性（哪怕是连续性）方面的信息。
+
+\begin{definition}[方向导数]
+\label{def:21}
+设 $f:\X\to\Rbar$，$x\in\dom f$，$v\in\X$。若下面的极限存在，就称它为 $f$ 在 $x$ 处沿方向 $v$ 的\emph{方向导数}（directional derivative）：
+\begin{equation}
+  f^+(x;v)=\lim_{\varepsilon\to0^+}\frac{f(x+\varepsilon v)-f(x)}{\varepsilon}.
+  \label{eq:7}
+\end{equation}
+\end{definition}
+
+\begin{proposition}
+\label{res:31}
+设 $f:\X\to\Rbar$ 是凸函数，$x\in\dom f$。则对任意 $v\in\X$，方向导数 $f^+(x;v)\in\R\cup\{\pm\infty\}$ 都有定义，并且
+\begin{equation}
+  f^+(x;v)=\inf_{\varepsilon>0}\frac{f(x+\varepsilon v)-f(x)}{\varepsilon}.
+  \label{eq:8}
+\end{equation}
+\end{proposition}
+
+命题~\ref{res:31} 直接由下面的引理推出，它就是一维凸函数的熟知性质“割线斜率递增”。
+
+\begin{lemma}
+\label{res:32}
+设 $f$ 凸，$x\in\dom f$，$v\in\X$。则函数 $\varepsilon\in\left]0,+\infty\right[\mapsto\frac1\varepsilon\bigl(f(x+\varepsilon v)-f(x)\bigr)$ 是（不严格）递增的。
+\end{lemma}
+
+\begin{proof}
+设 $\varepsilon_2>\varepsilon_1>0$。由于
+$x+\varepsilon_1v=\bigl(1-\tfrac{\varepsilon_1}{\varepsilon_2}\bigr)x+\tfrac{\varepsilon_1}{\varepsilon_2}(x+\varepsilon_2v)$，
+由 $f$ 的凸性，
+\[
+  f(x+\varepsilon_1v)\leqslant\Bigl(1-\frac{\varepsilon_1}{\varepsilon_2}\Bigr)f(x)+\frac{\varepsilon_1}{\varepsilon_2}f(x+\varepsilon_2v).
+\]
+两边减去 $f(x)$（它有限）再除以 $\varepsilon_1$，即得
+$\frac{f(x+\varepsilon_1v)-f(x)}{\varepsilon_1}\leqslant\frac{f(x+\varepsilon_2v)-f(x)}{\varepsilon_2}$。
+（若 $f(x+\varepsilon_2v)=+\infty$，不等式显然成立。）
+于是 $\varepsilon\to0^+$ 时的极限存在，且等于下确界，这就是 \eqref{eq:8}。
+\end{proof}
+
+\begin{remark}
+\label{rem:10}
+定义 $f^+(x;v)$ 的极限可以取 $\pm\infty$。
+\begin{enumerate}[label=(\roman*)]
+  \item 由于极限 \eqref{eq:7} 可以换成下确界 \eqref{eq:8}，$f^+(x;v)=+\infty$ 当且仅当射线 $\{x+tv\mid t>0\}$ 与 $\dom f$ 不相交。
+        特别地，若 $x$ 属于 $\dom f$ 的内部，则对所有 $v$ 有 $f^+(x;v)<+\infty$。
+  \item 不难在 $\R$ 上构造凸函数，使得对某个 $x\in\dom f$ 有 $f^+(x;v)=-\infty$。（练习：构造一个例子；可参考例~\ref{exa:15}(iv)。）
+\end{enumerate}
+\end{remark}
+
+\begin{proposition}
+\label{res:33}
+设 $f:\X\to\Rbar$ 是凸函数。
+\begin{enumerate}[label=(\roman*)]
+  \item （单调性）对任意 $x,y\in\dom f$，
+        \begin{equation}
+          f^+(x;y-x)\leqslant f^+(y;y-x).
+          \label{eq:9}
+        \end{equation}
+  \item 若 $x\in\interior(\dom f)$，则 $f^+(x;\cdot)$ 只取有限值，并且是次线性（sublinear）函数（定义~\ref{def:4}）。
+  \item 若 $\X$ 是拓扑向量空间且 $x\in\cont f$，则 $f^+(x;\cdot)$ 是连续的次线性函数。
+\end{enumerate}
+\end{proposition}
+
+在 (ii) 中，若 $\X$ 只是向量空间（无拓扑），$\interior(\dom f)$ 理解为代数内部：
+对每个 $v\in\X$ 存在 $\varepsilon>0$ 使 $x\pm\varepsilon v\in\dom f$。证明中只用到这一点；
+当 $\X$ 是拓扑向量空间时，拓扑内点显然满足它（因为 $t\mapsto x+tv$ 连续）。
+
+\begin{proof}
+(i) 这对应于“一维凸函数的斜率递增”。令 $g(t)=f(x+t(y-x))$，它是 $\R$ 上的凸函数，且 $g(0)=f(x)$、$g(1)=f(y)$ 有限。
+由 \eqref{eq:8}（取 $\varepsilon=1$），$f^+(x;y-x)=g'_+(0)\leqslant g(1)-g(0)$。另一方面，对 $s>0$，
+$1=\frac{s}{1+s}\cdot0+\frac{1}{1+s}(1+s)$，由凸性 $(1+s)g(1)\leqslant s\,g(0)+g(1+s)$，即
+$\frac{g(1+s)-g(1)}{s}\geqslant g(1)-g(0)$。对 $s>0$ 取下确界得 $f^+(y;y-x)=g'_+(1)\geqslant g(1)-g(0)\geqslant f^+(x;y-x)$。
+
+(ii) 先证有限性。设 $v\in\X$。因为 $x\in\interior(\dom f)$，存在 $\varepsilon_0>0$ 使 $x\pm\varepsilon_0v\in\dom f$，
+由凸性对一切 $\varepsilon\in\left]0,\varepsilon_0\right]$ 也有 $x\pm\varepsilon v\in\dom f$。由 \eqref{eq:8}，
+$f^+(x;v)\leqslant\frac1{\varepsilon_0}\bigl(f(x+\varepsilon_0v)-f(x)\bigr)<+\infty$；同理 $f^+(x;-v)<+\infty$。又由凸性，
+\[
+  f(x)=f\Bigl(\frac{x+\varepsilon v}{2}+\frac{x-\varepsilon v}{2}\Bigr)\leqslant\frac12f(x+\varepsilon v)+\frac12f(x-\varepsilon v),
+\]
+且各项都有限，因此
+\[
+  \frac{f(x+\varepsilon v)-f(x)}{\varepsilon}\geqslant-\frac{f(x-\varepsilon v)-f(x)}{\varepsilon}.
+\]
+令 $\varepsilon\to0^+$，得 $f^+(x;v)\geqslant-f^+(x;-v)>-\infty$。故 $f^+(x;\cdot)$ 只取有限值。
+
+再证次线性。正齐次性直接来自定义：对 $\lambda>0$，在 \eqref{eq:7} 中换元 $\varepsilon'=\lambda\varepsilon$ 得 $f^+(x;\lambda v)=\lambda f^+(x;v)$，
+而 $f^+(x;0)=0$。下证次可加性。设 $u,v\in\X$，$\varepsilon>0$，则
+\[
+  x+\varepsilon(u+v)=\frac{x+2\varepsilon u}{2}+\frac{x+2\varepsilon v}{2},
+\]
+由凸性
+\[
+  \frac1\varepsilon\bigl(f(x+\varepsilon(u+v))-f(x)\bigr)\leqslant\frac{1}{2\varepsilon}\bigl(f(x+2\varepsilon u)-f(x)\bigr)+\frac{1}{2\varepsilon}\bigl(f(x+2\varepsilon v)-f(x)\bigr).
+\]
+令 $\varepsilon\to0^+$ 即得 $f^+(x;u+v)\leqslant f^+(x;u)+f^+(x;v)$。
+
+(iii) 因为 $\cont f\subseteq\interior(\dom f)$，由 (ii)，$f^+(x;\cdot)$ 有限且次线性，从而是凸函数。
+由于 $f$ 在 $x$ 处连续，它在 $x$ 的某个开邻域 $O_x$ 上有上界 $M$。令 $O=O_x-x$（$0$ 的开邻域），由 \eqref{eq:8}（取 $\varepsilon=1$），
+\[
+  \forall v\in O,\quad f^+(x;v)\leqslant f(x+v)-f(x)\leqslant M-f(x).
+\]
+所以 $f^+(x;\cdot)$ 在原点的一个邻域上有上界，由命题~\ref{res:17} 它在原点连续；
+再由推论~\ref{res:19}，它在其定义域的内部上连续，而这个内部就是整个 $\X$（$f^+(x;\cdot)$ 处处有限）。
+\end{proof}
+
+\section{Gâteaux 可微与 Fréchet 可微}
+
+\begin{definition}[Gâteaux 可微]
+\label{def:22}
+设 $\X$ 是拓扑向量空间，$f:\X\to\Rbar$，$x\in\dom f$。若方向导数 $v\in\X\mapsto f^+(x;v)$ 是连续线性泛函，
+就称 $f$ 在 $x$ 处 \emph{Gâteaux 可微}（Gâteaux-differentiable）。
+\end{definition}
+
+\begin{remark}
+\label{rem:11}
+Gâteaux 可微是很弱的概念。例如考虑（非凸的）函数 $f:\R^2\to\R$，
+\[
+  f(x_1,x_2)=\begin{cases}1, & x_1\neq0\text{ 且 }x_2=x_1^2,\\ 0, & \text{其他}.\end{cases}
+\]
+任一过原点的直线 $t\mapsto tv$ 在 $t$ 充分小时都不与抛物线 $\{x_2=x_1^2,\ x_1\ne0\}$ 相交，所以 $f^+(0;\cdot)\equiv0$，
+$f$ 在原点 Gâteaux 可微；但 $f$ 在 $(0,0)$ 处甚至不连续！
+\end{remark}
+
+\begin{corollary}
+\label{res:34}
+设 $f:\X\to\Rbar$ 凸，$x\in\cont f$。则 $f$ 在 $x$ 处 Gâteaux 可微，当且仅当对所有 $v\in\X$ 有 $f^+(x;v)\leqslant-f^+(x;-v)$。
+（大致说来：当且仅当在每个方向 $v$ 上，$x$ 处的左、右导数相等。）
+\end{corollary}
+
+\begin{remark}
+\label{rem:12}
+函数 $v\mapsto f^+(x;v)$ 可能是线性但不连续的，例如当 $f$ 本身是不连续的线性泛函时（此时 $x\notin\cont f$）。
+另外，当 $x\in\interior(\dom f)$ 时不等式 $f^+(x;v)\geqslant-f^+(x;-v)$ 总成立（见命题~\ref{res:33}(ii) 的证明），
+所以推论中的条件也可以写成 $f^+(x;v)=-f^+(x;-v)$。
+\end{remark}
+
+\begin{example}
+\label{exa:14}
+$\R$ 上的 $f(x)=\abs{x}$：$f^+(0;1)=1$，$f^+(0;-1)=1\neq-f^+(0;1)=-1$，所以 $\abs{\cdot}$ 在 $0$ 处不 Gâteaux 可微。
+\end{example}
+
+推论~\ref{res:34} 由命题~\ref{res:33}(iii) 和下面的引理直接得到。
+
+\begin{lemma}
+\label{res:35}
+次线性函数 $g:\X\to\R$ 是线性的，当且仅当对所有 $v\in\X$ 有 $g(v)\leqslant-g(-v)$。
+\end{lemma}
+
+\begin{proof}
+必要性显然，下证充分性。由正齐次性 $g(0)=0$，再由次可加性 $0=g(0)\leqslant g(v)+g(-v)$，即 $g(v)\geqslant-g(-v)$，
+结合假设得 $g(v)=-g(-v)$。于是对 $v,w\in\X$，
+\begin{align*}
+  g(v+w)&\leqslant g(v)+g(w),\\
+  g(-(v+w))&\leqslant g(-v)+g(-w)=-g(v)-g(w),
+\end{align*}
+第二行用了刚证的等式。因此
+\[
+  g(v)+g(w)\leqslant-g(-(v+w))=g(v+w)\leqslant g(v)+g(w),
+\]
+各处都取等号，特别地 $g(v+w)=g(v)+g(w)$。至于齐次性：$\lambda\geqslant0$ 时 $g(\lambda v)=\lambda g(v)$ 来自次线性的定义；
+$\lambda<0$ 时 $g(\lambda v)=\abs{\lambda}g(-v)=-\abs{\lambda}g(v)=\lambda g(v)$。故 $g$ 线性。
+\end{proof}
+
+\begin{definition}[Fréchet 可微]
+\label{def:23}
+设 $\X$ 是赋范空间。称 $f:\X\to\Rbar$ 在 $x\in\dom f$ 处 \emph{Fréchet 可微}（Fréchet-differentiable），如果它在 $x$ 处 Gâteaux 可微，并且
+\begin{equation}
+  \lim_{v\to0,\,v\neq0}\frac{\abs{f(x+v)-f(x)-f^+(x;v)}}{\norm{v}}=0,
+  \label{eq:10}
+\end{equation}
+即 $f(x+v)=f(x)+f^+(x;v)+o(\norm{v})$。
+\end{definition}
+
+\begin{remark}
+\label{rem:13}
+Fréchet 可微就是通常意义的可微（并蕴含连续）。一般地有
+\[
+  \text{Fréchet 可微}\Longrightarrow\text{Gâteaux 可微}\Longrightarrow v\mapsto f^+(x;v)\text{ 线性}.
+\]
+反向的蕴含一般不成立，但当 $f$ 是有限维空间上的凸函数（且 $x\in\interior(\dom f)$）时成立，见第~\ref{sec:ch03-frechet-ae} 小节。
+\end{remark}
+
+\section{次微分的定义与基本性质}
+
+\begin{definition}[次梯度与次微分]
+\label{def:24}
+设 $f:\X\to\Rbar$，$x_0\in\dom f$。称线性泛函 $x^*\in\Xs$ 是 $f$ 在 $x_0$ 处的\emph{次梯度}（subgradient），如果
+\[
+  \forall y\in\X,\quad f(y)\geqslant f(x_0)+\pair{x^*}{y-x_0}.
+\]
+$f$ 在 $x_0$ 处全体次梯度构成的集合称为 $f$ 在 $x_0$ 处的\emph{次微分}（subdifferential），记作 $\partial f(x_0)$。
+当 $x_0\notin\dom f$ 时，约定 $\partial f(x_0):=\varnothing$。
+\end{definition}
+
+几何上，$x^*\in\partial f(x_0)$ 说的是仿射函数 $y\mapsto f(x_0)+\pair{x^*}{y-x_0}$ 是 $f$ 的一个仿射下界函数，并且在 $x_0$ 处与 $f$ 相切。
+
+\begin{remark}
+\label{rem:14}
+当 $\X$ 是 Hilbert 空间或 $\R^d$ 时，我们常借助同构 $\Xs\simeq\X$ 把一点处的次微分看作 $\X$ 的子集。
+\end{remark}
+
+\begin{example}
+\label{exa:15}
+\leavevmode
+\begin{enumerate}[label=(\roman*)]
+  \item 设 $f(x)=\abs{x}=\max(x,-x)$（$x\in\R$）。则
+        \[
+          \partial f(x)=\begin{cases}\{-1\}, & x<0,\\ \{1\}, & x>0,\\ [-1,1], & x=0.\end{cases}
+        \]
+  \item 设 $\R^d$ 上的 $f(x)=\sum_{i=1}^dg(x_i)$，其中 $g:\R\to\Rbar$ 凸。则（在 $(\R^d)^*\simeq\R^d$ 的意义下）
+        \[
+          \partial f(x)=\prod_{i=1}^d\partial g(x_i).
+        \]
+        （“$\supseteq$”把各分量的次梯度不等式相加即得；“$\subseteq$”只需取 $y$ 与 $x$ 仅在第 $i$ 个分量不同。）
+        于是对 $f(x)=\sum_{1\leqslant i\leqslant d}\abs{x_i}=\norm{x}_1$，记 $s(t)=\partial\abs{\cdot}(t)$，有
+        \[
+          \partial f(x)=\prod_{1\leqslant i\leqslant d}s(x_i).
+        \]
+  \item 设 $\X$ 是赋范空间，$f(x)=\norm{x}$。则
+        \[
+          x^*\in\partial f(0)\iff\forall x\in\X,\ \pair{x^*}{x}\leqslant\norm{x}\iff\norm{x^*}_*\leqslant1 .
+        \]
+        换言之，$\partial f(0)$ 是对偶空间的闭单位球。
+  \item 设 $f(x)=-\sqrt x$（$x\in\left[0,+\infty\right[$，其余处 $f=+\infty$）。则虽然 $0\in\dom f$，却有 $\partial f(0)=\varnothing$
+        （次梯度 $x^*$ 需满足 $-\sqrt y\geqslant x^*y$ 对一切 $y>0$ 成立，令 $y\to0^+$ 即知不可能）。
+\end{enumerate}
+\end{example}
+
+下面这个命题建立了次微分与法锥（定义~\ref{def:10}）之间的联系。
+
+\begin{proposition}[示性函数的次微分]
+\label{res:36}
+设 $K\subseteq\X$ 是凸集，$x\in K$。则 $\partial\iota_K(x)=\Nor_xK$。
+\end{proposition}
+
+\begin{proof}
+$x^*\in\partial\iota_K(x)$ 当且仅当对所有 $y\in\X$ 有 $\iota_K(y)\geqslant\iota_K(x)+\pair{x^*}{y-x}=\pair{x^*}{y-x}$。
+对 $y\notin K$ 这自动成立，所以条件等价于 $\forall y\in K$，$\pair{x^*}{x-y}\geqslant0$，这正是 $x^*\in\Nor_xK$ 的定义。
+\end{proof}
+
+\begin{proposition}[基本性质]
+\label{res:37}
+设 $f:\X\to\Rbar$。
+\begin{enumerate}[label=(\roman*)]
+  \item （Fermat 法则（Fermat's rule））设 $f$ 正常（即 $f\not\equiv+\infty$）。则 $f$ 在 $x_0\in\X$ 处取到最小值，当且仅当 $0\in\partial f(x_0)$。
+  \item （凸性与闭性）$\partial f(x)$ 是弱*闭的凸集（可能为空）。
+  \item （单调性（monotonicity））对任意 $x,y\in\X$、$x^*\in\partial f(x)$、$y^*\in\partial f(y)$，有 $\pair{x^*-y^*}{x-y}\geqslant0$。
+  \item （“上半连续性”）设 $\X$ 是 Banach 空间，$f$ 下半连续。若序列 $(x_n,x_n^*)_{n\in\N}$ 满足 $x_n^*\in\partial f(x_n)$，并且
+        \[
+          x_n\xrightarrow[n\to+\infty]{\text{强}}x,\qquad x_n^*\xrightarrow[n\to+\infty]{\text{弱*}}x^*,
+        \]
+        则 $x^*\in\partial f(x)$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) 由定义，$0\in\partial f(x_0)$ 当且仅当 $x_0\in\dom f$ 且对所有 $y$ 有 $f(y)\geqslant f(x_0)$。
+若 $f$ 正常且在 $x_0$ 处取最小值，则 $f(x_0)=\inf f<+\infty$，即 $x_0\in\dom f$，故 $0\in\partial f(x_0)$；反之显然。
+
+(ii) 当 $x\notin\dom f$ 时 $\partial f(x)=\varnothing$。当 $x\in\dom f$ 时，$\partial f(x)$ 可表为弱*闭半空间（或全空间）的交：
+\[
+  \partial f(x)=\bigcap_{y\in\X}\{x^*\in\Xs\mid f(y)\geqslant f(x)+\pair{x^*}{y-x}\}.
+\]
+对 $y\in\dom f$，右边每一项是弱*闭半空间（$x^*\mapsto\pair{x^*}{y-x}$ 弱*连续）；对 $y\notin\dom f$ 它是整个 $\Xs$。
+
+(iii) 此时 $x,y\in\dom f$，由次梯度的定义
+\[
+  f(y)\geqslant f(x)+\pair{x^*}{y-x},\qquad f(x)\geqslant f(y)+\pair{y^*}{x-y}.
+\]
+两式相加（各项有限）即得 $\pair{x^*-y^*}{x-y}\geqslant0$。
+
+(iv) 由假设，对所有 $y\in\X$，
+\begin{align*}
+  f(y)&\geqslant f(x_n)+\pair{x_n^*}{y-x_n}\\
+      &=f(x_n)+\pair{x_n^*}{y-x}+\pair{x^*}{x-x_n}+\pair{x_n^*-x^*}{x-x_n}.
+\end{align*}
+由下半连续性 $\liminf_{n\to+\infty}f(x_n)\geqslant f(x)$；由弱*收敛 $\pair{x_n^*}{y-x}\to\pair{x^*}{y-x}$；由强收敛 $\pair{x^*}{x-x_n}\to0$。
+此外，由 Banach--Steinhaus 一致有界原理，弱*收敛序列 $(x_n^*)$ 在对偶范数下有界，故
+\[
+  \abs{\pair{x_n^*-x^*}{x-x_n}}\leqslant\norm{x_n^*-x^*}_*\,\norm{x-x_n}\xrightarrow[n\to+\infty]{}0.
+\]
+在上式中取下极限，得 $f(y)\geqslant f(x)+\pair{x^*}{y-x}$（取 $y=x_0\in\dom f$ 还说明 $f(x)<+\infty$），即 $x^*\in\partial f(x)$。
+注意这里没有用到 $f$ 的凸性。
+\end{proof}
+
+\begin{remark}
+\label{rem:15}
+性质 (iv) 等价于：次微分的图像 $\partial f=\{(x,x^*)\in\X\times\Xs\mid x^*\in\partial f(x)\}$ 在“强 $\times$ 弱*”拓扑下\emph{序列}闭。
+证明中关键的一步是 Banach--Steinhaus 定理给出的有界性，它只对序列成立。若把序列换成网（net），即要求图像在强 $\times$ 弱*乘积拓扑下闭，
+结论一般不成立，反例见 Borwein--Fitzpatrick--Girgensohn（2003）的论文
+\emph{Subdifferentials whose graphs are not norm$\times$weak* closed}。
+（原讲义说明：这一点的旧版错误由 Clément Cosserat 指出。）
+\end{remark}
+
+\begin{theorem}[凸函数的次微分]
+\label{res:38}
+设 $\X$ 是局部凸拓扑向量空间，$f:\X\to\Rbar$ 凸。则
+\begin{enumerate}[label=(\roman*)]
+  \item 若 $x\in\dom f$，则 $\partial f(x)=\{x^*\in\Xs\mid f^+(x;\cdot)\geqslant\pair{x^*}{\cdot}\}$；
+  \item 若 $x\in\cont f$ 且 $\X$ 是赋范空间，则 $\partial f(x)$ 关于 $\norm{\cdot}_*$ 有界；
+  \item 若 $x\in\cont f$，则对所有 $v\in\X$，$f^+(x;v)=\sup\{\pair{x^*}{v}\mid x^*\in\partial f(x)\}$；
+  \item 若 $x\in\cont f$，则 $\partial f(x)$ 非空；
+  \item 若 $x\in\cont f$，则 $f$ 在 $x$ 处 Gâteaux 可微当且仅当 $\partial f(x)$ 是单点集 $\{x^*\}$，此时 $f^+(x;\cdot)=\pair{x^*}{\cdot}$。
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[次微分的支撑函数]
+\label{rem:16}
+设 $f\in\Gammaz(\X)$，$x\in\cont f$。给 $\Xs$ 赋予弱*拓扑，则 $\Xs$ 上每个弱*连续线性泛函都由 $\X$ 中某个向量给出，即 $(\Xs)^*\simeq\X$。
+因此 $\partial f(x)$ 的支撑函数可以定义为
+\[
+  \sigma_{\partial f(x)}:y\in\X\mapsto\sup_{x^*\in\partial f(x)}\pair{x^*}{y}\in\R .
+\]
+定理~\ref{res:38}(iii) 立即给出 $\sigma_{\partial f(x)}=f^+(x;\cdot)$：方向导数可以看成次微分的支撑函数。
+\end{remark}
+
+\begin{proof}[定理~\ref{res:38} 的证明]
+(i) 记右边的集合为 $A$。若 $x^*\in A$，则由 \eqref{eq:8}（取 $t=1$），
+\[
+  \forall v\in\X,\quad\pair{x^*}{v}\leqslant f^+(x;v)=\inf_{t>0}\frac{f(x+tv)-f(x)}{t}\leqslant f(x+v)-f(x).
+\]
+对任意 $y\in\X$ 取 $v=y-x$，得 $\pair{x^*}{y-x}\leqslant f(y)-f(x)$，即 $x^*\in\partial f(x)$。
+反之设 $x^*\in\partial f(x)$。对任意 $v\in\X$、$t>0$，取 $y=x+tv$ 得 $\pair{x^*}{tv}\leqslant f(x+tv)-f(x)$，除以 $t$：
+\[
+  \pair{x^*}{v}\leqslant\frac{f(x+tv)-f(x)}{t}.
+\]
+这对所有 $t>0$ 成立，故 $\pair{x^*}{v}\leqslant f^+(x;v)$，即 $x^*\in A$。
+
+(ii) 因为 $f$ 在 $x$ 处连续，由命题~\ref{res:22}，$f$ 在 $x$ 附近是 $L$-Lipschitz 的（某个 $L\geqslant0$）。
+于是对 $t>0$ 充分小，$\frac{f(x+tv)-f(x)}{t}\leqslant L\norm{v}$，故 $f^+(x;v)\leqslant L\norm{v}$。
+若 $x^*\in\partial f(x)$，由 (i) 得 $\pair{x^*}{v}\leqslant f^+(x;v)\leqslant L\norm v$ 对所有 $v$ 成立，由对偶范数的定义 $\norm{x^*}_*\leqslant L$。
+
+(iii) 由命题~\ref{res:33}(iii)，$g:=f^+(x;\cdot)$ 是处处有限的连续凸函数，于是 $g\in\Gammaz(\X)$，
+由命题~\ref{res:26}，$g$ 等于其（连续）仿射下界函数的上确界。设 $(x^*,\alpha)\in\Xs\times\R$ 满足 $g\geqslant\pair{x^*}{\cdot}+\alpha$。
+对任意 $y\in\X$、$t>0$，在 $ty$ 处使用该不等式，并利用 $g$ 的正齐次性：
+\[
+  t\,g(y)=g(ty)\geqslant t\Bigl(\pair{x^*}{y}+\frac{\alpha}{t}\Bigr),\qquad\text{即}\quad g(y)\geqslant\pair{x^*}{y}+\frac\alpha t .
+\]
+令 $t\to+\infty$ 得 $g\geqslant\pair{x^*}{\cdot}$。另外在 $0$ 处取值得 $\alpha\leqslant g(0)=0$，所以仿射下界函数 $\pair{x^*}{\cdot}+\alpha$
+被线性下界函数 $\pair{x^*}{\cdot}$ 控制。因此
+\[
+  g(v)=\sup\{\pair{x^*}{v}\mid x^*\in\Xs,\ g\geqslant\pair{x^*}{\cdot}\}=\sup\{\pair{x^*}{v}\mid x^*\in\partial f(x)\},
+\]
+其中第二个等号用了 (i)。
+
+(iv) 由 (iii)，若 $\partial f(x)=\varnothing$，则 $f^+(x;v)=\sup\varnothing=-\infty$，与 $f^+(x;\cdot)$ 取有限值矛盾。
+
+(v) 若 $f$ 在 $x$ 处 Gâteaux 可微，则 $\phi:=f^+(x;\cdot)$ 是连续线性泛函。由 (i)，$x^*\in\partial f(x)$ 当且仅当线性泛函
+$\phi-x^*$ 处处 $\geqslant0$，这迫使 $\phi-x^*=0$，所以 $\partial f(x)=\{\phi\}$。
+反之，若 $\partial f(x)=\{x^*\}$ 是单点集，则由 (iii) 直接得 $f^+(x;\cdot)=\pair{x^*}{\cdot}$，它是连续线性的。
+\end{proof}
+
+\section{次微分运算法则}
+
+在应用中经常需要最小化由其他函数通过求和、取最大值、与线性算子复合得到的函数，因此研究这些运算对次微分的影响非常重要。
+先给出一个非常一般而且容易证明的包含关系。为此回顾伴随算子的定义。
+
+\begin{definition}[伴随算子]
+\label{def:25}
+记 $\mathcal L(\Y,\X)$ 为拓扑向量空间 $\Y$ 到 $\X$ 的连续线性算子全体。$A\in\mathcal L(\Y,\X)$ 的\emph{伴随算子}（adjoint operator）
+是对偶空间之间的线性算子
+\[
+  A^*:x^*\in\Xs\mapsto\bigl(y\in\Y\mapsto\pair{x^*}{Ay}\bigr)\in\Ys ,
+\]
+它由性质 $\pair{A^*x^*}{y}=\pair{x^*}{Ay}$ 刻画。
+\end{definition}
+
+\begin{proposition}[包含关系]
+\label{res:39}
+\leavevmode
+\begin{enumerate}[label=(\roman*)]
+  \item 对任意函数 $f,g:\X\to\Rbar$ 和任意 $x\in\X$，
+        \[
+          \partial f(x)+\partial g(x)\subseteq\partial(f+g)(x).
+        \]
+  \item 设 $(f_i)_{i\in I}$ 是一族 $\X\to\Rbar$ 的函数，$f=\sup_{i\in I}f_i$。则对任意 $x\in\X$，记 $I_x:=\argmax_{i\in I}f_i(x)$，有
+        \[
+          \clconv\bigcup_{i\in I_x}\partial f_i(x)\subseteq\partial f(x),
+        \]
+        这里闭包取弱*拓扑。
+  \item 设 $f:\X\to\Rbar$，$A\in\mathcal L(\Y,\X)$，$g=f\circ A$。则对 $y\in\Y$，
+        \[
+          A^*\partial f(Ay)\subseteq\partial g(y).
+        \]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+（原讲义留作练习，这里补上。）
+(i) 若 $x^*\in\partial f(x)$、$y^*\in\partial g(x)$，则 $x\in\dom f\cap\dom g$，把两个次梯度不等式相加得
+$(f+g)(y)\geqslant(f+g)(x)+\pair{x^*+y^*}{y-x}$。
+
+(ii) 设 $i\in I_x$（即 $f_i(x)=f(x)$），$x^*\in\partial f_i(x)$。则对所有 $y$，
+$f(y)\geqslant f_i(y)\geqslant f_i(x)+\pair{x^*}{y-x}=f(x)+\pair{x^*}{y-x}$，故 $x^*\in\partial f(x)$。
+于是 $\bigcup_{i\in I_x}\partial f_i(x)\subseteq\partial f(x)$；而 $\partial f(x)$ 是弱*闭凸集（命题~\ref{res:37}(ii)），所以它也包含左边的弱*闭凸包。
+
+(iii) 设 $x^*\in\partial f(Ay)$。则对所有 $z\in\Y$，
+$g(z)=f(Az)\geqslant f(Ay)+\pair{x^*}{Az-Ay}=g(y)+\pair{A^*x^*}{z-y}$，即 $A^*x^*\in\partial g(y)$。
+\end{proof}
+
+\begin{remark}[一个反例]
+\label{rem:17}
+上述包含关系可能是严格的。例如在 $\R$ 上取 $f=\iota_{\left]-\infty,0\right]}$，以及 $g(x)=-\sqrt x$（$x\geqslant0$），$g(x)=+\infty$（$x<0$）。
+则 $f+g$ 除 $x=0$ 外处处为 $+\infty$，即 $f+g=\iota_{\{0\}}$，所以 $\partial(f+g)(0)=\R$。
+另一方面 $\partial g(0)=\varnothing$（例~\ref{exa:15}(iv)），所以 $\partial f(0)+\partial g(0)=\varnothing$。
+\end{remark}
+
+为了排除这类反例，需要假设 $f$ 与 $g$ 的定义域“非平凡地”相交。这类假设在文献中称为\emph{规范条件}（qualification conditions）。
+下面的定理给出一个这样的条件；在 Banach 空间上（见 Attouch--Brézis 1986）或 $\X=\R^d$ 时（见 Rockafellar《Convex Analysis》第 23 节）还有更弱的条件。
+
+\begin{theorem}[Moreau--Rockafellar]
+\label{res:40}
+设 $\X$ 是局部凸拓扑向量空间，$f,g\in\Gammaz(\X)$，并且满足规范条件
+\[
+  \dom f\cap\cont g\neq\varnothing .
+\]
+则对所有 $x\in\X$，
+\[
+  \partial f(x)+\partial g(x)=\partial(f+g)(x).
+\]
+\end{theorem}
+
+\begin{proof}
+由命题~\ref{res:39}(i) 只需证“$\supseteq$”。设 $x\in\X$，$x^*\in\partial(f+g)(x)$（于是 $x\in\dom f\cap\dom g$），即
+\[
+  \forall y\in\X,\quad f(y)+g(y)\geqslant f(x)+g(x)+\pair{x^*}{y-x}.
+\]
+令 $\tilde f(y)=f(y)-\bigl(f(x)+g(x)\bigr)-\pair{x^*}{y-x}$，上式等价于
+\[
+  \forall y\in\X,\quad\tilde f(y)\geqslant-g(y),
+\]
+且 $\tilde f(x)=-g(x)$。在 $\X\times\R$ 中考虑凸集
+\[
+  K=\epi\tilde f,\qquad L=\{(y,s)\in\X\times\R\mid s\leqslant-g(y)\}
+\]
+（$L$ 是 $-g$ 的亚图（hypograph），它是 $\epi g$ 在 $(y,t)\mapsto(y,-t)$ 下的像）。由于 $g$ 下半连续，$L$ 是闭凸集。
+取 $x_0\in\dom f\cap\cont g$。$g$ 在 $x_0$ 附近有上界 $M$，故 $L$ 包含形如 $U\times\left]-\infty,-M\right[$ 的开集（$U$ 为 $x_0$ 的开邻域），从而 $L$ 有非空内部，
+于是由练习~\ref{exo:B1-4}，$L$ 是其内部 $M_L:=\interior L$ 的闭包。
+
+$K$ 与 $M_L$ 不相交：若 $(y,t)\in M_L$，则对小的 $\delta>0$ 有 $(y,t+\delta)\in L$，从而 $t<t+\delta\leqslant-g(y)\leqslant\tilde f(y)$，故 $(y,t)\notin K$。
+由于 $M_L$ 是非空开凸集，由 Hahn--Banach 定理的推论（推论~\ref{res:5}），存在 $\X\times\R$ 上不为零的连续线性泛函，即 $(z^*,\alpha)\in\Xs\times\R\setminus\{(0,0)\}$，使得
+\begin{equation}
+  \inf_{(y,t)\in K}\pair{z^*}{y}+\alpha t\geqslant\sup_{(y,s)\in M_L}\pair{z^*}{y}+\alpha s=\sup_{(y,s)\in L}\pair{z^*}{y}+\alpha s ,
+  \label{eq:11}
+\end{equation}
+最后的等号是因为 $L$ 是 $M_L$ 的闭包且泛函连续。
+
+\emph{第一步：$\alpha\geqslant0$。} 在 \eqref{eq:11} 中取 $y=x_0$，$t>\tilde f(x_0)$，$s<-g(x_0)$，得 $\alpha(t-s)\geqslant0$。
+由于 $t-s>\tilde f(x_0)+g(x_0)\geqslant0$，只能 $\alpha\geqslant0$。
+
+\emph{第二步：$\alpha\neq0$。} 反设 $\alpha=0$，则 $z^*\neq0$，且 \eqref{eq:11} 给出
+\[
+  \inf_{y\in\dom f}\pair{z^*}{y}\geqslant\sup_{y\in\dom g}\pair{z^*}{y},
+\]
+即 $\dom f$ 与 $\dom g$ 被线性分离。特别地 $\pair{z^*}{x_0}\geqslant\sup_{\dom g}\pair{z^*}{\cdot}$，即非零连续线性泛函 $z^*$ 在 $\dom g$ 上于 $x_0$ 处达到上确界。
+但 $x_0\in\cont g\subseteq\interior\dom g$，取 $v$ 使 $\pair{z^*}{v}>0$，则对小的 $\varepsilon>0$ 有 $x_0+\varepsilon v\in\dom g$ 且 $\pair{z^*}{x_0+\varepsilon v}>\pair{z^*}{x_0}$，矛盾。
+这与 $\dom f\cap\cont g\neq\varnothing$ 不相容，所以 $\alpha>0$。必要时以 $\frac1\alpha z^*$ 代替 $z^*$，不妨设 $\alpha=1$。
+
+\emph{第三步：构造分解。} 在 \eqref{eq:11} 中取 $(x,\tilde f(x))\in K$ 与 $(y,-g(y))\in L$（$y\in\dom g$），得
+\[
+  \forall y\in\dom g,\quad\pair{z^*}{x}+\tilde f(x)\geqslant\pair{z^*}{y}-g(y).
+\]
+因为 $\tilde f(x)=-g(x)$，这就是 $g(y)\geqslant g(x)+\pair{z^*}{y-x}$（对 $y\notin\dom g$ 显然成立），即 $z^*\in\partial g(x)$。
+再在 \eqref{eq:11} 中取 $(y,\tilde f(y))\in K$（$y\in\dom f$）与 $(x,-g(x))\in L$，得
+\[
+  \forall y\in\dom f,\quad\pair{z^*}{y}+\tilde f(y)\geqslant\pair{z^*}{x}-g(x).
+\]
+代入 $\tilde f(y)=f(y)-\bigl(f(x)+g(x)\bigr)-\pair{x^*}{y-x}$，得
+\[
+  \forall y\in\X,\quad f(y)\geqslant f(x)+\pair{x^*-z^*}{y-x},
+\]
+即 $x^*-z^*\in\partial f(x)$。于是 $x^*=(x^*-z^*)+z^*\in\partial f(x)+\partial g(x)$。
+\end{proof}
+
+\begin{theorem}[Moreau--Rockafellar，复合形式]
+\label{res:41}
+设 $\X,\Y$ 是拓扑向量空间，$f\in\Gammaz(\X)$，$A:\Y\to\X$ 是连续线性算子，并且满足规范条件
+\[
+  \cont f\cap A(\Y)\neq\varnothing .
+\]
+则对所有 $y\in\Y$，
+\[
+  \partial(f\circ A)(y)=A^*\partial f(Ay).
+\]
+\end{theorem}
+
+\begin{proof}
+由命题~\ref{res:39}(iii) 只需证“$\subseteq$”。设 $y\in\Y$，$y^*\in\partial(f\circ A)(y)$（于是 $Ay\in\dom f$），即
+\[
+  \forall z\in\Y,\quad f(Az)\geqslant\ell(z):=f(Ay)+\pair{y^*}{z-y}.
+\]
+引入 $\X\times\R$ 的两个凸子集 $K=\epi f$ 与 $L=\{(Az,\ell(z))\mid z\in\Y\}$（$L$ 是仿射映射 $z\mapsto(Az,\ell(z))$ 的像）。
+因为 $f$ 在 $\X$ 的某点连续，它在该点附近有上界，故闭凸集 $K$ 有非空内部，从而（练习~\ref{exo:B1-4}）等于其内部 $M:=\interior K$ 的闭包。
+$M$ 与 $L$ 不相交：若 $(Az,\ell(z))\in M$，则对小的 $\delta>0$ 有 $(Az,\ell(z)-\delta)\in K$，即 $f(Az)<\ell(z)$，与上面的次梯度不等式矛盾。
+$M$ 是开集，由推论~\ref{res:5}，存在非零连续线性泛函 $(x^*,\alpha)\in\Xs\times\R$ 使得
+\[
+  \inf_{(x,t)\in K}\pair{x^*}{x}+\alpha t=\inf_{(x,t)\in M}\pair{x^*}{x}+\alpha t\geqslant\sup_{(x,s)\in L}\pair{x^*}{x}+\alpha s .
+\]
+
+与前一定理类似地证明 $\alpha>0$。由假设存在 $y_0\in\Y$ 使 $Ay_0\in\cont f$。在下确界和上确界中都取 $x=Ay_0$，
+并取 $t>f(Ay_0)$、$s=\ell(y_0)$，则 $t>f(Ay_0)\geqslant\ell(y_0)=s$，由 $\alpha(t-s)\geqslant0$ 得 $\alpha\geqslant0$。
+其次，若 $\alpha=0$，则 $x^*\neq0$ 且 $\inf_{\dom f}\pair{x^*}{\cdot}\geqslant\sup_{z\in\Y}\pair{x^*}{Az}$；右边是线性函数在子空间 $A(\Y)$ 上的上确界，
+它有限迫使 $x^*$ 在 $A(\Y)$ 上为零，从而 $\pair{x^*}{\cdot}\geqslant0=\pair{x^*}{Ay_0}$ 在 $\dom f$ 上成立，
+即非零泛函 $x^*$ 在 $\dom f$ 的内点 $Ay_0$ 处取到最小值，矛盾（$\dom f$ 与 $A(\Y)$ 被线性分离，与 $\cont f\cap A(\Y)\neq\varnothing$ 不相容）。
+所以 $\alpha>0$，必要时用 $x^*/\alpha$ 代替 $x^*$，不妨设 $\alpha=1$。分离不等式（取 $t=f(x)$）可改写为
+\[
+  \forall x\in\X,\ \forall z\in\Y,\quad\pair{x^*}{x}+f(x)\geqslant\pair{x^*}{Az}+\ell(z)=\pair{x^*}{Az}+f(Ay)+\pair{y^*}{z-y}.
+\]
+在此不等式中取 $z=y$，得
+\[
+  \forall x\in\X,\quad\pair{x^*}{x}+f(x)\geqslant\pair{x^*}{Ay}+f(Ay),
+\]
+即 $f(x)\geqslant f(Ay)+\pair{-x^*}{x-Ay}$，也就是 $-x^*\in\partial f(Ay)$。另一方面取 $x=Ay$，得
+\[
+  \forall z\in\Y,\quad\pair{A^*x^*+y^*}{y-z}\geqslant0 .
+\]
+由于 $y-z$ 取遍 $\Y$，这说明 $A^*x^*+y^*=0$，即 $y^*=A^*(-x^*)$，其中 $-x^*\in\partial f(Ay)$。
+\end{proof}
+
+\begin{theorem}[Dubovitskii--Milyutin]
+\label{res:42}
+设 $\X$ 是局部凸拓扑向量空间，$f_1,\dots,f_N\in\Gammaz(\X)$，$f=\max_{1\leqslant i\leqslant N}f_i$。
+则对所有 $x\in\cont(f_1)\cap\dots\cap\cont(f_N)$，记 $I_x:=\argmax_{1\leqslant i\leqslant N}f_i(x)$，有
+\[
+  \partial f(x)=\clconv\Bigl(\bigcup_{i\in I_x}\partial f_i(x)\Bigr)
+\]
+（闭包取弱*拓扑）。
+\end{theorem}
+
+指标集不是有限集而是紧集时的更一般版本，见 Zălinescu《Convex Analysis in General Vector Spaces》定理 2.4.18。
+
+\begin{proof}
+记 $C=\bigcup_{i\in I_x}\partial f_i(x)$，$K=\clconv C\subseteq\Xs$。为证 $\partial f(x)=K$，先计算 $f^+(x;\cdot)$。
+对 $i\notin I_x$，$f_i(x)<f(x)$；由于各 $f_j$ 在 $x$ 处连续，对充分小的 $t>0$，有 $f_i(x+tv)<\max_{j\in I_x}f_j(x+tv)$，
+即在 $x+tv$ 处的最大值只在 $I_x$ 中取到。再利用 $f_i(x)=f(x)$（$i\in I_x$），
+\begin{align*}
+  f^+(x;v)&=\lim_{t\to0^+}\frac{f(x+tv)-f(x)}{t}
+           =\lim_{t\to0^+}\max_{i\in I_x}\frac{f_i(x+tv)-f_i(x)}{t}\\
+          &=\max_{i\in I_x}\lim_{t\to0^+}\frac{f_i(x+tv)-f_i(x)}{t}
+           =\max_{i\in I_x}f_i^+(x;v),
+\end{align*}
+其中交换极限与（有限个数的）最大值是因为每个极限都存在且有限。
+各 $f_i$ 在 $x$ 处连续，所以 $f$ 也在 $x$ 处连续。由注~\ref{rem:16}，上面的计算给出
+\[
+  \sigma_{\partial f(x)}=\max_{i\in I_x}\sigma_{\partial f_i(x)} .
+\]
+由命题~\ref{res:13}(iii)（应用于赋予弱*拓扑的 $\Xs$），右边等于 $\sigma_C$。
+而取弱*闭凸包不改变支撑函数：$C\subseteq K$ 给出 $\sigma_C\leqslant\sigma_K$；反之对 $y\in\X$，集合 $\{x^*\in\Xs\mid\pair{x^*}{y}\leqslant\sigma_C(y)\}$
+弱*闭、凸且包含 $C$，从而包含 $K$，即 $\sigma_K(y)\leqslant\sigma_C(y)$。故 $\sigma_{\partial f(x)}=\sigma_C=\sigma_K$。
+由于 $K$ 与 $\partial f(x)$ 都是非空（定理~\ref{res:38}(iv)）弱*闭凸集，由命题~\ref{res:13}(i) 得 $K=\partial f(x)$。
+\end{proof}
+
+\section{应用：最优性条件}
+
+\subsection{例子}
+
+\begin{example}[Fermat 问题]
+\label{exa:16}
+考虑最小化问题
+\[
+  \min_{x\in\R^d}\ \alpha_1\norm{x-x_1}+\dots+\alpha_N\norm{x-x_N},
+\]
+其中 $\alpha_1,\dots,\alpha_N\geqslant0$，$x_1,\dots,x_N\in\R^d$ 是\emph{互不相同的点}，$\norm\cdot$ 为 Euclid 范数。该问题的最小值点称为 \emph{Fermat 点}（Fermat point）。
+令 $f_i=\norm{\cdot-x_i}$，则（$\overline{\mathrm B}(0,r)$ 表示闭球）
+\[
+  \partial f_i(x)=\begin{cases}\Bigl\{\dfrac{x-x_i}{\norm{x-x_i}}\Bigr\}, & x\neq x_i,\\[2ex] \overline{\mathrm B}(0,1), & x=x_i.\end{cases}
+\]
+由于各 $f_i$ 都是凸的连续函数，反复应用定理~\ref{res:40} 得
+\[
+  \partial(\alpha_1f_1+\dots+\alpha_Nf_N)(x)=\begin{cases}
+    \Bigl\{\sum_i\alpha_i\dfrac{x-x_i}{\norm{x-x_i}}\Bigr\}, & x\notin\{x_1,\dots,x_N\},\\[2ex]
+    \overline{\mathrm B}(0,\alpha_j)+\sum_{i\neq j}\alpha_i\dfrac{x-x_i}{\norm{x-x_i}}, & x=x_j.
+  \end{cases}
+\]
+由 Fermat 法则，$x$ 是 Fermat 点当且仅当
+\[
+  \Bigl(x=x_j\ \text{且}\ \Bigl\|\sum_{i\neq j}\alpha_i\frac{x_j-x_i}{\norm{x_j-x_i}}\Bigr\|\leqslant\alpha_j\Bigr)
+  \quad\text{或}\quad
+  \Bigl(x\notin\{x_1,\dots,x_N\}\ \text{且}\ \sum_i\alpha_i\frac{x-x_i}{\norm{x-x_i}}=0\Bigr).
+\]
+\end{example}
+
+\begin{example}[Lasso 问题]
+\label{exa:17}
+设 $A$ 是 $m\times d$ 矩阵，$y\in\R^m$，$\gamma>0$。考虑最小二乘问题的如下修改：
+\[
+  \min_{x\in\R^d}\ \frac12\norm{Ax-y}_2^2+\gamma\norm{x}_1 .
+\]
+令 $f(x)=\frac12\norm{Ax-y}_2^2$，$g(x)=\norm{x}_1$，$h=\abs\cdot$。则（由定理~\ref{res:38}(v) 与例~\ref{exa:15}(ii)）
+\[
+  \partial f(x)=\{\nabla f(x)\}=\{A^\T(Ax-y)\},\qquad\partial g(x)=\partial h(x_1)\times\dots\times\partial h(x_d).
+\]
+由于这些函数都是连续凸函数，定理~\ref{res:40} 给出 $\partial(f+\gamma g)(x)=\partial f(x)+\gamma\partial g(x)$。
+于是 $x$ 是最小值点当且仅当
+\[
+  A^\T(Ax-y)=-\gamma v,\qquad\text{其中 } v \text{ 满足 }
+  \begin{cases} v_i=\operatorname{sgn}(x_i), & x_i\neq0,\\ v_i\in[-1,1], & x_i=0.\end{cases}
+\]
+记 $A_i$ 为 $A$ 的第 $i$ 列，则 $\pair{A_i}{Ax-y}=-\gamma v_i$，即 $x$ 是最小值点当且仅当
+\[
+  \begin{cases}\abs{\pair{A_i}{y-Ax}}\leqslant\gamma, & x_i=0,\\ \pair{A_i}{y-Ax}=\gamma\operatorname{sgn}(x_i), & x_i\neq0.\end{cases}
+\]
+由这个例子可以看出 $\norm{x}_1$ 项促使解稀疏：只要残差与第 $i$ 列的相关性 $\abs{\pair{A_i}{y-Ax}}$ 严格小于 $\gamma$，就有 $x_i=0$。
+\end{example}
+
+\subsection{Karush--Kuhn--Tucker 定理}
+
+\begin{theorem}[最优性的变分刻画]
+\label{res:43}
+设 $\X$ 是局部凸拓扑向量空间，$K\subseteq\X$ 是闭凸集，$f:\X\to\Rbar$ 是下半连续凸函数，并假设
+\[
+  (\interior K\cap\dom f\neq\varnothing)\quad\text{或}\quad(K\cap\cont f\neq\varnothing).
+\]
+则对 $x\in K$，下列条件等价：
+\begin{enumerate}[label=(\roman*)]
+  \item $x$ 是 $f$ 在 $K$ 上的最小值点；
+  \item $-\partial f(x)\cap\Nor_xK\neq\varnothing$；
+  \item 存在 $x^*\in\partial f(x)$，使得 $\forall y\in K$，$\pair{-x^*}{x-y}\geqslant0$（即 $\pair{x^*}{y-x}\geqslant0$）。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+两个假设都蕴含 $\dom f\neq\varnothing$，所以 $f\in\Gammaz(\X)$。令 $g=\iota_K\in\Gammaz(\X)$。点 $x$ 是 $f$ 在 $K$ 上的最小值点，当且仅当它是 $f+g$ 在 $\X$ 上的最小值点，
+由 Fermat 法则（命题~\ref{res:37}(i)，$f+g$ 正常），这又等价于 $0\in\partial(f+g)(x)$。
+由于 $\dom g=K$ 且 $\cont g=\interior K$，第一个假设就是 $\cont g\cap\dom f\neq\varnothing$，第二个假设就是 $\dom g\cap\cont f\neq\varnothing$。
+无论哪种情形，都可以（必要时交换 $f,g$ 的角色）应用定理~\ref{res:40}，再结合命题~\ref{res:36}，得
+\[
+  \partial(f+g)(x)=\partial f(x)+\partial\iota_K(x)=\partial f(x)+\Nor_xK .
+\]
+所以 $x$ 是最小值点当且仅当存在 $x^*\in\partial f(x)$ 使 $-x^*\in\Nor_xK$（这就是 (ii)）；而由法锥的定义，$-x^*\in\Nor_xK$ 就是 (iii) 中的不等式。
+\end{proof}
+
+\begin{proposition}[下水平集的法锥]
+\label{res:44}
+设 $g\in\Gammaz(\X)$（$\X$ 局部凸），$K=\lev_{\leqslant0}g$，并假设 \emph{Slater 条件}（Slater's condition）成立：
+\[
+  \begin{cases}K\subseteq\cont g,\\ \lev_{<0}g\neq\varnothing.\end{cases}
+\]
+则
+\[
+  \Nor_xK=\begin{cases}\{0\}, & g(x)<0,\\ \R_+\partial g(x), & g(x)=0,\\ \varnothing, & g(x)>0.\end{cases}
+\]
+\end{proposition}
+
+\begin{proof}
+$g(x)>0$ 时 $x\notin K$，按约定 $\Nor_xK=\varnothing$。
+
+若 $g(x)<0$，由假设 $x\in\cont g$，故 $g$ 在 $x$ 的某个邻域上 $<0$，即 $x\in\interior K$，$\iota_K$ 在 $x$ 附近恒为零。
+于是 $\Nor_xK=\partial\iota_K(x)=\{0\}$（若 $x^*\in\Nor_xK$，则 $\pair{x^*}{x-y}\geqslant0$ 对 $x$ 的一个邻域中的所有 $y$ 成立，迫使 $x^*=0$）。
+
+下设 $g(x)=0$。注意由定理~\ref{res:38}(iv)，$x\in\cont g$ 蕴含 $\partial g(x)\neq\varnothing$。
+
+先证 $\R_+\partial g(x)\subseteq\Nor_xK$。设 $x^*\in\partial g(x)$，则 $\forall y\in\X$，$g(y)\geqslant\pair{x^*}{y-x}+g(x)$。乘以 $\lambda\geqslant0$ 得
+\[
+  \forall y\in K,\quad0\geqslant\lambda g(y)\geqslant\pair{\lambda x^*}{y-x}+\lambda\underbrace{g(x)}_{=0},
+\]
+所以 $\lambda x^*\in\Nor_xK$。
+
+再证 $\Nor_xK\subseteq\R_+\partial g(x)$。设 $x^*\in\Nor_xK$。若 $x^*=0$，取任意 $y^*\in\partial g(x)$ 有 $x^*=0\cdot y^*$。下设 $x^*\neq0$。
+由法锥的定义，对一切 $y\in K$ 有 $\pair{x^*}{y}\leqslant\pair{x^*}{x}$，即 $K$ 与开半空间 $\{y\mid\pair{x^*}{y}>\pair{x^*}{x}\}$ 不相交，
+所以 $g>0$ 在该开半空间上成立。记闭半空间 $H=\{y\in\X\mid\pair{x^*}{y}\geqslant\pair{x^*}{x}\}$，下证 $g\geqslant0$ 在 $H$ 上成立：
+因为 $x\in\cont g\subseteq\interior\dom g$，可取 $w$ 使 $\pair{x^*}{w}>0$ 且 $z_0:=x+w\in\dom g$；若某 $y\in H$ 有 $g(y)<0$，
+则对 $\varepsilon\in\left]0,1\right[$，$y_\varepsilon=(1-\varepsilon)y+\varepsilon z_0$ 满足 $\pair{x^*}{y_\varepsilon}>\pair{x^*}{x}$，故 $g(y_\varepsilon)>0$；
+但 $g(y_\varepsilon)\leqslant(1-\varepsilon)g(y)+\varepsilon g(z_0)<0$（$\varepsilon$ 充分小），矛盾。
+因此 $x$ 是 $g$ 在闭凸集 $H$ 上的最小值点（$g(x)=0$，$x\in H$）。
+
+由于 $x\in H\cap\cont g$，由最优性的变分刻画（定理~\ref{res:43}，取其中的 $f,K$ 为 $g,H$，用第二个规范条件），
+存在 $y^*\in\partial g(x)$ 使 $-y^*\in\Nor_xH$。而 $\Nor_xH=\R_+\{-x^*\}$：若 $z^*\in\Nor_xH$，则 $z^*$ 在半空间 $\{u\mid\pair{x^*}{u}\geqslant0\}$ 上 $\leqslant0$，从而在 $\ker x^*$ 上为零，
+由引理~\ref{res:75}，$z^*=c\,x^*$，且 $c\leqslant0$；反之显然。
+所以存在 $\lambda\geqslant0$ 使 $y^*=\lambda x^*$。$\lambda$ 不能为零：否则 $0\in\partial g(x)$，$x$ 是 $g$ 的全局最小值点，
+与 $g(x)=0>\inf g$（Slater 条件第二条）矛盾。于是 $x^*=\frac1\lambda y^*\in\R_+\partial g(x)$。
+\end{proof}
+
+\begin{theorem}[Karush--Kuhn--Tucker]
+\label{res:45}
+设 $\X$ 是局部凸拓扑向量空间，$f,g_1,\dots,g_N\in\Gammaz(\X)$，$K=\bigcap_{1\leqslant i\leqslant N}\lev_{\leqslant0}g_i$，并假设 Slater 条件
+\begin{equation}
+  \begin{cases}\lev_{\leqslant0}g_i\subseteq\cont g_i, & \forall i\in\{1,\dots,N\},\\
+  \dom f\cap\lev_{<0}g_1\cap\dots\cap\lev_{<0}g_N\neq\varnothing\end{cases}
+  \label{eq:12}
+\end{equation}
+成立。则对 $x\in K$，下列条件等价：
+\begin{enumerate}[label=(\roman*)]
+  \item $x$ 是 $f$ 在 $K$ 上的最小值点；
+  \item 存在 $\lambda_1,\dots,\lambda_N\geqslant0$，使得
+        \[
+          \begin{cases}0\in\partial f(x)+\lambda_1\partial g_1(x)+\dots+\lambda_N\partial g_N(x),\\
+          \lambda_ig_i(x)=0, & \forall i\in\{1,\dots,N\}.\end{cases}
+        \]
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+\label{rem:18}
+若 $\X$ 是 Banach 空间或 $\R^d$，则对 $g_i\in\Gammaz(\X)$ 有 $\cont g_i=\interior\dom g_i$（练习~\ref{exo:B2-15}、推论~\ref{res:20}），
+此时 \eqref{eq:12} 的第一条可以写成 $\lev_{\leqslant0}g_i\subseteq\interior\dom g_i$。
+若各 $g_i$ 处处有限且连续，则 Slater 条件的第一条自动成立。
+\end{remark}
+
+\begin{remark}[Lagrange 乘子]
+\label{rem:19}
+定理中给出的数 $\lambda_1,\dots,\lambda_N$ 称为 \emph{Lagrange 乘子}（Lagrange multipliers）。若 $\lambda_1,\dots,\lambda_N$ 如定理所述，
+由命题~\ref{res:39}(i)，$0\in\partial f(x)+\sum_i\lambda_i\partial g_i(x)\subseteq\partial(f+\lambda_1g_1+\dots+\lambda_Ng_N)(x)$，
+所以 $x$ 是 $f+\lambda_1g_1+\dots+\lambda_Ng_N$ 在 $\X$ 上的最小值点。因此知道了 Lagrange 乘子，就能把约束优化问题 $\min_Kf$ 换成一个无约束问题。
+\end{remark}
+
+\begin{proof}[定理~\ref{res:45} 的证明]
+记 $K_i=\lev_{\leqslant0}g_i$，它们是闭凸集（$g_i$ 下半连续凸）。取 $x_0\in\dom f\cap\lev_{<0}g_1\cap\dots\cap\lev_{<0}g_N$。
+由于 $x_0\in K_i\subseteq\cont g_i$ 且 $g_i(x_0)<0$，$g_i$ 在 $x_0$ 的一个邻域上 $<0$，即 $x_0\in\interior K_i=\cont\iota_{K_i}$。因此
+\[
+  \dom f\cap\cont(\iota_{K_1})\cap\dots\cap\cont(\iota_{K_N})\neq\varnothing .
+\]
+依次对 $f+\iota_{K_1}+\dots+\iota_{K_{j-1}}$（属于 $\Gammaz(\X)$，其定义域含 $x_0$）与 $\iota_{K_j}$（在 $x_0$ 处连续）应用定理~\ref{res:40}，$j=1,\dots,N$，得
+\begin{align*}
+  \partial(f+\iota_{K_1}+\dots+\iota_{K_N})(x)&=\partial f(x)+\partial\iota_{K_1}(x)+\dots+\partial\iota_{K_N}(x)\\
+  &=\partial f(x)+\Nor_xK_1+\dots+\Nor_xK_N .
+\end{align*}
+由于 $\iota_K=\sum_i\iota_{K_i}$，由 Fermat 法则，$x\in K$ 是 $f$ 在 $K$ 上的最小值点，当且仅当存在 $x^*\in\partial f(x)$ 与 $x_i^*\in\Nor_xK_i$ 使
+$-x^*=x_1^*+\dots+x_N^*$。每个 $g_i$ 都满足命题~\ref{res:44} 的 Slater 条件，所以对 $x\in K$ 有
+\[
+  \Nor_xK_i=\begin{cases}\{0\}, & g_i(x)<0,\\ \R_+\partial g_i(x), & g_i(x)=0.\end{cases}
+\]
+因此“$x_i^*\in\Nor_xK_i$”等价于“$x_i^*=\lambda_iy_i^*$，其中 $y_i^*\in\partial g_i(x)$，$\lambda_i\geqslant0$，且 $g_i(x)<0$ 时 $\lambda_i=0$”
+（$g_i(x)<0$ 时取 $\lambda_i=0$ 与任意 $y_i^*\in\partial g_i(x)\neq\varnothing$），后一条件正是 $\lambda_ig_i(x)=0$。这就证明了 (i)$\iff$(ii)。
+\end{proof}
+
+\section{几乎处处可微性}
+
+\paragraph{动机} 给定紧凸集 $K\subseteq\X$ 与 $x^*\in\Xs$，考虑如下“线性规划”问题：
+\begin{equation}
+  \sup_{x\in K}\pair{x^*}{x}.
+  \label{eq:13}
+\end{equation}
+记 $f:x^*\in\Xs\mapsto\R$ 为该问题的\emph{值函数}（value function），即 $f(x^*)$ 是上述最大值。换言之，$f=\sigma_K$ 是 $K$ 的支撑函数，它是凸函数。
+若 $x$ 是 \eqref{eq:13} 的一个解，即 $x\in K$ 且 $f(x^*)=\pair{x^*}{x}$，则对 $v^*\in\Xs$，
+\[
+  f^+(x^*;v^*)=\lim_{\varepsilon\to0^+}\frac1\varepsilon\bigl(f(x^*+\varepsilon v^*)-f(x^*)\bigr)
+  \geqslant\lim_{\varepsilon\to0^+}\frac1\varepsilon\bigl(\pair{x^*+\varepsilon v^*}{x}-\pair{x^*}{x}\bigr)=\pair{v^*}{x}.
+\]
+知道 \eqref{eq:13} 是否有唯一最大值点往往很有用。设存在 $x\neq y\in K$ 使 $f(x^*)=\pair{x^*}{x}=\pair{x^*}{y}$，则同上，
+\[
+  f^+(x^*;v^*)\geqslant\max\bigl(\pair{v^*}{x},\pair{v^*}{y}\bigr).
+\]
+取 $v^*$ 使 $\pair{v^*}{x-y}\neq0$，则 $f^+(x^*;v^*)+f^+(x^*;-v^*)\geqslant\abs{\pair{v^*}{x-y}}>0$，
+所以映射 $v^*\in\Xs\mapsto f^+(x^*;v^*)$ 不是线性的，$f$ 在 $x^*$ 处不可微。于是 $f$ 在 $x^*$ 处 Gâteaux 可微蕴含线性规划问题 \eqref{eq:13} 的最大值点唯一。
+如果能证明 $f$“几乎处处”Gâteaux 可微，就得到：对“几乎所有”线性泛函 $x^*\in\Xs$，问题 \eqref{eq:13} 有唯一解。
+（当 $K$ 是 $\R^d$ 中的凸多面体时，这一结论相当直观。）
+
+\begin{remark}
+\label{rem:20}
+刻画凸函数的不可微点集在最优传输、最优控制等领域也有应用。关于凸函数不可微点集“大小”的结果很多，
+有限维情形见 Alberti--Ambrosio--Cannarsa（1992），无穷维情形见 Borwein--Vanderwerff《Convex Functions》§4.6。
+\end{remark}
+
+在 $\R$ 上，由下面的命题，凸函数几乎处处可微。
+
+\begin{proposition}
+\label{res:46}
+设 $f:\R\to\Rbar$ 凸。则 $\dom f$ 中使 $f$ 不可微的点至多可数。
+\end{proposition}
+
+这个命题在高维不成立，例如 $\R^2$ 上的 $f(x_1,x_2)=\abs{x_1}$ 在整条直线 $\{x_1=0\}$ 上不可微。
+
+\begin{proof}
+$\dom f$ 是区间，其端点至多两个，只需考虑内部 $\interior\dom f$ 的点。记右导数和左导数
+$f'_+(x)=f^+(x;1)$，$f'_-(x)=-f^+(x;-1)$；由命题~\ref{res:33}(ii)，在 $\interior\dom f$ 上它们有限，且 $f'_-(x)\leqslant f'_+(x)$。
+对 $\interior\dom f$ 中的 $x<x_0$，由 \eqref{eq:8}，
+\[
+  f'_+(x)=\inf_{y>x}\frac{f(y)-f(x)}{y-x}\leqslant\frac{f(x_0)-f(x)}{x_0-x}\leqslant f'_-(x_0)=\sup_{t>0}\frac{f(x_0)-f(x_0-t)}{t}.
+\]
+特别地 $f'_+$ 在 $\interior\dom f$ 上递增（$f'_+(x)\leqslant f'_-(x_0)\leqslant f'_+(x_0)$），并且
+\[
+  \lim_{x\to x_0^-}f'_+(x)\leqslant f'_-(x_0)\leqslant f'_+(x_0).
+\]
+$f$ 在 $x_0$ 处可微当且仅当 $f'_-(x_0)=f'_+(x_0)$。所以若 $f$ 在 $x_0$ 处不可微，则递增函数 $f'_+$ 在 $x_0$ 处有跳跃：
+\[
+  \lim_{x\to x_0^-}f'_+(x)<f'_+(x_0).
+\]
+最后利用“单调函数至多有可数个跳跃点”即得结论。
+\end{proof}
+
+\subsection{Gâteaux 几乎处处可微}
+
+\begin{theorem}[Mazur]
+\label{res:47}
+设 $\X$ 是可分 Banach 空间，$f:\X\to\R$ 是连续凸函数。则 $f$ 在 $\X$ 的一个稠密子集上 Gâteaux 可微。
+\end{theorem}
+
+为证明这个定理，先取 $\X$ 中的一个稠密序列 $(v_n)_{n\geqslant1}$（由可分性存在），并引入集合
+\begin{equation}
+  A_{m,n}=\{x\in\X\mid f^+(x;v_n)+f^+(x;-v_n)\geqslant1/m\},\qquad A=\bigcup_{m,n\geqslant1}A_{m,n}.
+  \label{eq:14}
+\end{equation}
+证明的思路如下：
+\begin{enumerate}[label=\alph*.]
+  \item 先证 $f$ 在 $\X\setminus A$ 上 Gâteaux 可微；
+  \item 再证每个 $A_{m,n}$ 是闭集且内部为空。
+\end{enumerate}
+于是由 Baire 定理，$A$ 的内部为空，即 $\X\setminus A$ 稠密。
+
+\begin{lemma}
+\label{res:48}
+$f$ 在 $\X\setminus A$ 上 Gâteaux 可微。
+\end{lemma}
+
+\begin{proof}
+因为 $f$ 在 $\X$ 上连续，由推论~\ref{res:34} 与注~\ref{rem:12}，
+\begin{align*}
+  f\text{ 在 }x\in\X\text{ 处不 Gâteaux 可微}
+  &\Longrightarrow\exists v\in\X,\ f^+(x;v)+f^+(x;-v)>0\\
+  &\Longrightarrow\exists v\in\X,\ \exists m\geqslant1,\ f^+(x;v)+f^+(x;-v)>2/m\\
+  &\Longrightarrow\exists m,n\geqslant1,\ f^+(x;v_n)+f^+(x;-v_n)>1/m\\
+  &\Longrightarrow x\in A_{m,n}\subseteq A,
+\end{align*}
+其中第三步用了映射 $v\mapsto f^+(x;v)$ 的连续性（命题~\ref{res:33}(iii)）以及 $(v_n)$ 的稠密性。
+\end{proof}
+
+\begin{lemma}
+\label{res:49}
+\eqref{eq:14} 中定义的集合 $A_{m,n}$ 是闭集。
+\end{lemma}
+
+这是下面引理的推论：对任意 $v\in\X$，方向导数 $x\mapsto f^+(x;v)$ 是上半连续的。于是 $f^+(\cdot;v)+f^+(\cdot;-v)$ 也上半连续，
+$A_{m,n}$ 作为上半连续函数的上水平集是闭集。
+
+\begin{lemma}
+\label{res:50}
+设 $\X$ 是赋范空间，$f:\X\to\Rbar$ 凸，$x\in\cont f$。则对任意收敛到 $x$ 的序列 $(x_k)_{k\in\N}$，有 $f^+(x;v)\geqslant\limsup_{k\to\infty}f^+(x_k;v)$。
+\end{lemma}
+
+\begin{proof}
+由凸性与连续性（命题~\ref{res:22}），$f$ 在 $x$ 的某个邻域 $\mathrm B(x,\delta)$ 上是 $L$-Lipschitz 的。不妨设序列 $(x_k)$ 都在 $\mathrm B(x,\delta/2)$ 中。
+固定 $\varepsilon>0$ 使 $\varepsilon\norm v<\delta/2$，则 $x+\varepsilon v$、$x_k$、$x_k+\varepsilon v$ 都在 $\mathrm B(x,\delta)$ 中。由 Lipschitz 性质与 \eqref{eq:8}，
+\begin{align*}
+  \frac1\varepsilon\bigl(f(x+\varepsilon v)-f(x)\bigr)&\geqslant\frac1\varepsilon\bigl(f(x_k+\varepsilon v)-f(x_k)-2L\norm{x-x_k}\bigr)\\
+  &\geqslant f^+(x_k;v)-\frac{2L\norm{x-x_k}}{\varepsilon}.
+\end{align*}
+先令 $k\to\infty$ 取上极限，得 $\frac1\varepsilon\bigl(f(x+\varepsilon v)-f(x)\bigr)\geqslant\limsup_{k\to\infty}f^+(x_k;v)$；
+再对 $\varepsilon$ 取下确界，得
+\[
+  f^+(x;v)\geqslant\limsup_{k\to\infty}f^+(x_k;v). \qedhere
+\]
+\end{proof}
+
+\begin{lemma}
+\label{res:51}
+\eqref{eq:14} 中定义的集合 $A_{m,n}$ 内部为空。
+\end{lemma}
+
+\begin{proof}
+若 $v_n=0$，则 $A_{m,n}=\varnothing$。设 $v_n\neq0$，并假设 $A_{m,n}$ 的内部含有一点 $x$，即存在 $r>0$ 使 $\mathrm B(x,r)\subseteq A_{m,n}$。
+令 $T=r/\norm{v_n}$，$x_t:=x+tv_n$，$g:t\in\left[0,T\right[\mapsto f(x_t)$。则 $x_t\in\mathrm B(x,r)$，且 $g'_+(t)=f^+(x_t;v_n)$，$g'_-(t)=-f^+(x_t;-v_n)$，故
+\[
+  \forall t\in\left]0,T\right[,\quad-f^+(x_t;-v_n)+1/m\leqslant f^+(x_t;v_n)
+  \ \Longrightarrow\ \forall t\in\left]0,T\right[,\quad g\text{ 在 }t\text{ 处不可微}.
+\]
+这与命题~\ref{res:46}（$g$ 的不可微点至多可数）矛盾。
+\end{proof}
+
+\subsection{$\R^d$ 上的 Fréchet 几乎处处可微}
+\label{sec:ch03-frechet-ae}
+
+$\R^d$ 上凸函数的性态比无穷维空间上简单得多。设 $f:\R^d\to\Rbar$ 是凸函数，$x\in\cont f$。我们将证明下面的蕴含链：
+\begin{align*}
+  f\text{ 在 }x\text{ 处存在各偏导数 }\Bigl(\frac{\partial f}{\partial e_i}(x)\Bigr)_{1\leqslant i\leqslant d}
+  &\Longrightarrow v\mapsto f^+(x;v)\text{ 线性}\\
+  &\Longrightarrow f\text{ 在 }x\text{ 处 Gâteaux 可微}\\
+  &\Longrightarrow f\text{ 在 }x\text{ 处 Fréchet 可微}.
+\end{align*}
+（第二个蕴含是因为 $\R^d$ 上的线性泛函都连续。）由此可推出凸函数 $f:\R^d\to\Rbar$ 在其定义域内部几乎处处可微。
+
+\begin{proposition}
+\label{res:52}
+设 $f:\R^d\to\Rbar$ 凸。若 $f$ 在 $x\in\interior(\dom f)$ 处 Gâteaux 可微，则 $f$ 在 $x$ 处也 Fréchet 可微。
+\end{proposition}
+
+这个命题由下面的引理以及 $f$ 在 $x$ 附近局部 Lipschitz（推论~\ref{res:20}、命题~\ref{res:22}）推出。
+
+\begin{lemma}
+\label{res:53}
+设 $f:\mathrm B(x,r)\subseteq\R^d\to\R$ 凸且 $M$-Lipschitz。则 $f$ 在 $x$ 处 Gâteaux 可微当且仅当它在 $x$ 处 Fréchet 可微。
+\end{lemma}
+
+\begin{proof}
+Fréchet 可微按定义蕴含 Gâteaux 可微，只需证反向。设 $S$ 是 $\R^d$ 的单位球面，$\varepsilon>0$。由紧性，存在 $S$ 中有限个向量 $(v_i)_{1\leqslant i\leqslant N}$
+使 $S\subseteq\bigcup_i\mathrm B(v_i,\varepsilon)$。由 $f$ 在 $x$ 处 Gâteaux 可微（$f^+(x;\cdot)$ 线性，故 $t<0$ 时 $f^+(x;tv_i)=tf^+(x;v_i)$ 也是双侧导数），
+对每个 $i$ 存在 $\delta_i>0$ 使
+\[
+  \forall t\in[-\delta_i,\delta_i],\quad\abs{f(x+tv_i)-\bigl(f(x)+tf^+(x;v_i)\bigr)}\leqslant\varepsilon\abs t .
+\]
+令 $\delta:=\min(\min_i\delta_i,r/2)>0$。对每个 $v\in S$，存在 $i$ 使 $\norm{v_i-v}\leqslant\varepsilon$。由于 $f$ 是 $M$-Lipschitz 的（从而 $f^+(x;\cdot)$ 也是 $M$-Lipschitz 的），
+\[
+  \abs{f(x+tv_i)-f(x+tv)}\leqslant M\abs t\varepsilon,\qquad\abs{f^+(x;v_i)-f^+(x;v)}\leqslant M\varepsilon .
+\]
+于是对所有 $v\in S$ 与 $\abs t\leqslant\delta$，
+\begin{align*}
+  \abs{f(x+tv)-\bigl(f(x)+tf^+(x;v)\bigr)}
+  &\leqslant\abs{f(x+tv_i)-\bigl(f(x)+tf^+(x;v_i)\bigr)}+2M\varepsilon\abs t\\
+  &\leqslant(2M+1)\varepsilon\abs t .
+\end{align*}
+由 $f^+(x;\cdot)$ 的齐次性，等价地对所有 $v\in\R^d$、$\norm v\leqslant\delta$（写 $v=tu$，$t=\norm v$，$u\in S$）有
+\[
+  \abs{f(x+v)-\bigl(f(x)+f^+(x;v)\bigr)}\leqslant(2M+1)\varepsilon\norm v .
+\]
+由于 $\varepsilon>0$ 任意，$f$ 在 $x$ 处 Fréchet 可微。
+\end{proof}
+
+\begin{proposition}
+\label{res:54}
+设 $f:\R^d\to\Rbar$ 凸。则 $f$ 在 $x\in\interior(\dom f)$ 处 Gâteaux 可微，当且仅当 $f$ 在 $x$ 处存在各偏导数。
+\end{proposition}
+
+\begin{lemma}
+\label{res:55}
+设 $g:\R^d\to\R$ 是次线性函数。则集合
+\[
+  V=\{v\in\R^d\mid g(v)=-g(-v)\}
+\]
+是 $\R^d$ 的线性子空间。
+\end{lemma}
+
+\begin{proof}
+由次线性，$0=g(u+(-u))\leqslant g(u)+g(-u)$，所以对所有 $u$ 有 $-g(-u)\leqslant g(u)$。
+$V$ 关于数乘封闭：$\lambda\geqslant0$ 时由 $g$ 的正齐次性；又由定义 $v\in V\iff-v\in V$，故对 $\lambda<0$ 也成立。设 $v,w\in V$，则
+\[
+  g(v+w)\leqslant g(v)+g(w)=-g(-v)-g(-w)\leqslant-g(-v-w)\leqslant g(v+w),
+\]
+其中第一个不等式用了次可加性，等号用了 $V$ 的定义，第二个不等式用了次可加性 $g(-v-w)\leqslant g(-v)+g(-w)$，
+第三个不等式用了 $-g(-u)\leqslant g(u)$（取 $u=v+w$）。于是处处取等，$g(v+w)=-g(-(v+w))$，即 $v+w\in V$。故 $V$ 是线性子空间。
+\end{proof}
+
+\begin{proof}[命题~\ref{res:54} 的证明]
+若 $f$ 在 $x$ 处 Gâteaux 可微，则 $\frac{\partial f}{\partial e_i}(x)=f^+(x;e_i)$ 存在。反之，由命题~\ref{res:33}(ii)，$g=f^+(x;\cdot)$ 是有限的次线性函数。
+令 $V:=\{v\in\R^d\mid g(v)=-g(-v)\}$，由前一引理它是线性子空间。由于各偏导数存在，对每个基向量 $e_i$ 有 $f^+(x;-e_i)=-f^+(x;e_i)$，即 $e_i\in V$。
+所以 $V=\R^d$，由引理~\ref{res:35}，$f^+(x;\cdot)$ 是线性的；它在 $\R^d$ 上自动连续，故 $f$ 在 $x$ 处 Gâteaux 可微。
+\end{proof}
+
+\begin{theorem}
+\label{res:56}
+设 $f:\R^d\to\Rbar$ 是凸函数。则 $f$ 在 $\interior(\dom f)$ 中几乎每一点处 Fréchet 可微。
+\end{theorem}
+
+\begin{proof}
+记 $\Omega:=\interior(\dom f)$（开凸集），$A$ 为 $f$ 在 $\Omega$ 中的不可微点集。由命题~\ref{res:54} 与命题~\ref{res:52}，$A$ 包含于集合
+\[
+  A_i:=\Bigl\{x\in\Omega\Bigm|\frac{\partial f}{\partial e_i}(x)\text{ 不存在}\Bigr\},\qquad i=1,\dots,d
+\]
+之并。所以只需证明每个 $A_i$ 是零测集。（$A_i$ 是 Borel 集：$A_i=\{x\in\Omega\mid h(x)>0\}$，其中 $h:=f^+(\cdot;e_i)+f^+(\cdot;-e_i)$；
+由引理~\ref{res:50}（$\Omega=\cont f$，推论~\ref{res:20}），$h$ 在 $\Omega$ 上上半连续，所以 $A_i=\bigcup_{m\geqslant1}\{x\in\Omega\mid h(x)\geqslant1/m\}$ 是可数个 $\Omega$ 的相对闭子集之并。）
+不妨设 $i=d$，令 $\phi$ 为 $A_d$ 的指示函数（取值 $0/1$）。将 $x\in\R^d$ 写成 $(y,t)\in\R^{d-1}\times\R$。由 Tonelli 定理，
+\[
+  \lambda(A_d)=\int_{\R^d}\phi(x)\,\mathrm dx=\int_{\R^{d-1}}\int_\R\phi(y,t)\,\mathrm dt\,\mathrm dy .
+\]
+对每个 $y\in\R^{d-1}$，$t\mapsto\phi(y,t)$ 是集合 $B_y:=\{t\in\R\mid(y,t)\in A_d\}$ 的指示函数，而 $B_y$ 正是一维凸函数 $t\mapsto f(y,t)$ 在开区间 $\{t\mid(y,t)\in\Omega\}$ 中的不可微点集。
+由命题~\ref{res:46}，$B_y$ 至多可数，从而 Lebesgue 测度为零。于是内层积分恒为零，$\lambda(A_d)=0$。
+\end{proof}
+
+\begin{remark}
+\label{rem:21}
+事实上可以证明：凸函数 $f:\R^d\to\Rbar$ 的不可微点集的 Hausdorff 维数至多为 $d-1$，并且它是维数 $\leqslant d-1$ 的可求长集（rectifiable set）。
+这意味着该集合在去掉一个 $(d-1)$ 维 Hausdorff 测度为零的集合之后，可以被可数多个 Lipschitz 映射 $\phi_n:\R^{d-1}\to\R$ 的图像（在适当选取坐标后）覆盖
+（Alberti--Ambrosio--Cannarsa 1992）。这一事实在最优传输中用来刻画存在最优传输映射的测度对。（了解即可。）
+\end{remark}
+
+\begin{keypoints}
+  \item 凸函数在 $x\in\dom f$ 处的方向导数总存在，$f^+(x;v)=\inf_{\varepsilon>0}\frac{f(x+\varepsilon v)-f(x)}{\varepsilon}$；在 $\interior\dom f$ 上它是有限的次线性函数，在 $\cont f$ 上还连续。
+  \item 次梯度 $x^*\in\partial f(x)$：$f(y)\geqslant f(x)+\pair{x^*}{y-x}$。$\partial f(x)$ 弱*闭凸；Fermat 法则 $x\in\argmin f\iff0\in\partial f(x)$；$\partial\iota_K(x)=\Nor_xK$。
+  \item 对凸函数，$\partial f(x)=\{x^*\mid\pair{x^*}{\cdot}\leqslant f^+(x;\cdot)\}$；在 $x\in\cont f$ 处 $\partial f(x)$ 非空（赋范时有界），$f^+(x;\cdot)=\sigma_{\partial f(x)}$，且 Gâteaux 可微 $\iff$ $\partial f(x)$ 为单点集。
+  \item 运算法则：一般只有包含关系 $\partial f+\partial g\subseteq\partial(f+g)$、$A^*\partial f(A\cdot)\subseteq\partial(f\circ A)$；在规范条件 $\dom f\cap\cont g\neq\varnothing$（或 $\cont f\cap A(\Y)\neq\varnothing$）下取等号（Moreau--Rockafellar）；有限个函数的最大值的次微分由 Dubovitskii--Milyutin 定理给出。
+  \item 约束最优性：$x\in\argmin_Kf\iff-\partial f(x)\cap\Nor_xK\neq\varnothing$；在 Slater 条件下得到 KKT 条件 $0\in\partial f(x)+\sum_i\lambda_i\partial g_i(x)$，$\lambda_i\geqslant0$，$\lambda_ig_i(x)=0$。
+  \item 可微性：$\R$ 上凸函数的不可微点至多可数；可分 Banach 空间上连续凸函数在稠密集上 Gâteaux 可微（Mazur）；$\R^d$ 上凸函数在 $\interior\dom f$ 内 Gâteaux 与 Fréchet 可微等价，且几乎处处可微。
+\end{keypoints}

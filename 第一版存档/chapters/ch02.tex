@@ -1,0 +1,737 @@
+% 第 2 章：凸函数（据原讲义第 12--24 页整理）
+\chapter{凸函数}
+\label{ch:ch02}
+
+凸分析中经常遇到取值于（半）扩充实数轴 $\Rbar = \R\cup\{+\infty\}$ 的函数。
+一个典型来源是把约束“写进”目标函数：设 $K\subseteq\X$ 是凸集，约束问题
+\[
+  \min_{K} f
+\]
+可以改写成无约束问题
+\[
+  \min_{\X}\ f + \iota_K ,
+\]
+其中 $\iota_K$ 是 $K$ 的（凸）示性函数（indicator function）：
+\[
+  \iota_K(x) =
+  \begin{cases}
+    0, & x\in K,\\
+    +\infty, & x\notin K.
+  \end{cases}
+\]
+这看似只是形式上的技巧，但在实践中很有用：它使得用“极小化两个凸函数之和”的通用算法来解带约束的凸优化问题成为可能。
+更重要的是，取值 $+\infty$ 的凸函数在 Legendre--Fenchel 共轭中会自然出现，例如我们将看到，范数的共轭恰好是对偶单位球的 $0/+\infty$ 型示性函数。
+
+$\R\cup\{+\infty\}$ 上采用直观的运算规则：对 $a\in\R$ 有 $a+(+\infty)=+\infty$；对 $a>0$ 有 $a\times(+\infty)=+\infty$。
+通常还约定 $0\times(+\infty)=0$，这样 $0\times\iota_K$ 就是零函数。
+
+\section{定义与基本性质}
+
+\begin{definition}[有效域与上图]
+\label{def:11}
+设 $f:\X\to\Rbar$。
+\begin{enumerate}[label=(\roman*)]
+  \item $f$ 的\emph{有效域}（domain）是 $f$ 取有限值的点构成的集合：
+  \[
+    \dom f = \{x\in\X \mid f(x)\neq+\infty\};
+  \]
+  \item $f$ 的\emph{上图}（epigraph）是 $\X\times\R$ 中位于 $f$ 的图像上方的部分：
+  \[
+    \epi f = \{(x,t)\in\X\times\R \mid t\geqslant f(x)\}.
+  \]
+\end{enumerate}
+若 $\dom f\neq\varnothing$，即 $f\not\equiv+\infty$，则称 $f$ 是\emph{正常的}（proper）。
+\end{definition}
+
+\begin{definition}[凸函数]
+\label{def:12}
+若 $\epi f$ 是 $\X\times\R$ 的凸子集，则称 $f:\X\to\Rbar$ 是\emph{凸函数}（convex function）。
+\end{definition}
+
+下面的命题说明这一定义与通常的“弦在图像上方”的定义一致。
+
+\begin{proposition}
+\label{res:15}
+$f:\X\to\Rbar$ 是凸函数，当且仅当 $\dom f$ 是凸集，并且对任意 $x,y\in\dom f$ 和任意 $\alpha\in[0,1]$，
+\begin{equation}
+  \label{eq:4}
+  f\bigl((1-\alpha)x+\alpha y\bigr)\leqslant(1-\alpha)f(x)+\alpha f(y).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+（$\Rightarrow$）设 $f$ 是凸函数。记 $\Pi_\X:\X\times\R\to\X$，$\Pi_\X(x,t)=x$ 为（线性的）投影，则
+\[
+  \dom f = \{x\in\X \mid \exists t\in\R,\ (x,t)\in\epi f\} = \Pi_\X(\epi f),
+\]
+凸集在线性映射下的像是凸集，故 $\dom f$ 是凸集。又对 $x,y\in\dom f$，点 $x'=(x,f(x))$、$y'=(y,f(y))$ 都属于 $\epi f$，由 $\epi f$ 的凸性，对任意 $\alpha\in[0,1]$，
+\[
+  (1-\alpha)x'+\alpha y' = \bigl((1-\alpha)x+\alpha y,\ (1-\alpha)f(x)+\alpha f(y)\bigr)\in\epi f,
+\]
+这正是 \eqref{eq:4}。
+
+（$\Leftarrow$）设 $(x,s),(y,t)\in\epi f$，$\alpha\in[0,1]$。则 $x,y\in\dom f$，$f(x)\leqslant s$，$f(y)\leqslant t$。由 $\dom f$ 的凸性，$(1-\alpha)x+\alpha y\in\dom f$，再由 \eqref{eq:4}，
+\[
+  f\bigl((1-\alpha)x+\alpha y\bigr)\leqslant(1-\alpha)f(x)+\alpha f(y)\leqslant(1-\alpha)s+\alpha t,
+\]
+即 $(1-\alpha)(x,s)+\alpha(y,t)\in\epi f$。故 $\epi f$ 是凸集。
+\end{proof}
+
+下面的命题给出构造凸函数的几种方式。
+
+\begin{proposition}
+\label{res:16}
+\begin{enumerate}[label=(\roman*)]
+  \item 若 $(f_i)_{i\in I}$ 是一族（可以不可数的）凸函数，则逐点上确界 $x\mapsto\sup_{i\in I}f_i(x)$ 是凸函数；
+  \item 设 $A:\X\to\Y$ 是仿射映射，$f$ 是 $\Y$ 上的凸函数，则 $f\circ A$ 是 $\X$ 上的凸函数；
+  \item 若 $f_1,\dots,f_N$ 是凸函数，$\lambda_1,\dots,\lambda_N\geqslant0$，则 $\sum_{i=1}^N\lambda_if_i$ 是凸函数。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) $\epi(\sup_i f_i)=\bigcap_i\epi f_i$，凸集之交是凸集。
+(ii) $A$ 仿射，故 $A((1-\alpha)x+\alpha y)=(1-\alpha)Ax+\alpha Ay$；$\dom(f\circ A)=A^{-1}(\dom f)$ 是凸集，再对 $Ax,Ay\in\dom f$ 用 \eqref{eq:4} 即可。
+(iii) $\dom(\sum\lambda_if_i)$ 是若干凸集之交（$\lambda_i=0$ 的项按约定恒为 $0$，不限制有效域），在其上把各 $f_i$ 的不等式 \eqref{eq:4} 乘以 $\lambda_i\geqslant0$ 后相加即可。
+\end{proof}
+
+\begin{example}
+\label{exa:5}
+\begin{enumerate}[label=\alph*.]
+  \item 设 $K\subseteq\X$，$\iota_K:\X\to\Rbar$ 为其示性函数。则 $\iota_K$ 是凸函数当且仅当 $K$ 是凸集（因为 $\epi\iota_K=K\times[0,+\infty)$）。
+  \item 线性型（即使不连续）是凸函数。
+  \item 次线性函数（sublinear function，如范数、规范函数、支撑函数）是凸函数。
+  \item 凸函数的下水平集（sublevel set）是凸集。反之不成立：存在下水平集全是凸集的非凸函数（例如 $\R$ 上的 $x\mapsto\sqrt{\abs{x}}$）。
+  \item 若 $f$ 是凸函数，$K$ 是凸集，则 $g=f+\iota_K$ 是凸函数。
+  \item 凸函数的复合未必是凸函数：例如 $f(x)=x^2$ 与 $g(x)=-x$ 都是 $\R$ 上的凸函数，但 $g\circ f=-x^2$ 不是。
+\end{enumerate}
+\end{example}
+
+\begin{definition}[严格凸、强凸与半凸]
+\label{def:13}
+若 $f:\X\to\Rbar$ 是凸函数，并且
+\begin{equation}
+  \label{eq:5}
+  \forall x\neq y\in\dom f,\ \forall t\in(0,1),\qquad
+  f\bigl((1-t)x+ty\bigr)<(1-t)f(x)+tf(y),
+\end{equation}
+则称 $f$ 是\emph{严格凸的}（strictly convex）。
+
+在赋范空间上，若
+\begin{equation}
+  \label{eq:6}
+  \forall x,y\in\dom f,\ \forall t\in[0,1],\qquad
+  f\bigl((1-t)x+ty\bigr)+t(1-t)\,\omega(\norm{x-y})\leqslant(1-t)f(x)+tf(y),
+\end{equation}
+则称 $f$ 具有\emph{凸性模}（convexity modulus）$\omega:\R\to\R$。
+当 $\omega(t)=\frac{\alpha}{2}t^2$ 且 $\alpha>0$ 时，称 $f$ 是 \emph{$\alpha$-强凸的}（$\alpha$-strongly convex）；
+当 $\alpha<0$ 时，称 $f$ 是 \emph{$\alpha$-半凸的}（$\alpha$-semiconvex）。注意半凸函数一般不是凸函数。
+\end{definition}
+
+\section{凸函数的连续性}
+
+\begin{proposition}
+\label{res:17}
+设 $f:\X\to\Rbar$ 是拓扑向量空间上的凸函数，$f$ 在 $x$ 处取有限值，并且在 $x$ 的某个邻域上有上界。则 $f$ 在 $x$ 处连续。
+\end{proposition}
+
+\begin{proof}
+不妨设 $x=0$ 且 $f(0)=0$（否则考虑 $y\mapsto f(x+y)-f(x)$）。设 $O$ 是原点的邻域，$M\geqslant0$ 使得在 $O$ 上 $f\leqslant M$。必要时用 $O\cap(-O)$ 代替 $O$，可设 $O$ 对称，即 $O=-O$。
+
+取 $\varepsilon\in(0,1)$，令 $O_\varepsilon=\varepsilon O$，它也是原点的邻域。设 $y\in O_\varepsilon$，则 $y/\varepsilon\in O$ 且 $-y/\varepsilon\in O$。
+\begin{itemize}
+  \item 上界：由 $y=(1-\varepsilon)\cdot0+\varepsilon\cdot\frac{y}{\varepsilon}$ 和凸性，
+  \[
+    f(y)\leqslant(1-\varepsilon)f(0)+\varepsilon f(y/\varepsilon)\leqslant\varepsilon M.
+  \]
+  \item 下界：由 $0=\frac{1}{1+\varepsilon}y+\frac{\varepsilon}{1+\varepsilon}\bigl(-\frac{y}{\varepsilon}\bigr)$ 和凸性，
+  \[
+    0=f(0)\leqslant\frac{1}{1+\varepsilon}f(y)+\frac{\varepsilon}{1+\varepsilon}f(-y/\varepsilon),
+  \]
+  于是 $f(y)\geqslant-\varepsilon f(-y/\varepsilon)\geqslant-\varepsilon M$。
+\end{itemize}
+所以在 $O_\varepsilon$ 上 $\abs{f}\leqslant\varepsilon M$。由 $\varepsilon$ 的任意性，$f$ 在 $0$ 处连续。
+\end{proof}
+
+\begin{remark}
+\label{rem:4}
+命题~\ref{res:17} 说明：若 $f$ 是线性型，则 $f$ 在 $x$ 处连续当且仅当 $f$ 在 $x$ 的某个邻域上有上界（或有下界，对 $-f$ 用同一结论）。
+因此命题~\ref{res:17} 可看作线性型连续性的熟知刻画（引理~\ref{res:70}）的推广。
+\end{remark}
+
+从现在起记
+\[
+  \cont f = \{x\in\dom f \mid f\text{ 在 }x\text{ 处连续}\}.
+\]
+
+\begin{proposition}
+\label{res:18}
+设 $f:\X\to\Rbar$ 是拓扑向量空间上的凸函数。若存在非空开集，$f$ 在其上有上界，则 $\cont f=\interior\dom f$。
+\end{proposition}
+
+\begin{proof}
+（$\subseteq$）设 $y\in\cont f$。由于 $f(y)<+\infty$ 且 $f$ 在 $y$ 处连续，$y$ 有邻域使其上 $f<f(y)+1<+\infty$，该邻域含于 $\dom f$，故 $y\in\interior\dom f$。
+
+（$\supseteq$）设 $O$ 是非空开集，在 $O$ 上 $f\leqslant M$，取 $x\in O$；记 $\Omega=\interior\dom f$（注意 $O\subseteq\dom f$，故 $\Omega\neq\varnothing$）。任取 $y\in\Omega$，我们证明 $f$ 在 $y$ 附近有上界。
+由于 $\Omega$ 是开集，存在 $t>0$ 使得 $z:=y+t(y-x)\in\Omega$，特别地 $f(z)<+\infty$。于是 $y$ 在线段 $[x,z]$ 上：
+\[
+  y=(1-\alpha)x+\alpha z,\qquad \alpha=\frac{1}{1+t}\in(0,1).
+\]
+集合 $O_y:=(1-\alpha)O+\alpha z$ 是开集（开集的平移与非零伸缩仍是开集），且含 $y$。
+对任意 $w_y\in O_y$，存在 $w_x\in O$ 使 $w_y=(1-\alpha)w_x+\alpha z$，由凸性及在 $O$ 上 $f\leqslant M$，
+\[
+  f(w_y)\leqslant(1-\alpha)f(w_x)+\alpha f(z)\leqslant\max\bigl(M,f(z)\bigr).
+\]
+所以 $f$ 在 $y$ 的邻域 $O_y$ 上有上界，由命题~\ref{res:17}，$f$ 在 $y$ 处连续。
+\end{proof}
+
+\begin{remark}
+\label{rem:5}
+“有上界”这一假设不可去掉。例如取无穷维空间 $\X$ 上的不连续线性型 $f$，则 $\dom f=\X$，$f$ 是凸函数，但 $f$ 在 $\X$ 的每一点都不连续。
+\end{remark}
+
+\begin{example}
+\label{exa:6}
+设 $\X$ 是赋范空间，$K\subseteq\X$ 是凸集，且包含某个球 $B(0,r)$（$r>0$）。设 $f=p_K$ 是 $K$ 的规范函数（gauge，定义~\ref{def:5}）。则在单位球上 $\abs{f}\leqslant1/r$，由命题~\ref{res:18}，$f$ 在 $\X$ 上处处连续。
+\end{example}
+
+\begin{corollary}
+\label{res:19}
+若 $f:\X\to\Rbar$ 是凸函数且 $\cont f\neq\varnothing$，则 $\cont f=\interior\dom f$。
+\end{corollary}
+
+\begin{proof}
+若 $f$ 在 $x$ 处连续且 $f(x)<+\infty$，则 $f$ 在 $x$ 的某个开邻域上有上界 $f(x)+1$，用命题~\ref{res:18} 即可。
+\end{proof}
+
+\begin{corollary}
+\label{res:20}
+若 $\X$ 是有限维空间，$f:\X\to\Rbar$ 是凸函数，则 $\cont f=\interior\dom f$。
+\end{corollary}
+
+\begin{proof}
+若 $\interior\dom f=\varnothing$，则由命题~\ref{res:18} 证明的第一部分，$\cont f\subseteq\interior\dom f=\varnothing$，结论成立。
+设 $\interior\dom f\neq\varnothing$，$\dim\X=n$。取 $x_1\in\interior\dom f$，再在 $\interior\dom f$ 中取 $x_2,\dots,x_{n+1}$，使 $x_2-x_1,\dots,x_{n+1}-x_1$ 张成 $\X$（$\interior\dom f$ 是开集，可以在 $x_1$ 附近沿一组基的方向取点）。
+于是单纯形 $K=\conv\{x_1,\dots,x_{n+1}\}$ 有非空内部。$K$ 中每个元素都是 $x_1,\dots,x_{n+1}$ 的凸组合，由凸性
+\[
+  \forall x\in K,\qquad f(x)\leqslant M:=\max_i f(x_i)<+\infty .
+\]
+因此 $f$ 在非空开集 $\interior K$ 上有上界，由命题~\ref{res:18} 得 $\cont f=\interior\dom f$。
+\end{proof}
+
+本节余下部分设 $\X$ 是赋范空间。此时凸函数的连续性可以加强为局部 Lipschitz 性。
+
+\begin{definition}[局部 Lipschitz]
+\label{def:14}
+设 $\Omega\subseteq\X$ 是开集，$f:\Omega\to\R$。若 $\Omega$ 中每一点都有一个邻域，$f$ 在其上是 Lipschitz 的，即
+\[
+  \forall x_0\in\Omega,\ \exists\delta>0,\ \exists M\in\R,\ \forall x,y\in B(x_0,\delta),\quad \abs{f(x)-f(y)}\leqslant M\norm{x-y},
+\]
+则称 $f$ 在 $\Omega$ 上\emph{局部 Lipschitz}（locally Lipschitz）。
+\end{definition}
+
+先证明一个中间结果。
+
+\begin{lemma}
+\label{res:21}
+设 $f:\X\to\Rbar$ 是凸函数，且在 $B(x_0,2\delta)$ 上 $\abs{f}\leqslant M$。则 $f$ 在 $B(x_0,\delta)$ 上是 $\frac{2M}{\delta}$-Lipschitz 的。
+\end{lemma}
+
+\begin{proof}
+设 $x,y\in B(x_0,\delta)$，$x\neq y$，令 $\alpha=\norm{x-y}>0$，
+\[
+  z:=y+\frac{\delta}{\alpha}(y-x).
+\]
+则 $\norm{z-x_0}\leqslant\norm{y-x_0}+\delta<2\delta$，即 $z\in B(x_0,2\delta)$。由 $z$ 的定义解出 $y$，它是 $x$ 与 $z$ 的凸组合：
+\[
+  y=\frac{\delta/\alpha}{1+\delta/\alpha}\,x+\frac{1}{1+\delta/\alpha}\,z .
+\]
+由凸性，
+\[
+  f(y)\leqslant\frac{\delta/\alpha}{1+\delta/\alpha}f(x)+\frac{1}{1+\delta/\alpha}f(z),
+  \quad\text{即}\quad
+  f(y)-f(x)\leqslant\frac{f(z)-f(x)}{1+\delta/\alpha}.
+\]
+利用 $\abs{f}\leqslant M$，
+\[
+  f(y)-f(x)\leqslant\frac{2M}{1+\delta/\alpha}\leqslant\frac{2M}{\delta/\alpha}=\frac{2M}{\delta}\norm{x-y}.
+\]
+交换 $x,y$ 的地位即得 $\abs{f(y)-f(x)}\leqslant\frac{2M}{\delta}\norm{x-y}$。
+\end{proof}
+
+结合引理~\ref{res:21} 与前面的连续性结果，得到：
+
+\begin{proposition}
+\label{res:22}
+设 $f:\X\to\Rbar$ 是赋范空间上的凸函数。若 $\cont f\neq\varnothing$，则 $f$ 在 $\interior\dom f$ 上局部 Lipschitz。
+\end{proposition}
+
+\begin{proof}
+由推论~\ref{res:19}，$\cont f=\interior\dom f$。任取 $x_0\in\interior\dom f$，$f$ 在 $x_0$ 处连续，故存在 $\delta>0$，使在 $B(x_0,2\delta)$ 上 $\abs{f-f(x_0)}\leqslant1$，从而 $\abs{f}\leqslant\abs{f(x_0)}+1$。由引理~\ref{res:21}，$f$ 在 $B(x_0,\delta)$ 上 Lipschitz。
+\end{proof}
+
+\begin{remark}
+\label{rem:6}
+定义~\ref{def:14} 中 $\Omega$ 为开集的要求不能去掉（命题~\ref{res:22} 的结论只在 $\interior\dom f$ 上成立）。例如取
+$f(x)=-\sqrt{x}$（$x\in[0,1]$），在 $[0,1]$ 外取 $+\infty$。$f$ 是凸函数，但 $\lim_{x\to0,\,x\neq0}f'(x)=-\infty$，所以 $f$ 在 $0$ 处（作为 $\dom f=[0,1]$ 上的函数）不是局部 Lipschitz 的。
+\end{remark}
+
+\section{下半连续凸函数}
+
+\begin{definition}[下半连续]
+\label{def:15}
+设 $\X$ 是拓扑向量空间。若对任意 $a\in\R$，下水平集
+\[
+  \lev_{\leqslant a}f=\{x\in\X \mid f(x)\leqslant a\}
+\]
+都是闭集，则称 $f:\X\to\Rbar$ 是\emph{下半连续的}（lower semicontinuous，简记 lsc）。
+等价地，对任意 $a\in\R$，严格上水平集 $\lev_{>a}f$ 都是开集。在凸分析文献中，下半连续函数有时也称为\emph{闭函数}（closed function）。
+\end{definition}
+
+\begin{remark}[与连续性的关系]
+\label{rem:7}
+若对任意 $a\in\R$，下水平集 $\lev_{\leqslant a}f$ 与上水平集 $\lev_{\geqslant a}f$ 都是闭集，或等价地，严格下水平集 $\lev_{<a}f$ 与严格上水平集 $\lev_{>a}f$ 都是开集，则 $f:\X\to\Rbar$ 连续。
+事实上，此时对任意 $a\leqslant b$，
+\[
+  f^{-1}\bigl((a,b)\bigr)=\lev_{>a}f\cap\lev_{<b}f
+\]
+作为有限个开集之交是开集。$\R$ 中每个开集都是（可数个）开区间之并，所以任意开集 $O\subseteq\R$ 的原像 $f^{-1}(O)$ 都是开集，这就证明了 $f$ 的连续性。
+\end{remark}
+
+\begin{example}[示性函数]
+\label{exa:7}
+集合 $A\subseteq\X$ 的 $0/+\infty$ 型示性函数 $\iota_A$ 下半连续，当且仅当 $A$ 是闭集（因为对 $a\geqslant0$ 有 $\lev_{\leqslant a}\iota_A=A$，对 $a<0$ 为空集）。
+\end{example}
+
+\begin{proposition}
+\label{res:23}
+设 $\X$ 是拓扑空间，$(f_i)_{i\in I}$ 是一族下半连续函数 $f_i:\X\to\Rbar$。则
+\begin{enumerate}[label=(\roman*)]
+  \item 函数 $\sup_{i\in I}f_i$ 下半连续；
+  \item 若 $I$ 有限且 $(\lambda_i)_{i\in I}$ 都是正数，则 $\sum_{i\in I}\lambda_if_i$ 下半连续。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) 令 $f=\sup_{i}f_i$，则其下水平集
+\[
+  \lev_{\leqslant a}f=\{x\in\X \mid \forall i,\ f_i(x)\leqslant a\}=\bigcap_{i\in I}\lev_{\leqslant a}f_i
+\]
+是闭集之交，故为闭集。
+
+(ii) 令 $f=\sum_i\lambda_if_i$。对 $a\in\R$，
+\[
+  \lev_{>a}f=\Bigl\{x\in\X \Bigm| \sum_{i\in I}\lambda_if_i(x)>a\Bigr\}
+  =\bigcup_{\substack{t\in\R^I\\ \sum_i\lambda_it_i>a}}\ \Bigl[\bigcap_{i\in I}\lev_{>t_i}f_i\Bigr].
+\]
+（“$\supseteq$”：若对每个 $i$ 有 $f_i(x)>t_i$，则 $\sum\lambda_if_i(x)\geqslant\sum\lambda_it_i>a$。“$\subseteq$”：若 $\sum\lambda_if_i(x)>a$，对 $f_i(x)<+\infty$ 的 $i$ 取 $t_i$ 略小于 $f_i(x)$，对 $f_i(x)=+\infty$ 的 $i$ 取 $t_i$ 充分大即可。）
+右边是有限个开集之交的任意并，故为开集。
+\end{proof}
+
+\begin{remark}[下半连续包]
+\label{rem:8}
+设 $\X$ 是拓扑空间，$f:\X\to\Rbar$，并设 $f$ 至少有一个下半连续的下界函数（例如 $f$ 有下界）。由上一命题，函数
+\[
+  \hat f(x)=\sup\{g(x) \mid g:\X\to\Rbar\text{ 下半连续},\ g\leqslant f\}
+\]
+下半连续，并且它是位于 $f$ 下方的最大的下半连续函数，称为 $f$ 的\emph{下半连续包}（lower semicontinuous envelope）。
+\end{remark}
+
+下面给出下半连续性的另一些刻画。以下总给乘积空间 $\X\times\R$ 赋予乘积拓扑（定义~\ref{def:34}）：$O\subseteq\X\times\R$ 是开集，当且仅当对任意 $(x,t)\in O$，存在 $x$ 在 $\X$ 中的邻域 $N_x$ 和 $\varepsilon>0$，使得 $N_x\times(t-\varepsilon,t+\varepsilon)\subseteq O$。
+
+\begin{proposition}
+\label{res:24}
+下列性质等价：
+\begin{enumerate}[label=(\roman*)]
+  \item $f$ 下半连续；
+  \item $\epi f\subseteq\X\times\R$ 是闭集。
+\end{enumerate}
+\end{proposition}
+
+实数序列 $(f_n)\in\R^\N$ 的下极限 $\liminf_{n\to+\infty}f_n$ 是该序列（在 $[-\infty,+\infty]$ 中）最小的聚点。
+在度量空间 $\X$ 中，$f:\X\to\Rbar$ 下半连续，当且仅当对任意 $x\in\X$ 和任意收敛于 $x$ 的序列 $(x_n)_{n\geqslant1}$，
+\[
+  f(x)\leqslant\liminf_{n\to+\infty}f(x_n).
+\]
+度量空间中这一刻画的证明留作练习。
+
+\begin{proof}[命题~\ref{res:24} 的证明]
+(ii)$\Rightarrow$(i)：设 $\epi f$ 是闭集，$a\in\R$。映射 $j_a:\X\to\X\times\R$，$j_a(x)=(x,a)$ 连续，而
+\[
+  \lev_{\leqslant a}f=\{x \mid (x,a)\in\epi f\}=j_a^{-1}(\epi f)
+\]
+是闭集的连续原像，故为闭集。因此 $f$ 下半连续。
+
+(i)$\Rightarrow$(ii)：我们证明补集 $(\X\times\R)\setminus\epi f$ 是开集。设 $(x,t)\notin\epi f$，即 $t<f(x)$。取 $\alpha\in\R$ 使 $t<\alpha<f(x)$，则 $x\notin\lev_{\leqslant\alpha}f$。由于该集合是闭集，存在 $x$ 的邻域 $N_x$ 使 $N_x\cap\lev_{\leqslant\alpha}f=\varnothing$。
+于是 $N_x\times(-\infty,\alpha)$ 是 $(x,t)$ 在 $\X\times\R$ 中的邻域，且与 $\epi f$ 不交：若 $y\in N_x$，$s<\alpha$ 且 $s\geqslant f(y)$，则 $f(y)<\alpha$，与 $y\notin\lev_{\leqslant\alpha}f$ 矛盾。所以 $(\X\times\R)\setminus\epi f$ 是开集，即 $\epi f$ 是闭集。
+\end{proof}
+
+下一命题说明，对凸函数而言，（强）下半连续与弱下半连续是一回事。这很有用，因为证明一个函数下半连续通常比证明它弱下半连续容易得多。
+
+\begin{proposition}
+\label{res:25}
+设 $\X$ 是局部凸拓扑向量空间，$f:\X\to\Rbar$ 是凸函数。则 $f$ 下半连续当且仅当 $f$ 弱下半连续（weakly lower semicontinuous）。
+\end{proposition}
+
+\begin{proof}
+由命题~\ref{res:12}（凸集闭当且仅当弱闭）立得：凸函数的下水平集都是凸集，因此它们闭当且仅当弱闭。
+\end{proof}
+
+\begin{definition}[下半连续凸函数类]
+\label{def:16}
+下半连续凸函数的全体记为 $\Gamma(\X)$，正常的下半连续凸函数的全体记为
+\[
+  \Gammaz(\X)=\{f\in\Gamma(\X) \mid \dom f\neq\varnothing\}.
+\]
+\end{definition}
+
+\begin{proposition}
+\label{res:26}
+设 $\X$ 是局部凸拓扑向量空间，$f\in\Gamma(\X)$ 是下半连续凸函数。则 $f$ 等于它的所有（连续）仿射下界函数（affine minorant）的上确界，即
+\[
+  \forall x\in\X,\qquad f(x)=\sup\bigl\{\pair{x^*}{x}+b \bigm| x^*\in\Xs,\ b\in\R,\ f\geqslant\pair{x^*}{\cdot}+b\bigr\}.
+\]
+\end{proposition}
+
+\begin{proof}
+若 $\dom f=\varnothing$，则 $f\equiv+\infty$，任何仿射函数都是它的下界函数，上确界为 $+\infty$，结论成立。下设 $\dom f\neq\varnothing$，即 $K=\epi f$ 是 $\X\times\R$ 的非空闭凸集。令
+\[
+  g(x)=\sup\bigl\{\pair{x^*}{x}+b \bigm| x^*\in\Xs,\ b\in\R,\ f\geqslant\pair{x^*}{\cdot}+b\bigr\}.
+\]
+$g$ 是一族位于 $f$ 下方的函数的上确界，故 $g\leqslant f$。下面证明 $g\geqslant f$：只需证对任意 $x_0\in\X$ 和任意实数 $t_0<f(x_0)$，有 $g(x_0)\geqslant t_0$。
+
+由 $t_0<f(x_0)$ 知 $(x_0,t_0)\notin K$。于是可以把闭凸集 $K$ 与紧凸集 $\{(x_0,t_0)\}$ 严格分离（推论~\ref{res:7}）：存在 $\X\times\R$ 上的连续线性型，写成 $(x,t)\mapsto\pair{x^*}{x}+tv$，其中 $(x^*,v)\in\Xs\times\R$，使得
+\[
+  \inf_{(x,t)\in\epi f}\pair{x^*}{x}+tv>\pair{x^*}{x_0}+t_0v. \tag{$\ast$}
+\]
+由于 $(x,t)\in\epi f$ 时 $(x,t+s)\in\epi f$（$s\geqslant0$），左边有限迫使 $v\geqslant0$。
+
+\emph{情形 1：$v>0$。}对 $x\in\dom f$，取 $(x,f(x))\in\epi f$ 代入 ($\ast$)，除以 $v$ 得
+\[
+  \forall x\in\X,\qquad f(x)\geqslant\Bigl\langle\frac{x^*}{v}\Bigm| x_0-x\Bigr\rangle+t_0
+\]
+（$x\notin\dom f$ 时显然成立）。右边是 $f$ 的一个连续仿射下界函数，由 $g$ 的定义，
+\[
+  g(x_0)\geqslant\Bigl\langle\frac{x^*}{v}\Bigm| x_0-x_0\Bigr\rangle+t_0=t_0 .
+\]
+
+\emph{情形 2：$v=0$。}若 $x_0\in\dom f$，把 $(x_0,f(x_0))$ 代入 ($\ast$) 得 $v(f(x_0)-t_0)>0$，故此情形不会发生；因此 $x_0\notin\dom f$，$f(x_0)=+\infty$。此时 ($\ast$) 说明
+\[
+  c:=\inf_{x\in\dom f}\pair{x^*}{x-x_0}>0 .
+\]
+先说明 $f$ 至少有一个连续仿射下界函数 $a$：任取 $y_0\in\dom f$，对 $(y_0,f(y_0)-1)$ 做同样的分离，由上面的论证对应的 $v$ 必为正，于是由情形 1 得到一个仿射下界函数 $a$。现在对任意 $\lambda>0$，函数
+\[
+  a_\lambda(x)=a(x)+\lambda\bigl(c-\pair{x^*}{x-x_0}\bigr)
+\]
+是连续仿射函数，并且在 $\dom f$ 上 $c-\pair{x^*}{x-x_0}\leqslant0$，从而 $a_\lambda\leqslant a\leqslant f$；在 $\dom f$ 外 $f=+\infty$。故 $a_\lambda$ 是 $f$ 的仿射下界函数，所以 $g(x_0)\geqslant a_\lambda(x_0)=a(x_0)+\lambda c\to+\infty$（$\lambda\to+\infty$），于是 $g(x_0)=+\infty\geqslant t_0$。
+
+综上，对任意 $t_0<f(x_0)$ 都有 $g(x_0)\geqslant t_0$，所以 $g(x_0)\geqslant f(x_0)$。
+\end{proof}
+
+由于闭凸集之交仍是闭凸集，而 $\epi(\sup_if_i)=\bigcap_i\epi f_i$，下半连续凸函数族的上确界仍是下半连续凸函数。这引出下面的定义。
+
+\begin{definition}[下半连续凸包]
+\label{def:17}
+设 $f:\X\to\Rbar$。它的\emph{下半连续凸包}（lsc convex envelope）定义为
+\[
+  \clconv f=\sup\{g \mid g\leqslant f,\ g\in\Gamma(\X)\}.
+\]
+由上一命题（$\X$ 局部凸时），也可以把 $\clconv f$ 刻画为
+\[
+  \clconv f(x)=\sup\bigl\{\pair{x^*}{x}+b \bigm| x^*\in\Xs,\ b\in\R,\ f\geqslant\pair{x^*}{\cdot}+b\bigr\}.
+\]
+（若 $f$ 没有任何连续仿射下界函数，上确界取遍空集，按约定 $\clconv f\equiv-\infty$。）
+\end{definition}
+
+\begin{example}[范数的函数]
+\label{exa:8}
+设 $\phi:\R\to\Rbar$ 是凸、单调不减且下半连续的函数。则 $f(x):=\phi(\norm{x})$ 是凸函数且（强）下半连续，因此也弱下半连续（命题~\ref{res:25}）。
+
+下面对 $\phi$ 的两种选择，把 $f$ 表示为仿射函数的上确界（一般情形见 \ref{sec:ch02-conjugate} 节）。记对偶范数（dual norm）为 $\norm{x^*}_*=\sup_{x\in B(0,1)}\pair{x^*}{x}$。
+当 $\phi(t)=t$ 时（由 Hahn--Banach 定理），
+\[
+  f(x)=\norm{x}=\sup_{\norm{x^*}_*\leqslant1}\pair{x^*}{x};
+\]
+当 $\phi(t)=\frac12t^2$ 时，
+\[
+  f(x)=\frac12\norm{x}^2=\sup_{x^*\in\Xs}\pair{x^*}{x}-\phi(\norm{x^*}_*).
+\]
+\end{example}
+
+\section{凸共轭}
+\label{sec:ch02-conjugate}
+
+凸共轭对凸函数所起的作用，类似于支撑函数对凸集所起的作用。特别地，它能把一个下半连续凸函数显式地表示为仿射函数的上确界（定理~\ref{res:28}），正如支撑函数能把闭凸集表示为闭半空间之交（式~\eqref{eq:2}）。
+
+\begin{definition}[凸共轭]
+\label{def:18}
+设 $f:\X\to\Rbar$ 是正常函数。它的\emph{凸共轭}（convex conjugate），又称 \emph{Legendre--Fenchel 变换}（Legendre--Fenchel transform），是函数 $f^*:\Xs\to\Rbar$：
+\[
+  f^*(x^*)=\sup_{x\in\X}\ \pair{x^*}{x}-f(x).
+\]
+\end{definition}
+
+由于 $f$ 正常，存在 $x\in\dom f$，于是 $f^*\geqslant\pair{\cdot}{x}-f(x)>-\infty$。特别地，$f^*$ 从不取值 $-\infty$。
+
+\begin{example}
+\label{exa:9}
+几个共轭函数的例子。
+\begin{enumerate}[label=\alph*.]
+  \item 设 $A$ 是 $\X$ 的非空子集，$\iota_A$ 为其示性函数。则
+  \[
+    \forall x^*\in\Xs,\qquad \iota_A^*(x^*)=\sup_{x\in\X}\pair{x^*}{x}-\iota_A(x)=\sup_{x\in A}\pair{x^*}{x}=\sigma_A(x^*).
+  \]
+  所以 Legendre--Fenchel 变换可以看作支撑函数（support function）的推广。
+  \item 设 $f=\norm{\cdot}$ 是 $\X$ 上的范数，则 $f^*(x^*)=\sup_{x\in\X}\pair{x^*}{x}-\norm{x}$。
+  若 $\norm{x^*}_*>1$，由对偶范数的定义存在 $x\in\X$ 使 $\pair{x^*}{x}-\norm{x}>0$；把 $x$ 换成 $\lambda x$ 并令 $\lambda\to+\infty$，得 $f^*(x^*)=+\infty$。
+  若 $\norm{x^*}_*\leqslant1$，则 $\pair{x^*}{x}-\norm{x}\leqslant0$，且 $x=0$ 时取等号，故 $f^*(x^*)=0$。
+  总之，$f^*$ 是 $\Xs$ 中（对偶）单位球的示性函数：$f^*=\iota_{\{\norm{\cdot}_*\leqslant1\}}$。
+  \item 设 $f=\pair{z^*}{\cdot}$ 是连续线性型，则
+  \[
+    f^*(x^*)=\sup_{x\in\X}\pair{x^*-z^*}{x}=
+    \begin{cases}
+      0, & x^*=z^*,\\
+      +\infty, & \text{否则},
+    \end{cases}
+  \]
+  即 $f^*=\iota_{\{z^*\}}$。
+  \item 若 $f(x)=\frac1p\abs{x}^p$ 是 $\R$ 上的函数，$p\in(1,+\infty)$，并把对偶空间等同于 $\R$，可以验证 $f^*(y)=\frac1q\abs{y}^q$，其中 $\frac1p+\frac1q=1$。
+\end{enumerate}
+\end{example}
+
+\begin{proposition}[基本性质]
+\label{res:27}
+设 $f:\X\to\Rbar$ 是正常函数。则
+\begin{enumerate}[label=(\roman*)]
+  \item（Fenchel--Young 不等式）$\forall(x,x^*)\in\X\times\Xs$，$f(x)+f^*(x^*)\geqslant\pair{x^*}{x}$；
+  \item $f^*(0)=-\inf f$；
+  \item $f^*$ 是凸函数，且弱*下半连续（weak* lower semicontinuous）；
+  \item 若还有 $f\in\Gammaz(\X)$（$\X$ 局部凸），则 $f^*\in\Gammaz(\Xs)$（$\Xs$ 赋予弱*拓扑）。
+\end{enumerate}
+\end{proposition}
+
+\begin{example}[Hölder 不等式]
+\label{exa:10}
+取 $\R$ 上的 $f(x)=\frac1p\abs{x}^p$，由 Fenchel--Young 不等式与例~\ref{exa:9}d，
+\[
+  xy\leqslant f(x)+f^*(y)=\frac1p\abs{x}^p+\frac1q\abs{y}^q .
+\]
+对 $x,y\in\R^n$，$\norm{x}_p=\norm{y}_q=1$，逐分量相加得
+\[
+  \inner{x}{y}=\sum_{i=1}^nx_iy_i\leqslant\frac1p\norm{x}_p^p+\frac1q\norm{y}_q^q=\frac1p+\frac1q=1=\norm{x}_p\norm{y}_q .
+\]
+由齐次性，不等式 $\inner{x}{y}\leqslant\norm{x}_p\norm{y}_q$ 对所有 $x,y\in\R^n$ 成立。
+\end{example}
+
+\begin{proof}[命题~\ref{res:27} 的证明]
+(i) 若 $f(x)=+\infty$，由于 $f^*>-\infty$，不等式显然；否则由 $f^*(x^*)\geqslant\pair{x^*}{x}-f(x)$ 移项即得。
+
+(ii) $f^*(0)=\sup_x\,(-f(x))=-\inf f$。
+
+(iii) $f^*$ 是形如 $x^*\mapsto\pair{x^*}{x}-f(x)$（$x\in\dom f$）的函数族的上确界，这些函数都是仿射的且弱*连续，由命题~\ref{res:16} 与命题~\ref{res:23}，$f^*$ 凸且弱*下半连续。
+
+(iv) 由 (iii) 及 $f^*>-\infty$，只需证 $f^*\not\equiv+\infty$。由命题~\ref{res:26}，$f$ 是其仿射下界函数的上确界；因 $f\not\equiv+\infty$，至少存在一个仿射下界函数，即存在 $x_0^*\in\Xs$ 与 $\alpha\in\R$ 使 $f\geqslant\pair{x_0^*}{\cdot}+\alpha$。于是
+\[
+  f^*(x_0^*)=\sup_{x\in\X}\pair{x_0^*}{x}-f(x)\leqslant\sup_{x\in\X}\pair{x_0^*-x_0^*}{x}-\alpha=-\alpha<+\infty,
+\]
+所以 $f^*$ 是正常的。
+\end{proof}
+
+\begin{definition}[双共轭]
+\label{def:19}
+函数 $f:\X\to\Rbar$ 的\emph{双共轭}（convex biconjugate）是 $\X$ 上的函数
+\[
+  f^{**}(x)=\sup_{x^*\in\Xs}\pair{x^*}{x}-f^*(x^*).
+\]
+\end{definition}
+
+\begin{theorem}[Fenchel--Moreau]
+\label{res:28}
+设 $\X$ 是局部凸拓扑向量空间，$f:\X\to\Rbar$ 是正常函数。则 $f^{**}$ 就是 $f$ 的下半连续凸包（定义~\ref{def:17}）：
+\[
+  f^{**}=\clconv f .
+\]
+特别地，总有 $f^{**}\leqslant f$，且等号成立当且仅当 $f\in\Gammaz(\X)$。
+\end{theorem}
+
+\begin{proof}
+先证 $f^{**}\leqslant\clconv f$。由 Fenchel--Young 不等式，对任意 $x\in\X$，$x^*\in\Xs$，有 $\pair{x^*}{x}-f^*(x^*)\leqslant f(x)$。代入 $f^{**}$ 的定义得
+\[
+  f^{**}(x)=\sup_{x^*\in\Xs}\pair{x^*}{x}-f^*(x^*)\leqslant f(x).
+\]
+另一方面，$f^{**}$ 是连续仿射函数 $x\mapsto\pair{x^*}{x}-f^*(x^*)$（$x^*\in\dom f^*$）的上确界，因而凸且下半连续。若 $\dom f^*=\varnothing$，则 $f^{**}\equiv-\infty\leqslant\clconv f$；否则 $f^{**}\in\Gamma(\X)$ 且 $f^{**}\leqslant f$，由 $\clconv f$ 的定义得 $f^{**}\leqslant\clconv f$。
+
+再证反向不等式。由定义~\ref{def:17} 中的刻画，$\clconv f$ 是 $f$ 的仿射下界函数的上确界，所以只需证 $f^{**}$ 不小于 $f$ 的任一仿射下界函数。设 $x_0^*\in\Xs$，$\alpha\in\R$，$f\geqslant\pair{x_0^*}{\cdot}+\alpha$。则
+\[
+  f^*(x_0^*)=\sup_{x\in\X}\pair{x_0^*}{x}-f(x)\leqslant\sup_{x\in\X}\pair{x_0^*}{x}-\bigl(\pair{x_0^*}{x}+\alpha\bigr)=-\alpha .
+\]
+于是
+\[
+  \forall x\in\X,\qquad f^{**}(x)=\sup_{z^*\in\Xs}\pair{z^*}{x}-f^*(z^*)\geqslant\pair{x_0^*}{x}-f^*(x_0^*)\geqslant\pair{x_0^*}{x}+\alpha .
+\]
+
+最后，若 $f\in\Gammaz(\X)$，由命题~\ref{res:26} 与定义~\ref{def:17} 的刻画，$f=\clconv f=f^{**}$；反之若 $f=f^{**}$，则 $f$ 是下半连续凸函数，又是正常的，故 $f\in\Gammaz(\X)$。
+\end{proof}
+
+\section{应用：极小点的存在性}
+
+\subsection*{函数空间中的例子}
+
+下面两个例子要用到 Sobolev 空间 $W^{1,p}(\Omega)$，其中 $\Omega$ 是 $\R^d$ 中的\emph{有界}开集，$p>1$。
+粗略地说，$W^{1,p}(\Omega)$ 的元素是满足下述条件的函数 $u\in L^p(\Omega)$：对每个 $1\leqslant i\leqslant d$，偏导数 $\partial_iu$ 在分布意义下属于 $L^p(\Omega)$\footnote{即存在 $v_i\in L^p(\Omega)$，使得对任意光滑紧支检验函数 $\varphi\in\mathcal{C}_c^\infty(\Omega)$ 有 $\int_\Omega(\partial_i\varphi)u=-\int_\Omega\varphi v_i$。此时定义 $\partial_iu:=v_i$。}。赋予范数
+\[
+  \norm{u}_{W^{1,p}}^p=\norm{u}_{L^p(\Omega)}^p+\norm{\nabla u}_{L^p(\Omega,\R^d)}^p
+\]
+后它是 Banach 空间，且当 $1<p<+\infty$ 时是自反空间（并且可分）。
+记 $W_0^{1,p}(\Omega)$ 为 $W^{1,p}(\Omega)$ 中“在 $\partial\Omega$ 上为零”的元素构成的空间，严格定义为 $\mathcal{C}_c^\infty(\Omega)$ 在 $W^{1,p}(\Omega)$ 中的闭包。
+当 $p=2$ 时这些空间是 Hilbert 空间，记 $H^1(\Omega)=W^{1,2}(\Omega)$，$H_0^1(\Omega)=W_0^{1,2}(\Omega)$。我们将用到下面两个结果：
+\begin{itemize}
+  \item \textbf{Poincaré 不等式}：对有界开集 $\Omega$，存在常数 $C=C(\Omega)$，使得
+  \[
+    \forall u\in W_0^{1,p}(\Omega),\qquad \norm{u}_{W^{1,p}(\Omega)}\leqslant C\norm{\nabla u}_{L^p(\Omega,\R^d)} .
+  \]
+  \item \textbf{弱紧性（由 Banach--Alaoglu 定理得到）}：设 $p\in(1,+\infty)$，$(u_n)_{n\in\N}$ 是 $W^{1,p}(\Omega)$ 中的有界序列，则 $(u_n)$ 有弱收敛子列（这是推论~\ref{res:79}，可分自反空间中的有界闭凸集序列弱紧）。
+\end{itemize}
+
+\begin{example}[障碍问题（obstacle problem）]
+\label{exa:11}
+设 $\X=H_0^1(\Omega)$，$\Psi\in\mathcal{C}_c^\infty(\Omega)$，$K=\{u\in\X \mid u\geqslant\Psi\ \text{a.e.}\}$，考虑极小化问题
+\[
+  \min_{u\in K}f(u),\qquad f(u):=\int_\Omega\norm{\nabla u(x)}^2\,\mathrm{d}x .
+\]
+仿照练习~\ref{exo:B1-5} 可证 $K$ 是闭集，它显然是凸集，且非空（$\Psi\in K$）。
+此外 $f$ 在 $\X$ 上严格凸（若 $\nabla u=\nabla v$ 且 $u-v\in H_0^1$，由 Poincaré 不等式 $u=v$），所以 $\min_Kf$ \emph{至多}有一个解。
+
+设 $(u_k)_{k\geqslant1}$ 是极小化序列，即 $u_k\in K$ 且 $\inf_Kf=\lim_{k\to+\infty}f(u_k)$。于是 $(f(u_k))$ 有界，由 Poincaré 不等式 $(u_k)$ 在 $\X$ 中有界，从而有弱收敛子列，记其极限为 $u$。
+$K$ 是闭凸集，因而弱闭（命题~\ref{res:12}），故 $u\in K$。最后，$f$ 是连续凸函数，由命题~\ref{res:25} 弱下半连续，所以
+\[
+  f(u)\leqslant\liminf_{k\to+\infty}f(u_k)=\inf_Kf ,
+\]
+这就证明了极小点的存在性。
+\end{example}
+
+\begin{proposition}
+\label{res:29}
+设 $\Omega\subseteq\R^d$ 是有界开集，$p\geqslant1$，$\phi\in\mathcal{C}^0(\R^k)$ 是凸函数，且存在 $a\in\R$ 使 $\phi(x)\geqslant a\norm{x}^p$。则函数
+\[
+  f:v\in L^p(\Omega,\R^k)\longmapsto\int_\Omega\phi(v(x))\,\mathrm{d}x\in\Rbar
+\]
+是凸函数且弱下半连续。
+\end{proposition}
+
+\begin{proof}
+（$f$ 的定义合理：$\phi(v)-a\norm{v}^p\geqslant0$ 的积分在 $[0,+\infty]$ 中，而 $\int a\norm{v}^p$ 有限。）$f$ 的凸性由 $\phi$ 的凸性和积分的线性立得。
+
+先证 $f$（强）下半连续。设 $v_n\to v$（在 $L^p$ 范数下），要证 $f(v)\leqslant\liminf_nf(v_n)$。
+先取子列使 $f(v_n)$ 收敛到 $\liminf_nf(v_n)$，再从中取子列使 $v_n$ 几乎处处收敛于 $v$（$L^p$ 收敛序列总有几乎处处收敛的子列）。这样取子列不改变下极限的值，因此不妨设 $v_n\to v$ a.e.。
+对非负函数 $x\mapsto\phi(v_n(x))-a\norm{v_n(x)}^p$ 用 Fatou 引理，并利用 $\phi$ 的连续性：
+\begin{align*}
+  f(v)-a\norm{v}_{L^p(\Omega,\R^k)}^p
+  &=\int_\Omega\lim_{n\to+\infty}\bigl(\phi(v_n(x))-a\norm{v_n(x)}^p\bigr)\,\mathrm{d}x\\
+  &\leqslant\liminf_{n\to+\infty}\int_\Omega\phi(v_n(x))-a\norm{v_n(x)}^p\,\mathrm{d}x\\
+  &=\liminf_{n\to+\infty}f(v_n)-a\lim_{n\to+\infty}\norm{v_n}_{L^p(\Omega,\R^k)}^p ,
+\end{align*}
+而 $\norm{v_n}_{L^p}\to\norm{v}_{L^p}$，所以 $f(v)\leqslant\liminf_nf(v_n)$，$f$ 强下半连续。
+又 $f$ 是凸函数，由命题~\ref{res:25}，$f$ 弱下半连续。
+\end{proof}
+
+\begin{remark}[弱下半连续的积分泛函必是凸的]
+\label{rem:9}
+为简单起见，考虑单位区间 $\Omega=[0,1]$ 上的积分泛函。设 $\phi\in\mathcal{C}^0(\R^d)$，定义 $f:L^2(\Omega,\R^d)\to\Rbar$，
+\[
+  f(v)=\int_\Omega\phi(v(x))\,\mathrm{d}x ,
+\]
+并设 $f$ 弱下半连续。任给 $A,B\in\R^d$ 和 $N\geqslant1$，考虑分段常值函数 $v_N:\Omega\to\R^d$：
+\[
+  v_N\big|_{[\frac{k}{2N},\frac{k+1}{2N})}=
+  \begin{cases}
+    A, & k\text{ 为偶数},\\
+    B, & k\text{ 为奇数}.
+  \end{cases}
+\]
+则 $v_N$ 弱收敛于常值函数 $v\equiv\frac12(A+B)$，而 $f(v_N)=\frac12\phi(A)+\frac12\phi(B)$。由下半连续性 $f(v)\leqslant\liminf_Nf(v_N)$，即
+\[
+  \phi\Bigl(\frac{A+B}{2}\Bigr)\leqslant\frac12\phi(A)+\frac12\phi(B).
+\]
+所以 $\phi$ 是中点凸的，结合 $\phi$ 的连续性知 $\phi$ 是凸函数，从而 $f$ 也是凸函数。
+\end{remark}
+
+\begin{example}[一个变分问题]
+\label{exa:12}
+在空间 $\X:=W_0^{1,p}(\Omega)$（$p>1$）上考虑积分泛函
+\[
+  f(u)=\int_\Omega\phi(\nabla u(x))\,\mathrm{d}x ,
+\]
+其中 $\phi:\R^d\to\R$ 是连续凸函数，满足 $\phi(v)\geqslant a\norm{v}^p$，$a>0$。则极小化问题
+\[
+  \inf_{u\in\X}f(u)
+\]
+有解。为此，取极小化序列 $(u_n)$，即 $u_n\in\X$ 且 $\lim_nf(u_n)=\inf_\X f$（注意 $0\leqslant\inf_\X f\leqslant f(0)<+\infty$）。特别地存在常数 $M>0$ 使 $f(u_n)\leqslant M$。由 $\phi$ 的下界和 Poincaré 不等式，$(u_n)$ 有界：
+\[
+  \norm{u_n}_{W^{1,p}(\Omega)}^p\leqslant C^p\norm{\nabla u_n}_{L^p(\Omega,\R^d)}^p\leqslant\frac{C^p}{a}f(u_n)\leqslant\frac{MC^p}{a} .
+\]
+因此可以取子列（不改记号）弱收敛于某个 $u\in\X$（$\X$ 是闭子空间，从而弱闭）。由命题~\ref{res:29}（取 $k=d$），泛函 $v\mapsto\int_\Omega\phi(v)$ 在 $L^p(\Omega,\R^d)$ 上弱下半连续；而 $\nabla:\X\to L^p(\Omega,\R^d)$ 是连续线性映射，把弱收敛序列映为弱收敛序列，所以 $f$ 在 $\X$ 上弱下半连续，于是
+\[
+  f(u)\leqslant\liminf_{n\to+\infty}f(u_n)=\lim_{n\to+\infty}f(u_n)=\inf_\X f .
+\]
+这说明 $u$ 是 $f$ 在 $\X$ 上的极小点。
+\end{example}
+
+上面两个例子可以推广如下。
+
+\begin{definition}[强制性]
+\label{def:20}
+设 $K$ 是赋范空间 $\X$ 的子集。若对 $K$ 中任意满足 $\lim_{n\to+\infty}\norm{x_n}=+\infty$ 的序列 $(x_n)_{n\in\N}$，都有 $\lim_{n\to+\infty}f(x_n)=+\infty$，则称 $f:\X\to\Rbar$ 在 $K$ 上是\emph{强制的}（coercive）。
+\end{definition}
+
+\begin{proposition}
+\label{res:30}
+设 $\X$ 是可分自反空间，$f:\X\to\Rbar$ 是正常下半连续凸函数，$K\subseteq\X$ 是闭凸集，且 $K\cap\dom f\neq\varnothing$。考虑极小化问题
+\[
+  \inf_{x\in K}f(x).
+\]
+若下列条件之一成立，则最小值可以取到：
+\begin{enumerate}[label=\alph*.]
+  \item 集合 $K$ 有界；
+  \item 函数 $f$ 在 $K$ 上强制。
+\end{enumerate}
+若 $f$ 在 $K$ 上严格凸，则极小点唯一。
+\end{proposition}
+
+\begin{proof}
+留作练习（仿照例~\ref{exa:11}、例~\ref{exa:12}：取极小化序列，用有界性或强制性证明其有界，取弱收敛子列，再用 $K$ 的弱闭性和 $f$ 的弱下半连续性）。
+\end{proof}
+
+\subsection*{测度空间中的例子}
+
+下一个例子在紧集 $\Omega$ 上的 Radon 测度空间中进行：
+\[
+  \mathcal{M}(\Omega):=\mathcal{C}^0(\Omega)^* .
+\]
+
+\begin{example}[稀疏尖峰反卷积（sparse spikes deconvolution）]
+\label{exa:13}
+考虑圆周 $\mathbb{T}:=\R/\Z$ 上由有限个 Dirac 质量（在此语境中称为“尖峰”）构成的测度
+\[
+  \mu=\sum_{1\leqslant i\leqslant N}\alpha_i\delta_{x_i}.
+\]
+$\mu$ 未知，但我们能观测到它的模糊版本 $y=\Phi\mu\in L^2(\mathbb{T})$。更确切地说，给定一个线性算子（通常是卷积算子）$\Phi:\mathcal{M}(\mathbb{T})\to L^2(\mathbb{T})$，并假设它是序列弱*连续的（把弱*收敛序列映为 $L^2(\mathbb{T})$ 中弱收敛的序列）。对 $\lambda>0$，Beurling LASSO 问题是下面的优化问题：
+\[
+  \inf_{\nu\in\mathcal{M}(\mathbb{T})}\ \norm{\Phi\nu-y}_{L^2(\mathbb{T})}^2+\lambda\norm{\nu}_{TV} .
+\]
+下面证明它有解。记 $g=\lambda\norm{\cdot}_{TV}$，$h=\norm{\Phi(\cdot)-y}_{L^2(\mathbb{T})}^2$。二者都是序列弱*下半连续的：对 $g$，这由对偶范数是上确界（$\norm{\nu}_{TV}=\sup_{\norm{\varphi}_\infty\leqslant1}\int\varphi\,\mathrm{d}\nu$）得到；对 $h$，由对 $\Phi$ 的假设以及 $L^2$ 范数平方的弱下半连续性得到。
+此外，任一极小化序列 $(\nu_n)_{n\in\N}$ 都有界（因为 $\lambda\norm{\nu_n}_{TV}\leqslant(g+h)(\nu_n)$ 有界），由 Banach--Alaoglu 定理（$\mathcal{C}^0(\mathbb{T})$ 可分，有界集弱*序列紧）存在弱*收敛子列（不改记号），极限记为 $\nu$。于是
+\[
+  (g+h)(\nu)\leqslant\liminf_{n\to+\infty}(g+h)(\nu_n)=\inf_{\nu'}\,(g+h)(\nu').
+\]
+还要注意 $g+h$ 是凸函数，这对于数值求解至关重要，但在证明存在性时并没有用到。事实上，由于 $\mathcal{M}(\mathbb{T})$ 不是自反空间，这里无法直接应用命题~\ref{res:30}。
+\end{example}
+
+\begin{keypoints}
+  \item 凸函数取值于 $\R\cup\{+\infty\}$，用上图定义；约束可以通过示性函数 $\iota_K$ 写进目标函数。
+  \item 凸函数在一点有限且在其邻域上有上界，则在该点连续；只要在某个非空开集上有上界，就有 $\cont f=\interior\dom f$；有限维中这总成立。赋范空间中还进一步局部 Lipschitz。
+  \item 下半连续 $\iff$ 下水平集闭 $\iff$ 上图闭；对凸函数，强下半连续与弱下半连续等价。
+  \item 局部凸空间中，下半连续凸函数等于其连续仿射下界函数的上确界（证明的关键是上图与一点的严格分离，并注意“竖直”超平面的情形）。
+  \item 共轭 $f^*(x^*)=\sup_x\pair{x^*}{x}-f(x)$：Fenchel--Young 不等式；$\iota_A^*=\sigma_A$，$\norm{\cdot}^*=\iota_{\{\norm{\cdot}_*\leqslant1\}}$。
+  \item Fenchel--Moreau：$f^{**}=\clconv f$，且 $f^{**}=f\iff f\in\Gammaz(\X)$。
+  \item 存在性的标准套路：极小化序列 $\to$ 有界（有界约束集或强制性）$\to$ 弱（或弱*）收敛子列 $\to$ 约束集弱闭 + 目标弱下半连续。
+\end{keypoints}

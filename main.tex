@@ -1,0 +1,27 @@
+% 凸分析与最优化复习笔记（中文）
+% 编译：xelatex main.tex（运行两遍以生成目录与交叉引用）
+\documentclass[UTF8,a4paper,11pt,openany]{ctexbook}
+\input{preamble}
+
+\title{凸分析与最优化\\[0.5em]\large 课程复习笔记（中文整理版）}
+\author{根据课程讲义 \emph{Convex analysis and optimisation}（2023 年 9 月 28 日版）整理}
+\date{\today}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+\input{guide}
+
+\mainmatter
+\includechapter{01}
+\includechapter{02}
+\includechapter{03}
+\includechapter{04}
+\includechapter{05}
+
+\appendix
+\IfFileExists{chapters/appA.tex}{\input{chapters/appA}}{}
+\input{glossary}
+
+\end{document}

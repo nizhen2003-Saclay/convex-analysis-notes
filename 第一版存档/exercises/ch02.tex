@@ -1,0 +1,50 @@
+% 第 2 章练习（原讲义附录 B.2，原标题误作 “Chapter 3”，内容对应凸函数一章）
+
+\begin{exercise}[原讲义 B.2 练习 13]
+\label{exo:B2-13}
+\textbf{距离函数。}设 $K\subseteq\X$，定义 $d_K(x)=\inf_{p\in K}\norm{x-p}$。
+\begin{enumerate}[label=\arabic*.]
+  \item 证明：若 $K$ 是凸集，则 $d_K$ 是凸函数。
+  \item 证明：若 $\X$ 是 Hilbert 空间，则 $\norm{\cdot}^2-d_K^2$ 是凸函数且下半连续（这时称 $d_K^2$ 是\emph{半凹的}（semi-concave））。注意这里不需要假设 $K$ 是凸集。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.2 练习 14]
+\label{exo:B2-14}
+设 $f:\X\to\R$ 是凸函数，且对所有 $x\in\X$ 满足 $f(x)\leqslant L\norm{x}$。证明 $f$ 是 $L$-Lipschitz 的。
+\end{exercise}
+
+回忆：Banach 空间是完备的赋范空间。Baire 定理断言：若 $(F_n)_{n\in\N}$ 是 Banach 空间 $\X$（更一般地，完备度量空间）中可数个闭子集，且每个都有空内部，则 $\bigcup_{n\in\N}F_n$ 也有空内部。下面用它刻画下半连续凸函数的连续点集。
+
+\begin{exercise}[原讲义 B.2 练习 15]
+\label{exo:B2-15}
+设 $f:\X\to\Rbar$ 是 Banach 空间上的下半连续凸函数，且 $\interior\dom f$ 含有一点 $x$。
+\begin{enumerate}[label=\arabic*.]
+  \item 设 $x=0$ 且 $B(0,r)\subseteq\dom f$。令
+  \[
+    F_n=\{y\in B(0,r) \mid \max(f(y),f(-y))\leqslant n\},
+  \]
+  证明 $f$ 在某个内部非空的集合上有界。
+  \item 由此推出 $\cont f=\interior\dom f$。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.2 练习 16]
+\label{exo:B2-16}
+\textbf{Banach--Steinhaus 定理。}设 $(T_\alpha)_{\alpha\in A}$ 是一族连续线性算子 $T_\alpha:\X\to\Y$，其中 $\X,\Y$ 是 Banach 空间。定义 $f(x):=\sup_{\alpha\in A}\norm{T_\alpha(x)}$。
+\begin{enumerate}[label=\arabic*.]
+  \item 证明 $f$ 是下半连续凸函数。
+  \item 现设对任意 $x\in\X$，存在 $M_x\geqslant0$ 使 $\sup_\alpha\norm{T_\alpha(x)}<M_x$。证明 $f$ 在 $\X$ 上连续，并且在原点附近局部 Lipschitz。
+  \item 推出存在 $M\geqslant0$ 使 $\sup_\alpha\norm{T_\alpha}\leqslant M$。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.2 练习 17]
+\label{exo:B2-17}
+\textbf{支撑函数的刻画。}设 $\Y$ 是局部凸拓扑向量空间，$\sigma:\Y\to\Rbar$ 是下半连续的次线性（因而是凸的）函数，且 $\sigma(0)=0$。
+\begin{enumerate}[label=\arabic*.]
+  \item 设 $g=\pair{y^*}{\cdot}+t$（$y^*\in\Ys$，$t\in\R$）是 $\sigma$ 的一个仿射下界函数。证明 $t\leqslant0$，并且线性函数 $\pair{y^*}{\cdot}$ 也是 $\sigma$ 的下界函数。
+  \item 由此推出 $\sigma(y)=\sup\{\pair{y^*}{y} \mid y^*\in\Ys,\ \sigma\geqslant\pair{y^*}{\cdot}\}$。
+  \item 证明：若 $\Y=\Xs$，且 $\X$ 是自反 Banach 空间（从而 $\Xs$ 也自反），则存在凸集 $K\subseteq\X$ 使得 $\sigma=\sigma_K$。
+\end{enumerate}
+\end{exercise}

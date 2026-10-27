@@ -1,0 +1,88 @@
+% 第 4 章练习：原讲义附录 B.4（标题误作 “Chapter 5”）全部，
+% 以及 B.5（标题作 “Chapter 6”）中按内容属于本章的练习 27--29（锥的极、强凸性与共轭、Moreau--Yosida 正则化）。
+% B.5 的练习 30（Kantorovich 对偶）见第 5 章练习。
+
+\begin{exercise}[原讲义 B.4 练习 25]
+\label{exo:B4-25}
+设 Hilbert 空间 $\X=\X_1\oplus\X_2$，其中 $\X_1,\X_2$ 是两个\emph{相互正交}的闭子空间。设 $f_i\in\Gammaz(\X_i)$，
+令 $f=f_1\oplus f_2$，即 $f:\X\to\Rbar$ 定义为
+\[
+  \forall (x_1,x_2)\in\X_1\times\X_2,\qquad f(x_1+x_2)=f_1(x_1)+f_2(x_2).
+\]
+证明：对 $\gamma>0$，$\prox_{\gamma f}(x_1+x_2)=\prox_{\gamma f_1}(x_1)+\prox_{\gamma f_2}(x_2)$。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.4 练习 26]
+\label{exo:B4-26}
+设 $f\in\Gammaz(\X)$ 是强制的，$\gamma>0$，$T=\prox_{\gamma f}$，并定义 $x_{n+1}=T(x_n)$。
+\begin{enumerate}[label=\arabic*.]
+  \item 证明：$\forall x\in\X$，$f(x)\geqslant f(x_{n+1})+\frac1\gamma\pair{x-x_{n+1}}{x_n-x_{n+1}}$。
+  \item 利用该不等式：
+  \begin{enumerate}[label=(\roman*)]
+    \item 证明 $(f(x_n))_{n\in\N}$ 单调递减，且 $(x_n)_{n\in\N}$ 有界；
+    \item 证明 $(x_n)_{n\in\N}$ 的任一弱聚点都是 $f$ 的全局极小点。
+    （提示：如定理~\ref{res:60} 那样利用 $\lim_{n\to+\infty}\norm{x_{n+1}-x_n}=0$。）
+  \end{enumerate}
+  \item 由此推出 $(x_n)_{n\in\N}$ 是极小化序列。
+  \item 最后证明：若 $f$ 严格凸，则 $(x_n)_{n\in\N}$ 弱收敛到 $f$ 的唯一极小点。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.5 练习 27]
+\label{exo:B5-27}
+\textbf{凸锥。}设 $K$ 是非空凸锥（即对一切 $x\in K$ 和 $\lambda\geqslant0$ 有 $\lambda x\in K$），$K^*\subseteq\Xs$ 是 $K$ 的\emph{极锥}（polar cone）：
+\[
+  K^*=\{x^*\in\Xs\mid\forall x\in K,\ \pair{x^*}{x}\leqslant0\}.
+\]
+\begin{enumerate}[label=\arabic*.]
+  \item 证明：若 $f=\iota_K$，则 $f^*=\iota_{K^*}$，且 $\partial f(0)=K^*$。
+  \item 证明 $K^{**}=\{x\in\X\mid\forall x^*\in K^*,\ \pair{x^*}{x}\leqslant0\}$ 是闭凸集且包含 $K$。
+  \item 证明：若 $K$ 是闭凸锥，则 $K^{**}=K$。
+  \item 设 $\X$ 是 Hilbert 空间，$K$ 是闭凸锥，$K^*\subseteq\X\simeq\Xs$ 是它的极锥。证明
+  \[
+    \forall x\in\X,\qquad x=\operatorname{proj}_K(x)+\operatorname{proj}_{K^*}(x).
+  \]
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.5 练习 28]
+\label{exo:B5-28}
+\textbf{强凸性与次微分。}设 $\X$ 是 Hilbert 空间，$\alpha>0$。函数 $f:\X\to\Rbar$ 称为 \emph{$\alpha$-强凸的}（$\alpha$-strongly convex），
+如果它满足下列等价条件之一：
+\begin{gather}
+  \forall x,y\in\dom f,\ \forall\lambda\in[0,1],\quad
+  \frac\alpha2\lambda(1-\lambda)\norm{x-y}^2+f((1-\lambda)x+\lambda y)\leqslant(1-\lambda)f(x)+\lambda f(y), \label{eq:22}\\
+  \forall x_0\in\X,\quad f_{x_0}:x\in\X\mapsto f(x)-\frac\alpha2\norm{x-x_0}^2\ \text{是凸函数}. \label{eq:23}
+\end{gather}
+\begin{enumerate}[label=\arabic*.]
+  \item 设 $f\in\Gammaz(\X)$ 是 $\alpha$-强凸的，$v\in\partial f(x_0)$。证明
+  \[
+    0\in\partial\Bigl(f-\frac\alpha2\norm{\cdot-x_0}^2-\pair{v}{\cdot}\Bigr)(x_0),
+  \]
+  并推出 $\forall x\in\X$，$f(x)\geqslant f(x_0)+\pair{v}{x-x_0}+\frac\alpha2\norm{x-x_0}^2$。
+  \item 证明：对一切 $x_0,y_0\in\X$，$v\in\partial f(x_0)$，$w\in\partial f(y_0)$，有
+  \[
+    \alpha\norm{x_0-y_0}\leqslant\norm{v-w}.
+  \]
+  \item 推出：若 $x_0\in\partial f^*(v)$，$y_0\in\partial f^*(w)$，同一不等式成立。
+  \item 令 $D=\{v\in\X\mid\partial f^*(v)\neq\varnothing\}$。证明 $f^*$ 在 $D$ 上 Gâteaux 可微，且映射 $v\in D\mapsto\nabla f^*(v)$ 是 $(1/\alpha)$-Lipschitz 的。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.5 练习 29]
+\label{exo:B5-29}
+\textbf{Moreau--Yosida 正则化。}设 $\X$ 是 Hilbert 空间，$f\in\Gammaz(\X)$。对 $\tau>0$，定义 $f$ 的 \emph{Moreau--Yosida 正则化}（Moreau--Yosida regularization）
+\[
+  f_\tau(x)=\inf_{z\in\X}\ f(z)+\frac1{2\tau}\norm{x-z}^2 .
+\]
+\begin{enumerate}[label=\arabic*.]
+  \item 证明 $f_\tau$ 是凸函数，处处有限，且在 $\X$ 的每个有界子集上有界。
+  \item 证明 $f_\tau$ 连续，且对一切 $x\in\X$，$\partial f_\tau(x)\neq\varnothing$。
+  \item 证明 $f_\tau=(f^*+g^*)^*$，其中 $g(x)=\frac1{2\tau}\norm{x}^2$。
+  \item 利用上一题（练习~\ref{exo:B5-28}），推出 $f_\tau$ 在每一点 $x\in\X$ 处 Gâteaux 可微，且 $\nabla f_\tau$ 是 $(1/\tau)$-Lipschitz 的。
+  \item 证明当 $\tau\to0$ 时 $f_\tau$ 逐点收敛到 $f$。
+  \item 证明 $\prox_{\tau f}(x)=x-\tau\nabla f_\tau(x)$。
+  （提示：令 $p=\prox_{\tau f}(x)$，利用 Fenchel--Young 不等式的等号情形证明 $\frac{x-p}\tau\in\partial f_\tau(x)$。）
+\end{enumerate}
+最后一问说明：邻近点算法可以理解为对 Moreau--Yosida 正则化 $f_\tau$ 做步长为 $\tau$ 的“普通”梯度下降。
+\end{exercise}

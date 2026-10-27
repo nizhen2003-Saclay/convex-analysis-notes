@@ -1,0 +1,569 @@
+% 第 1 章：凸集（据原讲义第 3--11 页整理）
+\chapter{凸集}
+\label{ch:ch01}
+
+本课程的大多数结论在 $\X$ 是\emph{赋范空间}（normed space）时成立：$\X$ 是带范数 $\norm{\cdot}$ 的向量空间，
+拓扑由距离 $d(x,y)=\norm{x-y}$ 诱导，以 $x$ 为心、$r$ 为半径的闭球记为
+\[
+  \mathrm{B}(x,r)=\{y\in\X \mid \norm{x-y}\leqslant r\}.
+\]
+因此本课程的结果适用于 $\R^d$、Hilbert 空间和 Banach 空间。
+
+不过，很多结论在更一般的\emph{（局部凸）拓扑向量空间}中同样成立。这一框架的好处是能够处理弱拓扑与弱$*$拓扑，
+它们在无穷维的应用中（变分法、最优控制、最优输运等）非常重要，常用来证明优化问题解的存在性。
+这些概念的简要介绍见\hyperref[ch:appA]{附录 A}。
+
+\begin{definition}[局部凸拓扑向量空间]
+\label{def:1}
+\emph{拓扑向量空间}（topological vector space）是指带有一个拓扑的向量空间 $\X$，使得向量加法
+$(x,y)\in\X^2\mapsto x+y\in\X$ 与数乘 $(\lambda,x)\in\R\times\X\mapsto\lambda x\in\X$ 都连续。
+
+拓扑向量空间 $\X$ 称为\emph{局部凸的}（locally convex），如果存在一族含原点的凸开集 $\mathcal B$，
+使得对原点的任意邻域 $O$，都存在 $\omega\in\mathcal B$ 满足 $\omega\subseteq O$
+（即原点有一个由凸开集构成的邻域基）。
+\end{definition}
+
+任何赋范空间都是局部凸拓扑向量空间（开球是凸的）。课程的大部分内容只需掌握赋范空间即可：
+把所有陈述中的“（局部凸）拓扑向量空间”换成“赋范空间”来理解就行。
+
+% ------------------------------------------------------------
+\section{凸集}
+
+\begin{definition}[凸集]
+\label{def:2}
+$\X$ 的子集 $K$ 称为\emph{凸集}（convex set），如果对任意 $x,y\in K$，线段
+\[
+  [x,y]=\{(1-t)x+ty \mid t\in[0,1]\}
+\]
+都包含在 $K$ 中。
+\end{definition}
+
+\begin{example}
+\label{exa:1}
+下面是一些基本的凸集：
+\begin{itemize}[itemsep=1pt]
+  \item 赋范空间中的开球与闭球；
+  \item \emph{超平面}（hyperplane），即形如 $\{x\in\X\mid\phi(x)=\alpha\}$ 的集合，其中 $\phi$ 是 $\X$ 上的非零线性函数，$\alpha\in\R$；
+  \item \emph{仿射子空间}（affine subspace），例如若干超平面之交；
+  \item \emph{半空间}（half-space），即形如 $\{x\in\X\mid\phi(x)\leqslant\alpha\}$ 的集合，其中 $\phi$ 线性，$\alpha\in\R$；
+  \item 半空间之交；\emph{有限}个半空间之交称为\emph{多面体}（polyhedron）；
+  \item 全体对称正定矩阵（它是对称矩阵空间中的凸锥）；
+  \item 设 $f:\X\to\R$ 是凸函数，$\alpha\in\R$，则\emph{下水平集}（sublevel set）$\{x\in\X\mid f(x)\leqslant\alpha\}$
+        与\emph{上图}（epigraph）$\{(x,t)\mid t\geqslant f(x)\}$ 都是凸集。
+\end{itemize}
+\end{example}
+
+\begin{definition}[凸包]
+\label{def:3}
+集合 $A\subseteq\X$ 的\emph{凸包}（convex hull）是包含 $A$ 的最小凸集，记为 $\conv(A)$。
+\end{definition}
+
+对两个集合 $A,B\subseteq\X$，记它们的 \emph{Minkowski 和}（Minkowski sum）与 \emph{Minkowski 差}（Minkowski difference）为
+\[
+  A\oplus B=\{x+y\mid x\in A,\ y\in B\},\qquad
+  A\ominus B=\{x-y\mid x\in A,\ y\in B\}=A\oplus(-B).
+\]
+对 $\lambda\in\R$ 记 $\lambda A=\{\lambda x\mid x\in A\}$。
+
+\begin{proposition}
+\label{res:1}
+以下性质成立：
+\begin{enumerate}[label=(\roman*)]
+  \item 若 $(K_\alpha)_{\alpha\in I}$ 是一族凸集，则 $\bigcap_{\alpha\in I}K_\alpha$ 是凸集；
+  \item 若 $K\subseteq\X$ 凸，$L:\X\to\Y$ 线性，则 $L(K)$ 是凸集；
+  \item 若 $K\subseteq\X$ 凸，$L:\Y\to\X$ 线性，则 $L^{-1}(K)$ 是凸集；
+  \item 若 $K\subseteq\X$，$L\subseteq\Y$ 都是凸集，则 $K\times L$ 是凸集；
+  \item 若 $K,L\subseteq\X$ 都是凸集，则 $K\oplus L$ 是凸集；
+  \item $\conv(A)$ 等于所有包含 $A$ 的凸集之交；
+  \item $\displaystyle\conv(A)=\Bigl\{\sum_{i=1}^k\alpha_ix_i \;\Bigm|\; k\geqslant1,\ x_i\in A,\ \alpha_i\geqslant0,\ \sum_{i=1}^k\alpha_i=1\Bigr\}$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+原讲义留作练习，这里给出要点。(i)--(iv) 直接按定义验证，例如 (ii)：$(1-t)L(x)+tL(y)=L((1-t)x+ty)\in L(K)$。
+(v)：$K\oplus L$ 是凸集 $K\times L$ 在线性映射 $(x,y)\mapsto x+y$ 下的像，由 (iv)(ii) 得到。
+(vi)：由 (i)，所有包含 $A$ 的凸集之交是凸集，它包含 $A$，且含于每个包含 $A$ 的凸集，故是最小者。
+(vii)：记右端为 $C$。$C$ 包含 $A$（取 $k=1$），且是凸的：两个凸组合的凸组合仍是 $A$ 中点的凸组合。
+反之，对 $k$ 归纳可知任一凸集包含其中点的所有凸组合：若 $\alpha_k<1$，则
+$\sum_{i=1}^k\alpha_ix_i=(1-\alpha_k)\sum_{i<k}\frac{\alpha_i}{1-\alpha_k}x_i+\alpha_kx_k$。
+故 $C$ 含于任一包含 $A$ 的凸集，由 (vi) 得 $C=\conv(A)$。
+\end{proof}
+
+% ------------------------------------------------------------
+\section{Hahn--Banach 定理}
+
+本课程最重要的工具是：闭凸集可以表示为闭半空间之交。它是次微分计算、Fenchel 对偶与 Rockafellar 对偶理论等内容的基础，
+而这一表示主要依赖 Hahn--Banach 定理。
+
+\begin{definition}[次线性]
+\label{def:4}
+函数 $p:\X\to\R$ 称为\emph{次线性的}（sublinear），如果
+\begin{enumerate}[label=(\roman*)]
+  \item \emph{正齐次}（positively 1-homogeneous）：对任意 $x\in\X$ 和 $\lambda\geqslant0$，$p(\lambda x)=\lambda p(x)$；
+  \item \emph{次可加}（subadditive）：对任意 $x,y\in\X$，$p(x+y)\leqslant p(x)+p(y)$。
+\end{enumerate}
+\end{definition}
+
+范数是次线性泛函的例子；更一般地，凸集的规范函数也是次线性的（引理~\ref{res:4}）。
+
+\begin{definition}[规范函数]
+\label{def:5}
+凸集 $K\subseteq\X$ 的\emph{规范函数}（gauge），也称 \emph{Minkowski 泛函}（Minkowski functional），是定义在 $\X$ 上、取值于 $\Rbar$ 的函数
+\[
+  p_K(x)=\inf\{r>0\mid x\in rK\}\qquad(\text{约定}\inf\varnothing=+\infty).
+\]
+\end{definition}
+
+\begin{theorem}[Hahn--Banach]
+\label{res:2}
+设 $\X$ 是拓扑向量空间，$p$ 是 $\X$ 上连续的次线性函数。若 $E$ 是 $\X$ 的线性子空间，$f$ 是 $E$ 上满足 $f\leqslant p$ 的线性函数，
+则 $f$ 可以延拓为连续线性泛函 $\hat f\in\Xs$，且仍满足 $\hat f\leqslant p$。
+\end{theorem}
+
+一般向量空间情形（此时也不需要 $p$ 连续，但得到的延拓未必连续）的证明见 Brézis [Bre10]。
+下面只在 $\X$ \emph{可分}（separable，即 $\X$ 含有可数稠密子集）的情形下证明，这样证明更具构造性。
+
+\begin{proof}
+设 $(v_i)_{i\geqslant1}$ 是 $\X$ 的可数稠密子集，归纳地定义
+\[
+  E_0=E,\qquad E_i=\spanop(E_{i-1}\cup\{v_i\})\quad(i\geqslant1).
+\]
+
+\textbf{第 1 步：把 $f$ 从 $E_{i-1}$ 延拓到 $E_i$。}
+设已构造好 $E_{i-1}$ 上的线性函数 $f_{i-1}$，它延拓 $f$ 且 $f_{i-1}\leqslant p$（$f_0=f$）。
+若 $v_i\in E_{i-1}$，则 $E_i=E_{i-1}$，取 $f_i=f_{i-1}$ 即可。否则 $E_i$ 中每个元素可唯一写成 $x+tv_i$（$x\in E_{i-1}$，$t\in\R$），
+于是对任意 $\alpha\in\R$ 可以定义 $E_i$ 上的线性函数
+\[
+  f_{i,\alpha}(x+tv_i)=f_{i-1}(x)+t\alpha,\qquad x\in E_{i-1},\ t\in\R .
+\]
+要选取 $\alpha$ 使 $f_{i,\alpha}\leqslant p$，即
+\[
+  \forall x\in E_{i-1},\ \forall t\in\R,\quad f_{i-1}(x)+t\alpha\leqslant p(x+tv_i).
+\]
+$t=0$ 时这就是 $f_{i-1}\leqslant p$。$t\neq0$ 时两边除以 $\abs t$，利用 $f_{i-1}$ 的线性与 $p$ 的正齐次性，得
+$f_{i-1}\bigl(\tfrac{x}{\abs t}\bigr)+\tfrac{t}{\abs t}\alpha\leqslant p\bigl(\tfrac{x}{\abs t}+\tfrac{t}{\abs t}v_i\bigr)$。
+由于 $x/\abs t$ 跑遍 $E_{i-1}$，上述条件等价于
+\[
+  \forall x\in E_{i-1},\quad f_{i-1}(x)\pm\alpha\leqslant p(x\pm v_i),
+\]
+也就是
+\[
+  \sup_{x\in E_{i-1}}\bigl(f_{i-1}(x)-p(x-v_i)\bigr)\;\leqslant\;\alpha\;\leqslant\;\inf_{y\in E_{i-1}}\bigl(p(y+v_i)-f_{i-1}(y)\bigr).
+\]
+这样的 $\alpha$ 存在，当且仅当上确界不超过下确界，即
+\[
+  \begin{aligned}
+    &\forall x,y\in E_{i-1},\quad f_{i-1}(x)-p(x-v_i)\leqslant p(y+v_i)-f_{i-1}(y)\\
+    \iff{}&\forall x,y\in E_{i-1},\quad f_{i-1}(x+y)\leqslant p(x-v_i)+p(y+v_i).
+  \end{aligned}
+\]
+而由 $f_{i-1}\leqslant p$ 和 $p$ 的次可加性，$f_{i-1}(x+y)\leqslant p(x+y)\leqslant p(x-v_i)+p(y+v_i)$，所以条件成立。
+两端都是有限数：上确界 $\geqslant f_{i-1}(0)-p(-v_i)=-p(-v_i)$，下确界 $\leqslant p(v_i)$。
+实际上可以取
+\[
+  \alpha=\inf_{y\in E_{i-1}}\bigl(p(y+v_i)-f_{i-1}(y)\bigr)\geqslant-p(-v_i)>-\infty,
+\]
+这里用了 $f_{i-1}(y)\leqslant p(y)\leqslant p(y+v_i)+p(-v_i)$。令 $f_i=f_{i,\alpha}$。
+
+\textbf{第 2 步：把 $f$ 延拓到 $\X$。}
+由第 1 步，各 $f_i$ 逐个相互延拓，因此在线性子空间 $\tilde E=\bigcup_iE_i$（递增并，仍是线性子空间）上定义了线性函数 $\tilde f$，
+它延拓 $f$ 且 $\tilde f\leqslant p$。$\tilde E$ 包含全部 $v_i$，因而在 $\X$ 中稠密。
+为把 $\tilde f$ 延拓到 $\X$，要用到 $p$ 的连续性。对 $x,y\in\tilde E$，
+\[
+  -p(y-x)\leqslant-\tilde f(y-x)=\tilde f(x-y)\leqslant p(x-y),
+\]
+从而
+\begin{equation}
+  \label{eq:1}
+  \bigl|\tilde f(x-y)\bigr|\leqslant\max\bigl(\abs{p(x-y)},\abs{p(y-x)}\bigr).
+\end{equation}
+由正齐次性 $p(0)=0$，又 $p$ 连续，故 $z\to0$ 时 $p(\pm z)\to0$。
+因此若 $(x_n)$ 是 $\tilde E$ 中收敛到某 $x\in\X$ 的序列，则 $x_n-x_m\to0$，由 \eqref{eq:1}，$(\tilde f(x_n))$ 是 $\R$ 中的 Cauchy 列，从而收敛。
+同一不等式还说明：若 $\tilde E$ 中两个序列 $(x_n),(y_n)$ 收敛到同一点 $x$，则 $\lim_n\tilde f(x_n)=\lim_n\tilde f(y_n)$。
+把这个公共极限记为 $\hat f(x)$。对极限取线性组合可知 $\hat f$ 线性；在不等式 $\tilde f(x_n)\leqslant p(x_n)$ 中取极限，由 $p$ 连续得 $\hat f\leqslant p$；
+$\hat f$ 同样满足 \eqref{eq:1}，故在 $0$ 处连续，从而（作为线性函数）处处连续，即 $\hat f\in\Xs$。
+
+（这里用序列逼近，默认 $\X$ 的拓扑由距离给出，例如可分赋范空间；对一般的可分拓扑向量空间，把序列换成网（net），论证完全相同。）
+\end{proof}
+
+% ------------------------------------------------------------
+\section{线性分离}
+
+$\X$ 的\emph{拓扑对偶}（topological dual）是 $\X$ 上全体连续线性函数构成的空间，记为 $\Xs$，其元素带星号，如 $x^*\in\Xs$。
+仿照 Hilbert 空间的内积，记 $\Xs$ 与 $\X$ 之间的\emph{配对}（pairing）为
+\[
+  \pair{x^*}{x}:=x^*(x).
+\]
+
+\begin{definition}[分离]
+\label{def:6}
+称两个集合 $K,L\subseteq\X$ 可\emph{连续线性分离}（continuously linearly separated），简称\emph{可分离}（separated），
+如果存在非零连续线性泛函 $x^*\in\Xs\setminus\{0\}$，使得
+\[
+  \sup_{x\in K}\pair{x^*}{x}\leqslant\inf_{y\in L}\pair{x^*}{y}.
+\]
+若不等式严格成立，则称 $K$ 与 $L$ 可\emph{严格分离}（strongly separated）。
+\end{definition}
+
+分离关系是对称的：把 $x^*$ 换成 $-x^*$，就得到 $\sup_L\pair{-x^*}{\cdot}\leqslant\inf_K\pair{-x^*}{\cdot}$。
+
+\begin{corollary}
+\label{res:3}
+设 $\X$ 是拓扑向量空间，$K$ 是 $\X$ 的非空开凸子集，$z\in\X\setminus K$。则 $K$ 与 $\{z\}$ 可分离。
+\end{corollary}
+
+证明需要下面的引理。
+
+\begin{lemma}
+\label{res:4}
+设 $K\subseteq\X$ 是原点的凸邻域。则规范函数 $p_K$ 取有限值，是次线性且连续的，并且 $K\subseteq\{p_K\leqslant1\}$。
+\end{lemma}
+
+\begin{proof}
+先作一个观察：由于 $K$ 凸且 $0\in K$，对 $0<r\leqslant s$ 有 $rK\subseteq sK$（因为 $\tfrac rs k=\tfrac rs k+(1-\tfrac rs)0\in K$）。
+所以若 $p_K(x)<s$，则 $x\in sK$。
+
+\emph{有限性。}固定 $x\in\X$。数乘连续，$t\to0$ 时 $tx\to0$，而 $K$ 是 $0$ 的邻域，故存在 $t>0$ 使 $tx\in K$，即 $x\in\frac1tK$，于是 $p_K(x)\leqslant\frac1t<+\infty$。
+
+\emph{次线性}（原讲义留作练习）。由 $0\in rK$ 对一切 $r>0$ 成立，$p_K(0)=0$。对 $\lambda>0$，$x\in rK\iff\lambda x\in\lambda rK$，
+故 $p_K(\lambda x)=\lambda p_K(x)$。对次可加性，任取 $\varepsilon>0$，令 $r=p_K(x)+\varepsilon$，$s=p_K(y)+\varepsilon$，则由上面的观察 $x\in rK$，$y\in sK$，于是
+\[
+  x+y=(r+s)\Bigl(\frac{r}{r+s}\cdot\frac xr+\frac{s}{r+s}\cdot\frac ys\Bigr)\in(r+s)K,
+\]
+即 $p_K(x+y)\leqslant p_K(x)+p_K(y)+2\varepsilon$；令 $\varepsilon\to0$ 即得。
+
+\emph{包含关系与连续性。}由定义 $p_K\geqslant0$，且对 $x\in K=1\cdot K$ 有 $p_K(x)\leqslant1$，即 $K\subseteq\{p_K\leqslant1\}$。
+同理对任意 $\varepsilon>0$，在 $\varepsilon K$ 上 $0\leqslant p_K\leqslant\varepsilon$；而 $\varepsilon K$ 是原点的邻域（数乘 $x\mapsto\varepsilon^{-1}x$ 连续），
+所以 $p_K$ 在原点连续。再用次线性把连续性推广到全空间：对 $x,y\in\X$，
+\[
+  \begin{cases}
+    p_K(x)=p_K(x-y+y)\leqslant p_K(x-y)+p_K(y),\\
+    p_K(y)=p_K(y-x+x)\leqslant p_K(y-x)+p_K(x),
+  \end{cases}
+\]
+因此 $\abs{p_K(y)-p_K(x)}\leqslant\max\bigl(p_K(x-y),p_K(y-x)\bigr)$。给定 $\varepsilon>0$，令 $K'=x+\varepsilon(K\cap-K)$。
+$K\cap-K$ 是原点的邻域，故 $K'$ 是 $x$ 的邻域；对 $y\in K'$，$y-x$ 与 $x-y$ 都属于 $\varepsilon K$，于是 $\abs{p_K(y)-p_K(x)}\leqslant\varepsilon$。这就证明了 $p_K$ 在 $x$ 处连续。
+\end{proof}
+
+\begin{proof}[推论~\ref{res:3} 的证明]
+取 $x_0\in K$，把 $K,z$ 平移为 $K-x_0$，$z-x_0$；分离不等式两边同时加上 $\pair{x^*}{x_0}$ 即可还原，所以不妨设 $0\in K$。
+$K$ 是含原点的开凸集，因而是原点的凸邻域，由引理~\ref{res:4}，$p_K$ 是连续的次线性函数。由于 $0\in K$，$z\notin K$，有 $z\neq0$。
+
+令 $E=\R z$，在 $E$ 上定义 $f(tz):=t$。若 $p_K(z)<1$，则由引理证明开头的观察 $z\in K$，矛盾；故 $p_K(z)\geqslant1=f(z)$，由正齐次性，$t\geqslant0$ 时 $f(tz)=t\leqslant tp_K(z)=p_K(tz)$。
+$t\leqslant0$ 时 $f(tz)=t\leqslant0\leqslant p_K(tz)$。因此在 $E$ 上 $f\leqslant p_K$。
+由 Hahn--Banach 定理，$f$ 有连续线性延拓 $\hat f\in\Xs$ 且 $\hat f\leqslant p_K$。于是对一切 $x\in K$，
+\[
+  \hat f(x)\leqslant p_K(x)\leqslant1=\hat f(z),
+\]
+即 $K$ 与 $\{z\}$ 被 $\hat f$ 分离，且 $\hat f(z)=1$ 说明 $\hat f\neq0$。
+\end{proof}
+
+借助 Minkowski 和，可以把上述结果推广到两个凸集、其中一个为开集的情形。注意两个凸集的 Minkowski 和仍是凸集（命题~\ref{res:1}(v)）。
+
+\begin{corollary}
+\label{res:5}
+设 $\X$ 是拓扑向量空间，$K$ 与 $L$ 是 $\X$ 中两个不相交的非空凸子集，且 $L$ 是开集。则 $K$ 与 $L$ 可分离。
+\end{corollary}
+
+\begin{proof}
+考虑 Minkowski 差
+\[
+  M:=K\ominus L=\{x-y\mid x\in K,\ y\in L\}=\bigcup_{x\in K}(x-L).
+\]
+每个 $x-L$ 都是开集（平移与取负都是同胚），所以 $M$ 作为开集之并是开集；$M=K\oplus(-L)$ 是凸集之和，因而是凸集；$M$ 非空。
+由于 $K\cap L=\varnothing$，$z:=0\notin M$。由推论~\ref{res:3}，存在 $x^*\in\Xs\setminus\{0\}$ 使得
+\[
+  \forall x\in K,\ \forall y\in L,\quad \pair{x^*}{x-y}\leqslant\pair{x^*}{0}=0 ,
+\]
+即 $\sup_K\pair{x^*}{\cdot}\leqslant\inf_L\pair{x^*}{\cdot}$，$K$ 与 $L$ 被 $x^*$ 分离。
+\end{proof}
+
+由分离关系的对称性，推论~\ref{res:5} 中开集是 $K$ 还是 $L$ 无关紧要。
+
+\begin{corollary}
+\label{res:6}
+设 $\X$ 是拓扑向量空间，$K$ 与 $L$ 是 $\X$ 中两个非空凸子集。若存在 $0$ 的开凸邻域 $V$，使得 $(K\oplus V)\cap L=\varnothing$，则 $K$ 与 $L$ 可严格分离。
+\end{corollary}
+
+\begin{proof}
+$K\oplus V=\bigcup_{x\in K}(x+V)$ 是开集，又是凸集之和，故是开凸集。由推论~\ref{res:5}（开集为 $K\oplus V$），存在 $x^*\in\Xs\setminus\{0\}$ 使
+\[
+  \sup_{x\in K\oplus V}\pair{x^*}{x}\leqslant\inf_{y\in L}\pair{x^*}{y}.
+\]
+易见
+\[
+  \sup_{x\in K\oplus V}\pair{x^*}{x}=\sup_{x\in K}\pair{x^*}{x}+\sup_{v\in V}\pair{x^*}{v}.
+\]
+由于 $L$ 非空，右端有限，从而 $\sup_K\pair{x^*}{\cdot}$ 有限。因为 $x^*\neq0$，存在 $v\in\X$ 使 $\pair{x^*}{v}\neq0$，必要时把 $v$ 换成 $-v$，可设 $\pair{x^*}{v}>0$。
+$V$ 是 $0$ 的邻域，故 $t>0$ 充分小时 $tv\in V$，于是 $\sup_V\pair{x^*}{\cdot}\geqslant t\pair{x^*}{v}>0$。所以
+\[
+  \sup_K\pair{x^*}{\cdot}<\sup_K\pair{x^*}{\cdot}+\sup_V\pair{x^*}{\cdot}\leqslant\inf_L\pair{x^*}{\cdot},
+\]
+这就是严格分离。
+\end{proof}
+
+\begin{corollary}
+\label{res:7}
+设 $\X$ 是局部凸拓扑向量空间，$K$ 与 $L$ 是 $\X$ 中两个不相交的非空凸子集，$K$ 紧、$L$ 闭。则 $K$ 与 $L$ 可严格分离。
+\end{corollary}
+
+证明需要下面的引理。为避免与空间记号 $\X$ 混淆，引理中的集合记为 $A,B$。
+
+\begin{lemma}
+\label{res:8}
+在拓扑向量空间中，若 $A$ 紧、$B$ 闭，则 Minkowski 和 $A\oplus B$ 是闭集。
+\end{lemma}
+
+\begin{proof}[赋范空间情形的证明]
+设 $z_n=a_n+b_n$（$a_n\in A$，$b_n\in B$）是 $A\oplus B$ 中收敛到 $z$ 的序列。由 $A$ 的紧性，必要时取子列，可设 $a_n\to a\in A$。
+于是 $b_n=z_n-a_n\to z-a=:b$，由 $B$ 闭，$b\in B$。所以 $z=a+b\in A\oplus B$，即 $A\oplus B$ 闭。
+\end{proof}
+
+\begin{proof}[拓扑向量空间情形的证明]
+设 $z\notin A\oplus B$。则对每个 $a\in A$，$z-a\notin B$，即 $z-a$ 属于开集 $O:=\X\setminus B$。
+由减法 $(u,w)\mapsto u-w$ 在 $(z,a)$ 处连续，存在含 $z$ 的开集 $U_a$ 与含 $a$ 的开集 $W_a$，使 $U_a\ominus W_a\subseteq O$，即 $(U_a\ominus W_a)\cap B=\varnothing$。
+开集族 $(W_a)_{a\in A}$ 覆盖紧集 $A$，故可取有限个 $a_1,\dots,a_N\in A$ 使 $A\subseteq\bigcup_iW_{a_i}$。则 $U=\bigcap_iU_{a_i}$ 是含 $z$ 的开集，且
+\[
+  (U\ominus A)\cap B\subseteq\Bigl(U\ominus\bigcup_iW_{a_i}\Bigr)\cap B\subseteq\bigcup_i(U_{a_i}\ominus W_{a_i})\cap B=\varnothing .
+\]
+若 $u\in U\cap(A\oplus B)$，写 $u=a+b$，则 $b=u-a\in(U\ominus A)\cap B$，矛盾。故 $U\cap(A\oplus B)=\varnothing$，$A\oplus B$ 的补集是开集，即 $A\oplus B$ 闭。
+\end{proof}
+
+\begin{proof}[推论~\ref{res:7} 的证明]
+$-K$ 是紧集，由引理~\ref{res:8}，$L\ominus K=L\oplus(-K)$ 是闭集；由 $K\cap L=\varnothing$，它不含原点。
+于是 $\X\setminus(L\ominus K)$ 是原点的开邻域，由局部凸性，存在原点的开凸邻域 $V$ 满足 $V\cap(L\ominus K)=\varnothing$。
+这时 $(K\oplus V)\cap L=\varnothing$：若 $x+v=y$（$x\in K$，$v\in V$，$y\in L$），则 $v=y-x\in L\ominus K$，矛盾。
+由推论~\ref{res:6}，$K$ 与 $L$ 可严格分离。
+\end{proof}
+
+\begin{remark}[点的分离]
+\label{rem:1}
+若 $\X$ 是 Hausdorff（分离的）局部凸拓扑向量空间，则对任意两个不同的点 $x,y\in\X$，存在 $x^*\in\Xs$ 使
+\[
+  \pair{x^*}{x}>\pair{x^*}{y}.
+\]
+事实上 $\{x\}$ 紧，$\{y\}$ 在 Hausdorff 空间中闭，二者不相交，由推论~\ref{res:7}（必要时把 $x^*$ 换成 $-x^*$）即得。
+特别地，赋予\emph{弱拓扑}（weak topology）$\sigma(\X,\Xs)$ 的 $\X$ 是 Hausdorff 的（见定义~\ref{def:38}）。
+\end{remark}
+
+% ------------------------------------------------------------
+\section{闭凸集}
+
+由引理~\ref{res:71}，在拓扑向量空间 $\X$ 中，线性函数 $\phi$ 的半空间 $\{\phi\leqslant\alpha\}$ 闭当且仅当 $\phi$ 连续。
+所以\emph{闭半空间}（closed half-space）就是形如
+\[
+  H=\{x\in\X\mid\pair{x^*}{x}\leqslant\alpha\},\qquad x^*\in\Xs,\ \alpha\in\R
+\]
+的集合。
+
+\begin{proposition}
+\label{res:9}
+设 $K$ 是局部凸拓扑向量空间 $\X$ 中的闭凸集。则 $K$ 是所有包含 $K$ 的闭半空间之交；更确切地，
+\begin{equation}
+  \label{eq:2}
+  K=\bigcap_{x^*\in\Xs}\{x\in\X\mid\pair{x^*}{x}\leqslant\sigma_K(x^*)\},
+\end{equation}
+其中 $\sigma_K(x^*)=\sup_{x\in K}\pair{x^*}{x}$。
+\end{proposition}
+
+\begin{proof}
+若 $K=\varnothing$，则 $\sigma_K\equiv-\infty$，右端为空集，结论成立；下设 $K\neq\varnothing$。
+记 $C$ 为所有包含 $K$ 的闭半空间之交。显然 $K\subseteq C$，下证 $\X\setminus K\subseteq\X\setminus C$。
+任取 $x\in\X\setminus K$。对闭凸集 $K$ 与紧凸集 $\{x\}$ 应用严格分离定理（推论~\ref{res:7}），存在 $x^*\in\Xs$ 使
+\[
+  \sigma_K(x^*)=\sup_{z\in K}\pair{x^*}{z}<\pair{x^*}{x}.
+\]
+闭半空间 $H_{x^*}=\{z\in\X\mid\pair{x^*}{z}\leqslant\sigma_K(x^*)\}$ 包含 $K$，故 $C\subseteq H_{x^*}$；而 $x\notin H_{x^*}$，所以 $x\notin C$。
+这同时说明 \eqref{eq:2} 右端（它介于 $K$ 与 $C$ 之间）等于 $K$。
+\end{proof}
+
+\begin{definition}[闭凸包]
+\label{def:7}
+拓扑向量空间中子集 $A$ 的\emph{闭凸包}（closed convex hull）是包含 $A$ 的最小闭凸集，等价地，是所有包含 $A$ 的闭凸集之交，记为 $\clconv A$。
+\end{definition}
+
+\begin{corollary}
+\label{res:10}
+设 $\X$ 是局部凸拓扑向量空间。则对任意子集 $A\subseteq\X$，$\clconv A$ 等于所有包含 $A$ 的闭半空间之交。
+\end{corollary}
+
+（闭半空间包含 $A$ 当且仅当它包含 $\clconv A$，再对 $\clconv A$ 用命题~\ref{res:9}。）
+
+\begin{example}
+\label{exa:2}
+设 $A=\{(x,y)\in\R^2\mid y\geqslant\frac1{1+x^2}\}$，则 $\clconv A=\{(x,y)\in\R^2\mid y\geqslant0\}$。
+\end{example}
+
+\begin{definition}[弱收敛]
+\label{def:8}
+$\X$ 中的序列 $(x_n)$ 称为\emph{弱收敛}（weakly convergent）到 $x\in\X$，如果对任意连续线性泛函 $x^*$，
+\[
+  \lim_{n\to+\infty}\pair{x^*}{x_n}=\pair{x^*}{x}.
+\]
+\end{definition}
+
+由命题~\ref{res:9}，闭凸集对弱极限封闭。这在证明无穷维优化问题（最优控制、变分法、最优输运等）解的存在性时很有用。
+实际上还能证明闭凸集在空间的\emph{弱拓扑}下也是闭的，详见\hyperref[ch:appA]{附录 A}（A.4 节）。
+
+\begin{corollary}
+\label{res:11}
+设 $K$ 是局部凸拓扑向量空间 $\X$ 中的闭凸集，$(x_n)$ 是 $K$ 中弱收敛到 $x$ 的序列。则 $x\in K$。
+\end{corollary}
+
+\begin{proof}
+由命题~\ref{res:9}，可写 $K=\bigcap_{i\in I}H_i$，其中 $H_i=\{\pair{x_i^*}{\cdot}\leqslant\alpha_i\}$ 是闭半空间。
+于是对一切 $i\in I$ 与 $n$，$\pair{x_i^*}{x_n}\leqslant\alpha_i$。由弱收敛，
+\[
+  \pair{x_i^*}{x}=\lim_{n\to+\infty}\pair{x_i^*}{x_n}\leqslant\alpha_i ,
+\]
+所以 $x$ 属于每个 $H_i$，即 $x\in K$。
+\end{proof}
+
+\begin{proposition}
+\label{res:12}
+设 $\X$ 是局部凸拓扑向量空间，$K\subseteq\X$ 是凸集。则 $K$ 弱闭当且仅当 $K$ 闭。
+\end{proposition}
+
+\begin{proof}
+由注~\ref{rem:28}，弱闭集都是闭集。反之设 $K$ 闭且凸。由命题~\ref{res:9}，$K$ 是（可能不可数多个）闭半空间之交。
+每个闭半空间 $\{\pair{x^*}{\cdot}\leqslant\alpha\}$ 都是弱闭的（$\pair{x^*}{\cdot}$ 关于弱拓扑连续），所以 $K$ 也是弱闭的。
+\end{proof}
+
+% ------------------------------------------------------------
+\section{支撑函数与法锥}
+
+\begin{definition}[支撑函数、支撑超平面]
+\label{def:9}
+非空集合 $A\subseteq\X$ 的\emph{支撑函数}（support function）是 $\Xs$ 上的函数
+\begin{equation}
+  \label{eq:3}
+  \sigma_A:x^*\in\Xs\mapsto\sup_{x\in A}\pair{x^*}{x}\in\R\cup\{+\infty\}.
+\end{equation}
+设 $x^*\in\Xs\setminus\{0\}$。（闭）超平面 $H=\{\pair{x^*}{\cdot}=\alpha\}$ 称为 $A$ 在点 $x\in A$ 处的\emph{支撑超平面}（support hyperplane），
+或说 $H$ 在 $x$ 处\emph{支撑} $A$，如果 $\pair{x^*}{x}=\alpha$ 且 $A\subseteq\{\pair{x^*}{\cdot}\leqslant\alpha\}$。此时称 $x^*$ 为 $A$ 在 $x$ 处的\emph{（外）法向量}（exterior normal）。
+\end{definition}
+
+\begin{remark}
+\label{rem:2}
+$H=\{\pair{x^*}{\cdot}=\alpha\}$ 在 $x\in A$ 处支撑 $A$，当且仅当 $\alpha=\pair{x^*}{x}$ 且 $\sigma_A(x^*)=\pair{x^*}{x}$。这解释了“支撑函数”这一名称。
+\end{remark}
+
+单点集 $A=\{x\}$ 的支撑函数 $\pair{\cdot}{x}$ 是线性的；一般集合的支撑函数是次线性的（在定义~\ref{def:4} 的意义下，只是允许取值 $+\infty$）。
+支撑函数由 Minkowski 在有限维情形引入。映射 $K\mapsto\sigma_K$ 的一个好处是它保持了闭凸集族的许多结构，
+闭凸集支撑函数性质的简要总结可参看 Hörmander [Hör55]。支撑函数还可以给次微分计算的某些法则提供几何解释。
+
+\begin{proposition}
+\label{res:13}
+设 $\X$ 是局部凸拓扑向量空间。
+\begin{enumerate}[label=(\roman*)]
+  \item 设 $K,L\subseteq\X$ 是非空闭凸集。则 $K\subseteq L$ 当且仅当 $\sigma_K\leqslant\sigma_L$。特别地，$\sigma_K=\sigma_L$ 当且仅当 $K=L$。
+  \item 设 $K_1,\dots,K_\ell$ 是非空闭凸集，$\lambda_1,\dots,\lambda_\ell>0$。则
+  \[
+    \sigma_{\bigoplus_i\lambda_iK_i}=\sum_i\lambda_i\sigma_{K_i}.
+  \]
+  \item 设 $K_1,\dots,K_\ell$ 是非空闭凸集。则
+  \[
+    \sigma_{\bigcup_iK_i}=\max_i\sigma_{K_i}.
+  \]
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}
+\label{rem:3}
+这个命题有时被用来设计计算凸集（特别是凸多面体）Minkowski 和的算法。
+\end{remark}
+
+\begin{proof}
+(i) 若 $K\subseteq L$，则对每个 $x^*$，$K$ 上的上确界不超过 $L$ 上的上确界，即 $\sigma_K\leqslant\sigma_L$。
+反之若 $\sigma_K\leqslant\sigma_L$，由 \eqref{eq:2}，
+\[
+  K=\bigcap_{x^*\in\Xs}\{\pair{x^*}{\cdot}\leqslant\sigma_K(x^*)\}\subseteq\bigcap_{x^*\in\Xs}\{\pair{x^*}{\cdot}\leqslant\sigma_L(x^*)\}=L .
+\]
+
+(ii) 对每个 $x^*\in\Xs$，
+\[
+  \sigma_{\bigoplus_i\lambda_iK_i}(x^*)=\sup_{x\in\bigoplus_i\lambda_iK_i}\pair{x^*}{x}
+  =\sup_{(x_1,\dots,x_\ell)\in K_1\times\dots\times K_\ell}\Bigl\langle x^*\Bigm|\sum_i\lambda_ix_i\Bigr\rangle
+  =\sum_i\lambda_i\sigma_{K_i}(x^*),
+\]
+最后一步是因为各 $x_i$ 独立变化且 $\lambda_i>0$。
+
+(iii) 同理：$\sup_{x\in\bigcup_iK_i}\pair{x^*}{x}=\max_i\sup_{x\in K_i}\pair{x^*}{x}$。
+（(ii)(iii) 的证明并不用到闭性与凸性。）
+\end{proof}
+
+\begin{definition}[法锥]
+\label{def:10}
+设 $K\subseteq\X$ 是凸集。$K$ 在点 $x\in K$ 处的\emph{法锥}（normal cone）定义为
+\[
+  \Nor_xK=\{x^*\in\Xs\mid\forall y\in K,\ \pair{x^*}{x-y}\geqslant0\}.
+\]
+当 $x\notin K$ 时，约定 $\Nor_xK=\varnothing$。
+\end{definition}
+
+直观地说，法锥 $\Nor_xK$ 就是 $K$ 在 $x$ 处所有支撑超平面 $\{\pair{x^*}{\cdot}=\alpha\}$ 的“斜率” $x^*$ 的全体（再加上 $0$）。
+
+\begin{example}[光滑下水平集]
+\label{exa:3}
+设 $\X=\R^d$，$g:\R^d\to\R$ 是 $\mathcal C^1$ 凸函数，$\inf_{\R^d}g<0$，$K=g^{-1}((-\infty,0])$。特别地 $K$ 有非空内部。则
+\[
+  \Nor_xK=\begin{cases}
+    \R_+\nabla g(x), & x\in\partial K,\\
+    \{0\}, & x\in\interior(K),\\
+    \varnothing, & x\notin K.
+  \end{cases}
+\]
+法锥的概念把这一构造推广到不可微的凸集，例如多面体。
+\end{example}
+
+\begin{example}[Hilbert 空间情形]
+\label{exa:4}
+若 $\X$ 是 Hilbert 空间，由 Riesz 表示定理，$\Xs$ 可与 $\X$ 等同（$\X$ 上任一连续线性泛函都形如 $\inner{x}{\cdot}$，$x\in\X$）。
+设 $K$ 是非空闭凸集，$\mathrm P_K$ 是到 $K$ 上的正交投影（orthogonal projection），$x\in K$。则法锥可刻画为
+\[
+  \Nor_xK=\{v\in\X\mid\exists t>0,\ \mathrm P_K(x+tv)=x\}.
+\]
+事实上，由投影的变分刻画，$\mathrm P_K(x+tv)=x$ 当且仅当对一切 $y\in K$，$\inner{x+tv-x}{y-x}\leqslant0$，即 $\inner{v}{x-y}\geqslant0$（$t>0$ 可约去），这正是 $v\in\Nor_xK$。
+\end{example}
+
+下面的命题涉及对偶空间 $\Xs$ 上的\emph{弱$*$拓扑}（weak$*$ topology）：它是使所有求值映射 $x^*\in\Xs\mapsto\pair{x^*}{x}$（$x\in\X$）都连续的最粗拓扑。
+详见\hyperref[ch:appA]{附录 A}（A.4 节），特别是定理~\ref{res:77}：若 $\X$ 是可分赋范空间，则 $\Xs$ 中任意有界序列都有弱$*$收敛的子列。
+
+\begin{proposition}
+\label{res:14}
+设 $\X$ 是拓扑向量空间，$K\subseteq\X$ 是闭凸集。则
+\begin{enumerate}[label=(\roman*)]
+  \item 对任意 $x\in K$，法锥 $\Nor_xK$ 是凸的、弱$*$闭的，并且
+  \[
+    x^*\in\Nor_xK\iff\sigma_K(x^*)=\pair{x^*}{x};
+  \]
+  \item 若 $K$ 有非空内部，则对任意 $x\in\partial K$，$\Nor_xK\neq\{0\}$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) $\Nor_xK$ 可以写成一族弱$*$闭半空间之交：
+\[
+  \Nor_xK=\{x^*\in\Xs\mid\forall y\in K,\ \pair{x^*}{x-y}\geqslant0\}=\bigcap_{y\in K}\{x^*\in\Xs\mid\pair{x^*}{y-x}\leqslant0\},
+\]
+每个 $\{x^*\mid\pair{x^*}{y-x}\leqslant0\}$ 是弱$*$连续函数 $x^*\mapsto\pair{x^*}{y-x}$ 的下水平集，因而凸且弱$*$闭，故 $\Nor_xK$ 凸且弱$*$闭。
+至于刻画：$x^*\in\Nor_xK\iff\forall y\in K,\ \pair{x^*}{y}\leqslant\pair{x^*}{x}\iff\sigma_K(x^*)\leqslant\pair{x^*}{x}$，
+而 $x\in K$ 给出 $\sigma_K(x^*)\geqslant\pair{x^*}{x}$，故等价于 $\sigma_K(x^*)=\pair{x^*}{x}$。
+
+(ii) 令 $L=\interior K$，取 $x\in\partial K$。$K$ 闭，故 $x\in K$；又 $x\notin L$。$L$ 是非空开凸集（练习~\ref{exo:B1-4}），
+由推论~\ref{res:3}，开凸集 $L$ 与点 $x$ 可分离：存在 $x^*\neq0$ 使
+\[
+  \sup_{y\in L}\pair{x^*}{y}\leqslant\pair{x^*}{x}.
+\]
+由于 $K$ 是其内部的闭包（练习~\ref{exo:B1-4}），由 $x^*$ 的连续性，上式对一切 $y\in K$ 成立，即 $x^*\in\Nor_xK$，而 $x^*\neq0$。
+\end{proof}
+
+\begin{keypoints}
+  \item 凸集对交、线性像与原像、乘积、Minkowski 和封闭；$\conv A$ 是 $A$ 中点的全体有限凸组合。
+  \item Hahn--Banach 定理：被连续次线性函数 $p$ 控制的子空间上的线性函数，可延拓为 $\X$ 上被 $p$ 控制的连续线性泛函；关键是逐维延拓时 $\alpha$ 的选取。
+  \item 规范函数 $p_K$ 把“原点的凸邻域”变成连续次线性函数，由此得到开凸集与外点的分离（推论~\ref{res:3}）。
+  \item 分离定理链：开凸集与点 $\Rightarrow$ 开凸集与凸集（Minkowski 差）$\Rightarrow$ 加厚后不交则严格分离 $\Rightarrow$ 局部凸空间中不交的紧凸集与闭凸集严格分离。
+  \item 局部凸空间中闭凸集等于包含它的闭半空间之交：$K=\bigcap_{x^*}\{\pair{x^*}{\cdot}\leqslant\sigma_K(x^*)\}$；因此凸集闭 $\iff$ 弱闭，闭凸集对弱极限封闭。
+  \item 支撑函数 $\sigma_K$ 唯一确定闭凸集，且把 Minkowski 和变成和、把并变成 $\max$。
+  \item 法锥 $\Nor_xK=\{x^*\mid\sigma_K(x^*)=\pair{x^*}{x}\}$ 是弱$*$闭凸锥；内部非空的闭凸集在边界点处有非零法向量。
+\end{keypoints}

@@ -1,0 +1,54 @@
+\contentsline {chapter}{导读}{iv}{chapter*.2}%
+\contentsline {paragraph}{工作空间。}{iv}{paragraph*.3}%
+\contentsline {paragraph}{各章内容。}{iv}{paragraph*.4}%
+\contentsline {paragraph}{主线。}{iv}{paragraph*.5}%
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}凸集}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}凸集}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Hahn--Banach 定理}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}线性分离}{4}{section.1.3}%
+\contentsline {section}{\numberline {1.4}闭凸集}{7}{section.1.4}%
+\contentsline {section}{\numberline {1.5}支撑函数与法锥}{8}{section.1.5}%
+\contentsline {section}{\numberline {1.6}练习}{11}{section.1.6}%
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}凸函数}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1}定义与基本性质}{13}{section.2.1}%
+\contentsline {section}{\numberline {2.2}凸函数的连续性}{15}{section.2.2}%
+\contentsline {section}{\numberline {2.3}下半连续凸函数}{17}{section.2.3}%
+\contentsline {section}{\numberline {2.4}凸共轭}{20}{section.2.4}%
+\contentsline {section}{\numberline {2.5}应用：极小点的存在性}{22}{section.2.5}%
+\contentsline {section}{\numberline {2.6}练习}{26}{section.2.6}%
+\contentsline {chapter}{\numberline {第三章\hspace {.3em}}次微分}{28}{chapter.3}%
+\contentsline {section}{\numberline {3.1}方向导数}{28}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Gâteaux 可微与 Fréchet 可微}{30}{section.3.2}%
+\contentsline {section}{\numberline {3.3}次微分的定义与基本性质}{31}{section.3.3}%
+\contentsline {section}{\numberline {3.4}次微分运算法则}{34}{section.3.4}%
+\contentsline {section}{\numberline {3.5}应用：最优性条件}{37}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}例子}{37}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Karush--Kuhn--Tucker 定理}{38}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}几乎处处可微性}{41}{section.3.6}%
+\contentsline {paragraph}{动机}{41}{paragraph*.9}%
+\contentsline {subsection}{\numberline {3.6.1}Gâteaux 几乎处处可微}{42}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}$\mathbb {R}^d$ 上的 Fréchet 几乎处处可微}{43}{subsection.3.6.2}%
+\contentsline {section}{\numberline {3.7}练习}{45}{section.3.7}%
+\contentsline {chapter}{\numberline {第四章\hspace {.3em}}邻近算子}{48}{chapter.4}%
+\contentsline {section}{\numberline {4.1}定义与基本性质}{48}{section.4.1}%
+\contentsline {section}{\numberline {4.2}邻近点算法}{50}{section.4.2}%
+\contentsline {section}{\numberline {4.3}共轭函数的邻近算子}{52}{section.4.3}%
+\contentsline {section}{\numberline {4.4}练习}{54}{section.4.4}%
+\contentsline {chapter}{\numberline {第五章\hspace {.3em}}凸对偶}{57}{chapter.5}%
+\contentsline {section}{\numberline {5.1}凸问题的扰动}{57}{section.5.1}%
+\contentsline {section}{\numberline {5.2}应用：Lagrange 对偶}{60}{section.5.2}%
+\contentsline {section}{\numberline {5.3}应用：Fenchel--Rockafellar 定理}{62}{section.5.3}%
+\contentsline {section}{\numberline {5.4}应用：最优输运中的对偶}{66}{section.5.4}%
+\contentsline {section}{\numberline {5.5}练习}{67}{section.5.5}%
+\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}拓扑与泛函分析预备知识}{69}{appendix.A}%
+\contentsline {section}{\numberline {A.1}点集拓扑}{69}{section.A.1}%
+\contentsline {section}{\numberline {A.2}拓扑向量空间}{70}{section.A.2}%
+\contentsline {paragraph}{平移与数乘。}{70}{paragraph*.11}%
+\contentsline {section}{\numberline {A.3}连续线性形式}{71}{section.A.3}%
+\contentsline {section}{\numberline {A.4}弱拓扑与弱*拓扑}{72}{section.A.4}%
+\contentsline {subsection}{\numberline {A.4.1}由一族线性形式生成的拓扑}{72}{subsection.A.4.1}%
+\contentsline {subsection}{\numberline {A.4.2}弱拓扑}{74}{subsection.A.4.2}%
+\contentsline {subsection}{\numberline {A.4.3}弱*拓扑}{74}{subsection.A.4.3}%
+\contentsline {subsection}{\numberline {A.4.4}Banach--Alaoglu 定理}{75}{subsection.A.4.4}%
+\contentsline {subsection}{\numberline {A.4.5}自反空间}{78}{subsection.A.4.5}%
+\contentsline {chapter}{\numberline {附录 B\hspace {.3em}}中英术语对照}{80}{appendix.B}%

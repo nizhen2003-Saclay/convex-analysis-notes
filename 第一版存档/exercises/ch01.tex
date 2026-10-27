@@ -1,0 +1,109 @@
+% 第 1 章练习（原讲义附录 B.1，标题误作 “Chapter 2”）
+
+\begin{exercise}[原讲义 B.1 练习 1]
+\label{exo:B1-1}
+\textbf{并集的凸包。}
+\begin{enumerate}[label=\arabic*.]
+  \item 设 $K,L$ 是两个非空凸集，证明
+  \[
+    \conv(K\cup L)=\{(1-\alpha)x+\alpha y\mid(x,y,\alpha)\in K\times L\times[0,1]\}.
+  \]
+  \item 设 $K_1,\dots,K_n$ 是非空凸集，证明
+  \[
+    \conv(K_1\cup\dots\cup K_n)=\Bigl\{\sum_{1\leqslant i\leqslant n}\alpha_ix_i\;\Bigm|\;\alpha\in\Delta_n,\ \forall i,\ x_i\in K_i\Bigr\},
+  \]
+  其中 $\Delta_n=\{\alpha\in\R^n_+\mid\sum_i\alpha_i=1\}$ 是 $\R^n$ 中的单位单纯形。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 2]
+\label{exo:B1-2}
+当 $\X$ 是赋范空间且 $K$ 包含某个球 $\mathrm B(0,r)$ 时，证明引理~\ref{res:4}。$p_K$ 的连续模（modulus of continuity）是什么？
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 3]
+\label{exo:B1-3}
+证明凸集的闭包是凸集。由此推出 $A$ 的闭凸包等于 $A$ 的凸包的闭包：$\clconv A=\cl(\conv A)$。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 4]
+\label{exo:B1-4}
+\textbf{凸集的内部。}设 $K$ 是凸集。
+\begin{enumerate}[label=\arabic*.]
+  \item 证明：若 $B,C\subseteq K$，则对 $t\in[0,1]$ 有 $(1-t)B+tC\subseteq K$。
+  \item 由此推出：若 $x\in\interior K$，$y\in K$，则 $[x,y)$ 含于 $K$ 的内部。
+  \item 证明凸集的内部是凸集。
+  \item 证明：若 $K$ 闭且有非空内部，则 $K$ 是其内部的闭包。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 5]
+\label{exo:B1-5}
+设 $\X=\mathrm L^2([0,1])$，$K=\{f\in\X\mid f\geqslant0\ \text{a.e.}\}$。证明 $K$ 是闭凸集，从而序列弱闭。把 $K$ 明确写成闭半空间之交。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 6]
+\label{exo:B1-6}
+\textbf{不连续的线性泛函。}设 $\X=\R[X]$ 是多项式空间，赋予系数的上确界范数（若 $P=a_nX^n+\dots+a_0$，则 $\norm P=\max_i\abs{a_i}$）。
+证明线性泛函 $\phi(P)=P'(1)$ 处处不连续。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 7]
+\label{exo:B1-7}
+\textbf{Mazur 引理。}设 $(x_n)_{n\in\N}$ 是赋范空间 $\X$ 中弱收敛到 $x$ 的序列。考虑集合 $K=\conv(\{x_n\mid n\in\N\})$，
+证明存在由 $x_n$ 的凸组合构成的序列 $(y_n)$（即 $y_n\in K$），使 $y_n$ 强收敛（按范数收敛）到 $x$。
+\end{exercise}
+
+\begin{definition}[端点]
+\label{def:42}
+设 $K\subseteq\X$ 是凸集。点 $x\in K$ 称为 $K$ 的\emph{端点}（extreme point），如果它不能写成 $K$ 中点的非平凡凸组合，即不存在 $y,z\in K\setminus\{x\}$ 与 $\alpha\in(0,1)$ 使 $x=(1-\alpha)y+\alpha z$。
+$K$ 的端点全体记为 $\operatorname{ext}(K)$。
+\end{definition}
+
+\begin{exercise}[原讲义 B.1 练习 8]
+\label{exo:B1-8}
+设 $A\subseteq\X$，$K=\conv(A)$。证明 $\operatorname{ext}(K)\subseteq A$。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 9]
+\label{exo:B1-9}
+\textbf{端点与单位球的严格凸性。}回忆：凸集 $K$ 称为\emph{严格凸的}（strictly convex），如果
+\[
+  \forall x\neq y\in K,\ \forall\alpha\in(0,1),\quad(1-\alpha)x+\alpha y\in\interior(K).
+\]
+\begin{enumerate}[label=\arabic*.]
+  \item 证明 Hilbert 空间中的闭单位球是严格凸的，并且单位球面上的每一点（即范数为 $1$ 的点）都是它的端点。
+  \item 对 $x\in\R^d$，定义 $\norm x_1=\sum_{1\leqslant i\leqslant d}\abs{x_i}$，$\norm x_\infty=\max_{1\leqslant i\leqslant d}\abs{x_i}$。
+        $(\R^d,\norm\cdot_1)$ 与 $(\R^d,\norm\cdot_\infty)$ 的单位球是否严格凸？它们的端点是什么？
+  \item 对赋予上确界范数 $\norm\cdot_\infty$ 的 $\X=\mathcal C^0([0,1])$，以及 $\X=\mathrm L^1([0,1])$，回答同样的问题。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 10]
+\label{exo:B1-10}
+\textbf{支撑函数。}计算下列集合的支撑函数：
+\begin{enumerate}[label=\arabic*.]
+  \item $\R^d$ 中的线段 $[a,b]$；
+  \item $\R^2$ 中的正方形 $[0,1]^2$；
+  \item $\X=\R^d$ 中的\emph{单位单纯形}（unit simplex）$\Delta=\{x\in\R^d_+\mid\sum_ix_i=1\}$。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 11]
+\label{exo:B1-11}
+设 $(\X,\norm\cdot)$ 是赋范空间，$B$ 是 $\X$ 的闭单位球。证明 $\sigma_B$ 等于对偶范数（dual norm）$\norm\cdot_*$。
+\end{exercise}
+
+\begin{exercise}[原讲义 B.1 练习 12]
+\label{exo:B1-12}
+\textbf{Hausdorff 距离。}设 $K,L$ 是 $\R^d$ 中两个紧凸集（$\R^d$ 取 Euclid 范数），记单位球面 $\mathbb S^{d-1}=\{x\in\R^d\mid\norm x=1\}$。
+$K$ 与 $L$ 之间的 \emph{Hausdorff 距离}（Hausdorff distance）定义为
+\[
+  \mathrm d_H(K,L)=\max\Bigl(\max_{x\in K}\min_{y\in L}\norm{x-y},\ \max_{y\in L}\min_{x\in K}\norm{x-y}\Bigr).
+\]
+\begin{enumerate}[label=\arabic*.]
+  \item 证明 $\mathrm d_H(K,L)=\min\{\varepsilon\geqslant0\mid K\subseteq L+\mathrm B(0,\varepsilon)\ \text{且}\ L\subseteq K+\mathrm B(0,\varepsilon)\}$；
+  \item 证明 $K\subseteq L+\mathrm B(0,\varepsilon)$ 当且仅当在 $\mathbb S^{d-1}$ 上 $\sigma_K\leqslant\sigma_L+\varepsilon$；
+  \item 推出 $\mathrm d_H(K,L)=\norm{\sigma_K-\sigma_L}_{\infty,\mathbb S^{d-1}}$（$\mathbb S^{d-1}$ 上的上确界范数）。
+\end{enumerate}
+\end{exercise}

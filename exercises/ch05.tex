@@ -1,0 +1,61 @@
+% 第 5 章练习：原讲义附录 B.5（标题作 “Chapter 6”）中按内容属于本章的练习 30（Kantorovich 对偶）。
+% B.5 的练习 27--29 按内容放在第 4 章练习中。
+
+下一题中回忆：紧集 $X$ 上的\emph{测度}（measure）是指线性形式 $\mu:\mathcal C^0(X)\to\R$，它关于上确界范数 $\norm{\cdot}_\infty$ 诱导的拓扑连续。
+测度空间记为 $\mathcal M(X)=(\mathcal C^0(X))^*$。测度 $\mu$ 称为\emph{非负的}，如果 $\forall f\in\mathcal C^0(X)$，$f\geqslant0\Rightarrow\mu(f)\geqslant0$。
+$X$ 上的\emph{概率测度}是满足 $\norm{\mu}_{TV}=1$ 的非负测度 $\mu$（对非负测度，这等价于 $\mu(1)=1$）。
+非负测度的集合记为 $\mathcal M_+(X)$，概率测度的集合记为 $\mathcal P(X)$。
+
+\begin{exercise}[原讲义 B.5 练习 30]
+\label{exo:B5-30}
+\textbf{Kantorovich 对偶。}设 $X,Y$ 是两个紧集，$\mu$ 是 $X$ 上的概率测度，$\nu$ 是 $Y$ 上的概率测度，$c\in\mathcal C^0(X\times Y)$。
+定义线性映射 $\Lambda:\mathcal C^0(X)\times\mathcal C^0(Y)\to\mathcal C^0(X\times Y)$，$\Lambda(\phi,\psi)=\phi\oplus\psi$，其中
+\[
+  \phi\oplus\psi:(x,y)\in X\times Y\mapsto\phi(x)+\psi(y).
+\]
+考虑优化问题
+\[
+  P:=\inf\bigl\{-(\pair{\mu}{\phi}+\pair{\nu}{\psi})\bigm|(\phi,\psi)\in\mathcal C^0(X)\times\mathcal C^0(Y),\ \phi\oplus\psi\leqslant c\bigr\}.
+\]
+\begin{enumerate}[label=\arabic*.]
+  \item 证明 $P=\inf_{(\phi,\psi)\in\mathcal C^0(X)\times\mathcal C^0(Y)}f(\Lambda(\phi,\psi))+g(\phi,\psi)$，其中
+  \[
+    f:\sigma\in\mathcal C^0(X\times Y)\mapsto
+    \begin{cases}
+      0, & \sigma\leqslant c,\\
+      +\infty, & \text{其他},
+    \end{cases}
+    \qquad
+    g:(\phi,\psi)\in\mathcal C^0(X)\times\mathcal C^0(Y)\mapsto-(\pair{\mu}{\phi}+\pair{\nu}{\psi}).
+  \]
+  \item 证明 $f^*$ 与 $g^*$ 分别为
+  \[
+    f^*:\gamma\in\mathcal M(X\times Y)\mapsto
+    \begin{cases}
+      \pair{\gamma}{c}, & \gamma\in\mathcal M_+(X\times Y),\\
+      +\infty, & \text{其他},
+    \end{cases}
+  \]
+  \[
+    g^*:(\kappa,\lambda)\in\mathcal M(X)\times\mathcal M(Y)\mapsto
+    \begin{cases}
+      0, & (\kappa,\lambda)=-(\mu,\nu),\\
+      +\infty, & \text{其他}.
+    \end{cases}
+  \]
+  \item 设 $\gamma\in\mathcal M(X\times Y)$。$\gamma$ 在 $X$ 上的\emph{边缘分布}（marginal）是测度 $\Pi_X\gamma\in\mathcal M(X)$，定义为
+  $\Pi_X\gamma:\phi\in\mathcal C^0(X)\mapsto\gamma(\phi\oplus0)$；$Y$ 上的边缘分布 $\Pi_Y\gamma$ 类似定义。证明 $\Lambda$ 的伴随算子由
+  \[
+    \Lambda^*(\gamma)=(\Pi_X\gamma,\Pi_Y\gamma)\in\mathcal M(X)\times\mathcal M(Y)
+  \]
+  给出。
+  \item 由 Fenchel--Rockafellar 定理推出 $P=D$，其中
+  \[
+    \begin{aligned}
+    D&:=\max_{\gamma\in\mathcal C^0(X\times Y)^*}-g^*(-\Lambda^*\gamma)-f^*(\gamma)\\
+    &=\max\bigl\{-\pair{\gamma}{c}\bigm|\gamma\in\mathcal M_+(X\times Y),\ \Pi_X\gamma=\mu,\ \Pi_Y\gamma=\nu\bigr\}.
+    \end{aligned}
+  \]
+\end{enumerate}
+这一对偶公式归功于 Leonid Kantorovich，是最优输运理论中最重要的结果之一。
+\end{exercise}
